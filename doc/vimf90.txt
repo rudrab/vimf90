@@ -5,9 +5,61 @@ CONTENTS                          *vimf90+-contents*
 
   1. Introduction ................... |vimf90+Intro|
   2. Mappings ....................... |vimf90+Map|
+     2.1. blocks ...................... |vimf90+blocks|
+     2.2. statements ................. |vimf90+stats|
+     2.3. subprograms ............... |vimf90+subs|
 =====================================================
 1. Introduction                   *vimf90+Intro*
-This is the introduction for vimf90+ 
+This plugin is intended to make the coding with fortran easier 
+in vim. But this is still in very nascent stage. Not much utility 
+is included, and the different utility is not in sync properly(i.e.
+different types of expansion need different key combinations. This
+is explained in next part).
 
+=====================================================
 2. Mappings                       *vimf90+Map*
 This explains mappings of this plugin.
+-----------------------------------------------------
+2.1 blocks                        *vimf90+blocks*
+if,do,select etc statements, that are closed by a corresponding
+  end is defined here. After typing the first line, pressing <F7>
+  will complete the construct. For example:
+    you type:                   you get:      
+    trial: do i=1,10            trial: do i=1,10
+                                  <cursor here>
+                                end do trial
+  
+  NB: This part is largly copied from 
+  (http://www.vim.org/scripts/script.php?script_id=2487)
+-----------------------------------------------------
+2.2. statements                 *vimf90+stats*
+Some statements is included here for less typing. These are 
+mostly one-liner or part of the line:
+
+you type:           you get:
+`wr                 write(<cursor here>,*)<++>
+`rd                 read(<cursor here>,*)<++>
+`re                 real(<cursor here>)::<++>
+`int                integer::<cursor here>
+`ch                 character(len=<cursor here>)::<++> 
+
+The <++> is a nice option, a <CTRL+J> will put your cursor in that position.
+-----------------------------------------------------
+2.3. subprograms                *vimf90+subs*
+This part uses Ultisnips. If you don't have one, get it from vims repo.
+There are many Ultisnips. I am using https://github.com/SirVer/ultisnips.
+This key-combinations makes program and subprograms header.
+It supports program(prg<Shift-TAB>), module(mod<Shift-TAB>), subroutine and
+function. As shown, typing the first 3 letter and pressing <Shift-TAB> will
+complete the header section of the program. e.g.
+you type:                  you get:
+prg<Shift-TAB>             !This is file : <your file name>
+                           ! Author= <users login name>
+                           ! Started at: <current time>
+                           ! 
+                           Program  <program name you give, by default, filename>
+                           Implicit None
+                           <++Start Typing++>
+                           End Program   <program name you give, by default, filename>
+
+
