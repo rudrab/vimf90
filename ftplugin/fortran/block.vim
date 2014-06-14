@@ -1,7 +1,10 @@
-" File: fortran_codecomplete.vim
-" Author: Michael Goerz (goerz AT physik DOT fu MINUS berlin DOT de)
-" Version: 0.9
-" Copyright: Copyright (C) 2008 Michael Goerz
+" File: block.vim
+" Author: Rudra Banerjee (bnrj DOT rudra at gmail.com) 
+" Version: 0.1
+" Copyright: Copyright (C) 2014 Rudra Banerjee
+" THIS FILE IS AN UPDATE OF fortran_codecomplete.vim
+" (http://www.vim.org/scripts/script.php?script_id=2487) BY Michael Goerz
+" 
 "    This program is free software: you can redistribute it and/or modify
 "    it under the terms of the GNU General Public License as published by
 "    the Free Software Foundation, either version 3 of the License, or
@@ -15,8 +18,6 @@
 " Description: 
 "    This maps the <F7> key to complete Fortran 90 constructs"
 
-" Installation:
-"    Copy this file into your ftplugin directory. 
 
 
 python << EOF
