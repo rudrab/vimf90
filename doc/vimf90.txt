@@ -1,0 +1,13 @@
+*vimf90.txt*   A fortran-90+ plugin for easy editing
+
+=====================================================
+CONTENTS                          *vimf90+-contents*
+
+  1. Introduction ................... |vimf90+Intro|
+  2. Mappings ....................... |vimf90+Map|
+=====================================================
+1. Introduction                   *vimf90+Intro*
+This is the introduction for vimf90+ 
+
+2. Mappings                       *vimf90+Map*
+This explains mappings of this plugin.
