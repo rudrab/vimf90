@@ -69,7 +69,9 @@ def fortran_complete():
         SyntaxElement(re.compile(r'^\s*select\s*case\s*'),
                       'end select' ),
         SyntaxElement(re.compile(r'^\s*forall\s*'),
-                      'end forall' )
+                      'end forall' ),
+        SyntaxElement(re.compile(r'^\s*?\s*type\s*::((?P<name>([a-zA-Z0-9_]+))\s*)'),
+                      'end typE ${name}' )
     ]
 
     cb = vim.current.buffer

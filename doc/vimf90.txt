@@ -1,36 +1,45 @@
 *vimf90.txt*   A fortran-90+ plugin for easy editing
+       _            __ ___   ___        ~
+__   _(_)_ __ ___  / _/ _ \ / _ \   _   ~
+\ \ / / | '_ ` _ \| || (_) | | | |_| |_ ~
+ \ V /| | | | | | |  _\__, | |_| |_   _|~
+  \_/ |_|_| |_| |_|_|   /_/ \___/  |_|  ~
 
 =====================================================
 CONTENTS                          *vimf90+-contents*
 
-  1. Introduction ................... |vimf90+Intro|
-  2. Mappings ....................... |vimf90+Map|
-     2.1. blocks ...................... |vimf90+blocks|
-     2.2. statements ................. |vimf90+stats|
-     2.3. subprograms ............... |vimf90+subs|
+1. Introduction ................... |vimf90+Intro|
+2. Mappings ....................... |vimf90+Map|
+2.1. construct .................    |vimf90+construct|
+2.2. statements ................    |vimf90+stats|
+2.3. subprograms ...............    |vimf90+subs|
+2.4 List of all available mappings  |vimf90+List|
 =====================================================
 1. Introduction                   *vimf90+Intro*
 This plugin is intended to make the coding with fortran easier 
 in vim. But this is still in very nascent stage. Not much utility 
 is included, and the different utility is not in sync properly(i.e.
-different types of expansion need different key combinations. This
-is explained in next part).
+    different types of expansion need different key combinations. This
+    is explained in next part).
 
 =====================================================
 2. Mappings                       *vimf90+Map*
 This explains mappings of this plugin.
 -----------------------------------------------------
-2.1 blocks                        *vimf90+blocks*
+2.1 construct                        *vimf90+construct*
 if,do,select etc statements, that are closed by a corresponding
-  end is defined here. After typing the first line, pressing <F7>
-  will complete the construct. For example:
-    you type:                   you get:      
-    trial: do i=1,10            trial: do i=1,10
-                                  <cursor here>
-                                end do trial
-  
-  NB: This part is largly copied from 
-  (http://www.vim.org/scripts/script.php?script_id=2487)
+end is defined here. After typing the first line, pressing <F7>
+will complete the construct. For example:
+you type:                   you get:      
+trial: do i=1,10            trial: do i=1,10
+<cursor here>
+end do trial
+
+Avalable construct:
+  i) do, ii) if, iii)selectcase, iv)forall, v)type,
+
+NB: This part is largly copied from 
+(http://www.vim.org/scripts/script.php?script_id=2487)
 -----------------------------------------------------
 2.2. statements                 *vimf90+stats*
 Some statements is included here for less typing. These are 
@@ -54,12 +63,29 @@ function. As shown, typing the first 3 letter and pressing <Shift-TAB> will
 complete the header section of the program. e.g.
 you type:                  you get:
 prg<Shift-TAB>             !This is file : <your file name>
-                           ! Author= <users login name>
-                           ! Started at: <current time>
-                           ! 
-                           Program  <program name you give, by default, filename>
-                           Implicit None
-                           <++Start Typing++>
-                           End Program   <program name you give, by default, filename>
+! Author= <users login name>
+! Started at: <current time>
+! 
+Program  <program name you give, by default, filename>
+Implicit None
+<++Start Typing++>
+End Program   <program name you give, by default, filename>
 
+-----------------------------------------------------
+2.4 List of Mappings            *vimf90+List*
+Type:                                 get:
+01. [name:]do[iterator]<F7>           do construct 
+02. [name:]if(condition)then<F7>      if construct 
+03. selectcase<F7>                    select construct 
+04. forall<F7>                        forall construct
+05. type::name<F7>                    type  construct
+06. `wr                               write(<cursor here>,*)<++>
+07. `rd                               read(<cursor here>,*)<++>
+08. `re                               real(<cursor here>)::<++>
+09. `int                              integer::<cursor here>
+10. `ch                               character(len=<cursor here>)::<++> 
+11. `prg                              program header
+12. `mod                              module header
+13. `sub                              subroutine header
+14. `fun                              function header
 
