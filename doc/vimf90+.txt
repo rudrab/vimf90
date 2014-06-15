@@ -1,4 +1,4 @@
-*vimf90.txt*   A fortran-90+ plugin for easy editing
+*vimf90+.txt*   A fortran-90+ plugin for easy editing *vimf90+*
        _            __ ___   ___        ~
 __   _(_)_ __ ___  / _/ _ \ / _ \   _   ~
 \ \ / / | '_ ` _ \| || (_) | | | |_| |_ ~
@@ -14,6 +14,8 @@ CONTENTS                          *vimf90+-contents*
 2.2. statements ................    |vimf90+stats|
 2.3. subprograms ...............    |vimf90+subs|
 2.4 List of all available mappings  |vimf90+List|
+3. Dependencies ................... |vimf90+Deps|
+4. Installation ................... |vimf90+Inst|
 =====================================================
 1. Introduction                   *vimf90+Intro*
 This plugin is intended to make the coding with fortran easier 
@@ -89,3 +91,12 @@ Type:                                 get:
 13. `sub                              subroutine header
 14. `fun                              function header
 
+=====================================================
+3. Dependencies                 *vimf90+Deps*
+i) This plugin depends on snippets. This should work on standard snippets engine.
+I have tested it with http://www.vim.org/scripts/script.php?script_id=2715.
+The latest version is always be found in https://github.com/SirVer/ultisnips
+=====================================================
+4. Installation                 *vimf90+Inst*
+The easiest way of installation is to use a vim plugin manager.
+I have tested it with vundle.https://github.com/gmarik/Vundle.vim
