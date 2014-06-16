@@ -1,0 +1,112 @@
+
+           _            __ ___   ___        ~
+    __   _(_)_ __ ___  / _/ _ \ / _ \   _   ~
+    \ \ / / | '_ ` _ \| || (_) | | | |_| |_ ~
+     \ V /| | | | | | |  _\__, | |_| |_   _|~
+      \_/ |_|_| |_| |_|_|   /_/ \___/  |_|  ~
+
+*vimf90.txt*   A fortran-90+ plugin for easy editing *vimf90*
+=====================================================
+CONTENTS                          *vimf90-contents*
+
+1. Introduction ................... |vimf90-Intro|
+2. Mappings ....................... |vimf90-Map|
+2.1. construct .................    |vimf90-construct|
+2.2. statements ................    |vimf90-stats|
+2.3. subprograms ...............    |vimf90-subs|
+2.4 List of all available mappings  |vimf90-List|
+3. Dependencies ................... |vimf90-Deps|
+4. Installation ................... |vimf90-Inst|
+=====================================================
+1. Introduction                   *vimf90-Intro*
+This plugin is intended to make the coding with fortran easier 
+in vim. But this is still in very nascent stage. Not much utility 
+is included, and the different utility is not in sync properly(i.e.
+    different types of expansion need different key combinations. This
+    is explained in next part).
+
+=====================================================
+2. Mappings                       *vimf90-Map*
+This explains mappings of this plugin.
+-----------------------------------------------------
+2.1 construct                        *vimf90-construct*
+if,do,select etc statements, that are closed by a corresponding
+end is defined here. After typing the first line, pressing <F7>
+will complete the construct. For example:
+you type:                   you get:      
+trial: do i=1,10            trial: do i=1,10
+<cursor here>
+end do trial
+
+Avalable construct:
+  i) do, ii) if, iii)selectcase, iv)forall, v)type,
+
+NB: This part is largly copied from 
+(http://www.vim.org/scripts/script.php?script_id=2487)
+-----------------------------------------------------
+2.2. statements                 *vimf90-stats*
+Some statements is included here for less typing. These are 
+mostly one-liner or part of the line:
+
+you type:           you get:
+`wr                 write(<cursor here>,*)<++>
+`rd                 read(<cursor here>,*)<++>
+`re                 real(<cursor here>)::<++>
+`int                integer::<cursor here>
+`ch                 character(len=<cursor here>)::<++> 
+
+The <++> is a nice option, a <CTRL+J> will put your cursor in that position.
+-----------------------------------------------------
+2.3. subprograms                *vimf90-subs*
+This part uses Ultisnips. If you don't have one, get it from vims repo.
+There are many Ultisnips. I am using https://github.com/SirVer/ultisnips.
+This key-combinations makes program and subprograms header.
+It supports program(prg<Shift-TAB>), module(mod<Shift-TAB>), subroutine and
+function. As shown, typing the first 3 letter and pressing <Shift-TAB> will
+complete the header section of the program. e.g.
+you type:                  you get:
+prg<Shift-TAB>             !This is file : <your file name>
+! Author= <users login name>
+! Started at: <current time>
+! 
+Program  <program name you give, by default, filename>
+Implicit None
+<++Start Typing++>
+End Program   <program name you give, by default, filename>
+
+-----------------------------------------------------
+2.4 List of Mappings            *vimf90-List*
+Type:                                 get:
+-----------------------------------------------------
+Construct                       *vimf90-List-Cons*
+[name:]do[iterator]<F7>           do construct 
+[name:]if(condition)then<F7>      if construct 
+selectcase<F7>                    select construct 
+forall<F7>                        forall construct
+type::name<F7>                    type  construct
+-----------------------------------------------------
+Statements                      *vimf90-List-State*
+`wr                               write(<cursor here>,*)<++>
+`rd                               read(<cursor here>,*)<++>
+`re                               real(<cursor here>)::<++>
+`int                              integer::<cursor here>
+`ch                               character(len=<cursor here>)::<++> 
+`par                              parameter
+`sre                              selected_real_kind()
+`sie                              selected_integer_kind()
+-----------------------------------------------------
+Program and Subprograms         *vimf90-List-Subs*
+`prg                              program header
+`mod                              module header
+`sub                              subroutine header
+`fun                              function header
+
+=====================================================
+3. Dependencies                 *vimf90-Deps*
+i) This plugin depends on snippets. This should work on standard snippets engine.
+I have tested it with http://www.vim.org/scripts/script.php?script_id=2715.
+The latest version is always be found in https://github.com/SirVer/ultisnips
+=====================================================
+4. Installation                 *vimf90-Inst*
+The easiest way of installation is to use a vim plugin manager.
+I have tested it with vundle.https://github.com/gmarik/Vundle.vim
