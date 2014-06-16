@@ -1,14 +1,7 @@
-vimf90
-======
 
-  A fortran-90+ plugin for easy editing 
 *vimf90.txt*   A fortran-90+ plugin for easy editing *vimf90*
-       _            __ ___   ___        ~
-__   _(_)_ __ ___  / _/ _ \ / _ \   _   ~
-\ \ / / | '_ ` _ \| || (_) | | | |_| |_ ~
- \ V /| | | | | | |  _\__, | |_| |_   _|~
-  \_/ |_|_| |_| |_|_|   /_/ \___/  |_|  ~
-
+NB: This is a direct copy of help file, and here it  looks messy.
+    Kindly read it from vim
 =====================================================
 CONTENTS                          *vimf90-contents*
 
