@@ -76,20 +76,29 @@ End Program   <program name you give, by default, filename>
 -----------------------------------------------------
 2.4 List of Mappings            *vimf90-List*
 Type:                                 get:
-01. [name:]do[iterator]<F7>           do construct 
-02. [name:]if(condition)then<F7>      if construct 
-03. selectcase<F7>                    select construct 
-04. forall<F7>                        forall construct
-05. type::name<F7>                    type  construct
-06. `wr                               write(<cursor here>,*)<++>
-07. `rd                               read(<cursor here>,*)<++>
-08. `re                               real(<cursor here>)::<++>
-09. `int                              integer::<cursor here>
-10. `ch                               character(len=<cursor here>)::<++> 
-11. `prg                              program header
-12. `mod                              module header
-13. `sub                              subroutine header
-14. `fun                              function header
+-----------------------------------------------------
+Construct                       *vimf90-List-Cons*
+[name:]do[iterator]<F7>           do construct 
+[name:]if(condition)then<F7>      if construct 
+selectcase<F7>                    select construct 
+forall<F7>                        forall construct
+type::name<F7>                    type  construct
+-----------------------------------------------------
+Statements                      *vimf90-List-State*
+`wr                               write(<cursor here>,*)<++>
+`rd                               read(<cursor here>,*)<++>
+`re                               real(<cursor here>)::<++>
+`int                              integer::<cursor here>
+`ch                               character(len=<cursor here>)::<++> 
+`par                              parameter
+`sre                              selected_real_kind()
+`sie                              selected_integer_kind()
+-----------------------------------------------------
+Program and Subprograms         *vimf90-List-Subs*
+`prg                              program header
+`mod                              module header
+`sub                              subroutine header
+`fun                              function header
 
 =====================================================
 3. Dependencies                 *vimf90-Deps*
