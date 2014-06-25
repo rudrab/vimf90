@@ -62,7 +62,7 @@ class SyntaxElement:
 def fortran_complete():
 
     syntax_elements = [
-        SyntaxElement(re.compile(r'^\s*((?P<name>([a-zA-Z0-9_]+))\s*:)?\s*if \s*\(.*\) \s*then'),
+        SyntaxElement(re.compile(r'^\s*((?P<name>([a-zA-Z0-9_]+))\s*:)?\s*if\s*\(.*\)\s*then'),
                       'end if ${name}' ),
         SyntaxElement(re.compile(r'^\s*((?P<name>([a-zA-Z0-9_]+))\s*:)?\s*do'),
                       'end do ${name}' ),
@@ -70,6 +70,8 @@ def fortran_complete():
                       'end select' ),
         SyntaxElement(re.compile(r'^\s*forall\s*'),
                       'end forall' ),
+        SyntaxElement(re.compile(r'\s*open\((?:unit\s*=\s*?)((?P<name>([0-9]+))),.*\)'),
+                      'close(${name})' ),                           
         SyntaxElement(re.compile(r'^\s*?\s*type\s*::((?P<name>([a-zA-Z0-9_]+))\s*)'),
                       'end typE ${name}' )
     ]
