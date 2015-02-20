@@ -3,7 +3,7 @@ snippet prg
 ! Author= `!v expand($USER)`
 ! Started at: `date +%d.%m.%y`
 ! 
-Program  ${1:`!v expand('%:r')`}
+Program  ${1:`!v expand('%:r')`}  !
 Implicit None
 ${2:<++Start Typing++>}
 End Program  $1
@@ -14,7 +14,7 @@ snippet mod
 ! Author=  `!v expand($USER)`
 ! Started at: `date +%d.%m.%y`
 ! 
-Module  ${1:`!v expand('%:r')`}
+Module  ${1:`!v expand('%:r')`}  !
 Implicit None
 ${2:<++Start Typing++>}
 End Module  $1
