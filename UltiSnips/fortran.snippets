@@ -2,7 +2,8 @@ snippet prg
 !This is file : `!v expand('%:r')`
 ! Author= `!v expand($USER)`
 ! Started at: `date +%d.%m.%y`
-! 
+! Last Modified : 
+!
 Program  ${1:`!v expand('%:r')`}  !
 Implicit None
 ${2:<++Start Typing++>}
@@ -13,11 +14,12 @@ snippet mod
 !This is file : `!v expand('%:r')`
 ! Author=  `!v expand($USER)`
 ! Started at: `date +%d.%m.%y`
+! Last Modified : 
 ! 
-Module  ${1:`!v expand('%:r')`}  !
+Module  m${1:`!v expand('%:r')`}  !
 Implicit None
 ${2:<++Start Typing++>}
-End Module  $1
+End Module  m$1
 endsnippet
 
 snippet sub
