@@ -3,12 +3,12 @@
 " of fortran90+
 "
 "Formatting
- inoremap <expr> = getline(".")[col(".")-2] =~ '[[:alnum:])]' ? " = " : "\b= " 
- inoremap <expr> > getline(".")[col(".")-2] =~ '[[:alnum:])]' ? " > " : ">" 
- inoremap <expr> < getline(".")[col(".")-2] =~ '[[:alnum:])]' ? " < " : "<" 
- inoremap <expr> / getline(".")[col(".")-2] =~ '[[:alnum:])]' ? " / " : "/" 
- inoremap <expr> + getline(".")[col(".")-2] =~ '[[:alnum:])]' ? " + " : "+" 
- inoremap <expr> - getline(".")[col(".")-2] =~ '[[:alnum:])]' ? " - " : "-" 
+ inoremap <expr> = getline(".")[col(".")-2] =~ '[[:blank:])]' ? "= " : "=" 
+ inoremap <expr> > getline(".")[col(".")-2] =~ '[[:blank:])]' ? "> " : ">" 
+ inoremap <expr> < getline(".")[col(".")-2] =~ '[[:blank:])]' ? "< " : "<" 
+ inoremap <expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/" 
+ inoremap <expr> + getline(".")[col(".")-2] =~ '[[:blank:])]' ? "+ " : "+" 
+ inoremap <expr> - getline(".")[col(".")-2] =~ '[[:blank:])]' ? "- " : "-" 
 
 " "declarations 
 call IMAP ('`wr',  'write(<++>,*)<++>',           "fortran")

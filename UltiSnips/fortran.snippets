@@ -1,32 +1,32 @@
 snippet prg 
-!This is file : `!v expand('%:r')`
+!This is file : `!v expand('%:t:r')`
 ! Author= `!v expand($USER)`
 ! Started at: `date +%d.%m.%y`
 ! Last Modified : 
 !
-Program  ${1:`!v expand('%:r')`}  !
+Program  ${1:`!v expand('%:t:r')`}  !
 Implicit None
 ${2:<++Start Typing++>}
 End Program  ${1/([^\n$]+).*/$1/}
 endsnippet
 
 snippet mod
-!This is file : `!v expand('%:r')`
+!This is file : `!v expand('%:t:r')`
 ! Author=  `!v expand($USER)`
 ! Started at: `date +%d.%m.%y`
 ! Last Modified : 
 ! 
-Module  m${1:`!v expand('%:r')`}  !
+Module  m${1:`!v expand('%:t:r')`}  !
 Implicit None
 ${2:<++Start Typing++>}
-End Module  m${1/([^\n$]+).*/$1/}1
+End Module  m${1/([^\n$]+).*/$1/}
 endsnippet
 
 snippet sub
 Subroutine  ${1:<Subroutine>}()
 Implicit None
 ${2:<++Start Typing++>}
-End Subroutine ${1/([^\n$]+).*/$1/}1
+End Subroutine ${1/([^\n$]+).*/$1/}
 endsnippet
 
 snippet fun
