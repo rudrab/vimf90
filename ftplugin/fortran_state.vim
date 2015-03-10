@@ -1,20 +1,26 @@
-" part of vimf90+
-" state.vim: completes some most used statements and declarations 
-" of fortran90+
+" File: state.vim
+" Author: Rudra Banerjee (bnrj DOT rudra at gmail.com) 
+" Version: 0.2
+" Copyright: Copyright (C) 2015 Rudra Banerjee
+" 
+"    This program is free software: you can redistribute it and/or modify
+"    it under the terms of the GNU General Public License as published by
+"    the Free Software Foundation, either version 3 of the License, or
+"    (at your option) any later version.
 "
-"Formatting
+"    This program is distributed in the hope that it will be useful,
+"    but WITHOUT ANY WARRANTY; without even the implied warranty of
+"    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+"    GNU General Public License for more details.
+"
+" Description:  completes some most used statements and declarations 
+" of fortran90+ Formatting
+"
 inoremap <expr> + getline(".")[col(".")-2] =~ '[[:blank:])]' ? "+ " : "+" 
 inoremap <expr> - getline(".")[col(".")-2] =~ '[[:blank:])]' ? "- " : "-"
 inoremap <expr> * getline(".")[col(".")-2] =~ '[[:blank:])]' ? "* " : "*"
 inoremap <expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
-
-"inoremap <space>=<space>= <space>==<space>
-"inoremap <space>><space>= <space>>=<space>
-"inoremap <space><<space>= <space><=<space>
-"inoremap <space>/<space>= <space>/=<space>
-"inoremap <space>*<space>* <space>**<space>
 inoremap <expr> = stridx('<=>',getline(".")[col(".")-3]) > 0 ? "<bs>= " : getline(".")[col(".")-2] =~ '\s' ? "= " : "="
-"inoremap <expr> = getline(".")[col(".")-3] == '>' ? "<bs>= " : "= "
 
 " declarations 
 call IMAP ('`wr',  'write(<++>,*)<++>',           "fortran")
