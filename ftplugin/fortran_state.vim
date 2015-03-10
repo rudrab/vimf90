@@ -3,14 +3,20 @@
 " of fortran90+
 "
 "Formatting
- inoremap <expr> = getline(".")[col(".")-2] =~ '[[:blank:])]' ? "= " : "=" 
- inoremap <expr> > getline(".")[col(".")-2] =~ '[[:blank:])]' ? "> " : ">" 
- inoremap <expr> < getline(".")[col(".")-2] =~ '[[:blank:])]' ? "< " : "<" 
- inoremap <expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/" 
- inoremap <expr> + getline(".")[col(".")-2] =~ '[[:blank:])]' ? "+ " : "+" 
- inoremap <expr> - getline(".")[col(".")-2] =~ '[[:blank:])]' ? "- " : "-" 
+inoremap <expr> + getline(".")[col(".")-2] =~ '[[:blank:])]' ? "+ " : "+" 
+inoremap <expr> - getline(".")[col(".")-2] =~ '[[:blank:])]' ? "- " : "-"
+inoremap <expr> * getline(".")[col(".")-2] =~ '[[:blank:])]' ? "* " : "*"
+inoremap <expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
 
-" "declarations 
+"inoremap <space>=<space>= <space>==<space>
+"inoremap <space>><space>= <space>>=<space>
+"inoremap <space><<space>= <space><=<space>
+"inoremap <space>/<space>= <space>/=<space>
+"inoremap <space>*<space>* <space>**<space>
+inoremap <expr> = stridx('<=>',getline(".")[col(".")-3]) > 0 ? "<bs>= " : getline(".")[col(".")-2] =~ '\s' ? "= " : "="
+"inoremap <expr> = getline(".")[col(".")-3] == '>' ? "<bs>= " : "= "
+
+" declarations 
 call IMAP ('`wr',  'write(<++>,*)<++>',           "fortran")
 call IMAP ('`rd',  'read(<++>,*)<++>',            "fortran")
 call IMAP ('`re',  'real(<++>)::<++>',            "fortran")
