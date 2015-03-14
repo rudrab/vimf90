@@ -20,6 +20,8 @@
 :execute 'imap `mod mod' . g:UltiSnipsExpandTrigger . '<Esc>gg=G<C-j>'
 :execute 'imap `sub sub' . g:UltiSnipsExpandTrigger . '<Esc>gg=G<C-j>'
 :execute 'imap `fun fun' . g:UltiSnipsExpandTrigger . '<Esc>gg=G<C-j>'
-inoremap <leader>use  use <C-R>=GetComp("module") <CR> 
 inoremap <leader>call call <C-R>=GetComp("subroutine")<CR>
+inoremap <leader>use use <C-R>=GetComp("module")<CR>
+nnoremap <leader>amk :call MakeAMake()<CR> 
+nnoremap <leader>asc :call MakeAConf()<CR> 
 autocmd QuitPre *.f90 silent! exe "1," . 10 . "g/Last Modified :.*/s/Last Modified :.*/Last Modified : " .strftime("%c")

@@ -24,6 +24,18 @@ python << EOF
 import vim
 import os
 flsts = [' ']
+if vim.eval("a:arg") == "module":
+  flsts.append("ieee_arithmatic")
+  flsts.append("ieee_exceptions")
+  flsts.append("ieee_features")
+  flsts.append("iso_C_binding")
+  flsts.append("iso_fortran_env")
+  flsts.append("omp_lib")
+  flsts.append("omp_lib_kinds")
+if vim.eval("a:arg") == "subroutine":
+  flsts.append("get_command()")
+  flsts.append("get_command_argument()")
+  
 path = "."
 for dirs, subdirs, files in os.walk(path):
     for tfile in files:
