@@ -9,6 +9,8 @@ if has('gui_running') && has('menu')
   if g:Fortran_menumode == 1
     an  Fortran&90.&Compile.&Make<Tab>\mk                               :make<CR>
     an  Fortran&90.&Compile.&Make\ Clean<Tab>\mkc                       :make clean<CR>
+    an  Fortran&90.&AutoTools.&AutoConf<Tab>Generate\ configure\.ac     :call MakeAConf()<CR>
+    an  Fortran&90.&AutoTools.&AutoMake<Tab>Generate\ Makefile\.am      :call MakeAMake()<CR>
     an  &Fortran90.--sep0--                                             <Nop>  
     an  &Fortran90.&Blocks.&Program<Tab>`prg                            :call prg . g:UltiSnipsExpandTrigger   
     an  &Fortran90.&Blocks.&Module<Tab>`mod                             `mod  
