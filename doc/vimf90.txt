@@ -16,8 +16,9 @@ CONTENTS                          *vimf90-contents*
   3.3  subprograms ................ |vimf90-Subs|
   3.4  completions ................ |vimf90-Comp|
   3.5  List of  available mappings. |vimf90-List|
-4. Dependencies ................... |vimf90-Deps|
-5. Change Log ..................... |vimf90-Clog|
+4. Menu                             |vimf90-Menu|
+5. Dependencies ................... |vimf90-Deps|
+6. Change Log ..................... |vimf90-Clog|
 =====================================================================
 1. Introduction                                 *vimf90-Intro*
 This plugin is intended to make the coding with fortran easier in
@@ -91,7 +92,7 @@ you type:                  you get:~
 3.4 Fortran subprogram complete                 *vimf90-comp*
 vimf90 now supports subprogram completions.  *<leader>use* and
 *<leader>call* will popup a list of modules and subroutine inside
-present working dirs.
+present working dirs and fortran's standard module and subroutines.
 ---------------------------------------------------------------------
 3.5 List of Mappings                            *vimf90-List*
 Type:                                            get:~
@@ -122,13 +123,27 @@ Program and Subprograms                         *vimf90-List-Subs*
  `sub                                           subroutine header
  `fun                                           function header
 =====================================================================
-4. Dependencies                                 *vimf90-Deps*
+4. Menu                                         *vimf90-Menu*
+Menu is added for gui-help. It helps building project using 
+gnu-autotool. Every fortran file will open with "Fortran90" element 
+in the Menubar.
+It currently has the option of Compile(Make, Make clean, build current 
+file), Automake( A rudimentary configure.ac and Makefile.am file 
+generator) and Programing blocks (as given in |vimf90-subs|).
+=====================================================================
+5. Dependencies                                 *vimf90-Deps*
 i) This plugin depends on snippets. This should work on standard
 snippets engine.  I have tested it with
-http://www.vim.org/scripts/script.php?script_id=2715.  The latest
-version is always be found in https://github.com/SirVer/ultisnips
+http://www.vim.org/scripts/script.php?script_id=2715.  
+The latest version is always be found in 
+https://github.com/SirVer/ultisnips
 =====================================================================
-5. Change Log                                   *vimf90-Clog*
+6. Change Log                                   *vimf90-Clog*
+v0.3
+        * Major update
+        * Inclusion of Fortran Menu
+        * Standard and inbuilt modules and subroutine pop up
+        * Help with Autotool
 v0.2
         * Major update
         * complete for subprogram
