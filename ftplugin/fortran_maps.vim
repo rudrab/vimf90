@@ -20,11 +20,15 @@
 :execute 'imap `mod mod' . g:UltiSnipsExpandTrigger . '<Esc>gg=G<C-j>'
 :execute 'imap `sub sub' . g:UltiSnipsExpandTrigger . '<Esc>gg=G<C-j>'
 :execute 'imap `fun fun' . g:UltiSnipsExpandTrigger . '<Esc>gg=G<C-j>'
+
 inoremap <leader>call call <C-R>=GetComp("subroutine")<CR>
 inoremap <leader>use use <C-R>=GetComp("module")<CR>
 nnoremap <leader>amk :call MakeAMake()<CR> 
-nnoremap <leader>asc :call MakeAConf()<CR> 
+nnoremap <leader>asc :call MakeAConf()<CR>
+nnoremap <leader>sys :call GenSys()<CR>
+
 "autocmd BufUnload *.f90 silent! exe "1," . 10 . "g/Last Modified :.*/s/Last Modified :.*/Last Modified : " .strftime("%c")
 "autocmd Bufwritepre,filewritepre *.f90 exe "1," . 10 . "g/Last Modified :.*/s/Last Modified :.*/Last Modified : " .strftime("%c")
 au BufWrite *.f90 let b:update_modified = 1
-au BufUnload *.f90 if exists('b:update_modified') | exe "1," . 10 . "g/Last Modified :.*/s/Last Modified :.*/Last Modified : " .strftime("%c")| fi
+au BufUnload *.f90 silent! if exists('b:update_modified') | exe "1," . 10 . "g/Last Modified :.*/s/Last Modified :.*/Last Modified : " .strftime("%c")| fi
+

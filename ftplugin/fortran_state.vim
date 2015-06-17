@@ -44,4 +44,3 @@ call IMAP ('`sie', 'selected_integer_kind(<++>)', "fortran")
 :call IMAP ('`fadr',    'adjustr(<++>)',          "fortran")
 :call IMAP ('`faim',    'aimag(<++>)',            "fortran")
 :call IMAP ('`faint',   'aint(<++>)',             "fortran")
-

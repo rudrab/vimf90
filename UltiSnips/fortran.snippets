@@ -2,7 +2,7 @@ snippet prg
 !This is file : `!v expand('%:t:r')`
 ! Author= `!v expand($USER)`
 ! Started at: `date +%d.%m.%y`
-! Last Modified : 
+! Last Modified : Wed 17 Jun 2015 04:09:27 PM BST
 !
 Program  ${1:`!v expand('%:t:r')`}  !
 Implicit None
@@ -11,11 +11,6 @@ End Program  ${1/([^\n$]+).*/$1/}
 endsnippet
 
 snippet mod
-!This is file : `!v expand('%:t:r')`
-! Author=  `!v expand($USER)`
-! Started at: `date +%d.%m.%y`
-! Last Modified : 
-! 
 Module  m${1:`!v expand('%:t:r')`}  !
 Implicit None
 ${2:<++Start Typing++>}
