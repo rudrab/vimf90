@@ -1,0 +1,4 @@
+module  [:EVAL:]expand('%:t:r')[:END:]
+Implicit None
+<++>                       
+end module  [:EVAL:]expand('%:t:r')[:END:]

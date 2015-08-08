@@ -1,4 +1,4 @@
-" File: state.vim
+" File: fortran_state.vim
 " Author: Rudra Banerjee (bnrj DOT rudra at gmail.com) 
 " Version: 0.2
 " Copyright: Copyright (C) 2015 Rudra Banerjee

@@ -1,4 +1,5 @@
-" File: comp.vim
+"########################################################################
+" File: fortran_maps.vim
 " Author: Rudra Banerjee (bnrj DOT rudra at gmail.com) 
 " Version: 0.2
 " Copyright: Copyright (C) 2015 Rudra Banerjee
@@ -15,17 +16,31 @@
 "
 " Description: Mappings! This file do not contain any new program. 
 " It just calls functions defined in other fils.
+"########################################################################
 
-:execute 'imap `prg prg' . g:UltiSnipsExpandTrigger . '<Esc>gg=G<C-j>'
-:execute 'imap `mod mod' . g:UltiSnipsExpandTrigger . '<Esc>gg=G<C-j>'
-:execute 'imap `sub sub' . g:UltiSnipsExpandTrigger . '<Esc>gg=G<C-j>'
-:execute 'imap `fun fun' . g:UltiSnipsExpandTrigger . '<Esc>gg=G<C-j>'
+":execute 'imap `prg prg' . g:UltiSnipsExpandTrigger . '<Esc>gg=G<C-j>'
+":execute 'imap `mod mod' . g:UltiSnipsExpandTrigger . '<Esc>gg=G<C-j>'
+":execute 'imap `sub sub' . g:UltiSnipsExpandTrigger . '<Esc>gg=G<C-j>'
+":execute 'imap `fun fun' . g:UltiSnipsExpandTrigger . '<Esc>gg=G<C-j>'
 
-inoremap <leader>call call <C-R>=GetComp("subroutine")<CR>
-inoremap <leader>use use <C-R>=GetComp("module")<CR>
-nnoremap <leader>amk :call MakeAMake()<CR> 
-nnoremap <leader>asc :call MakeAConf()<CR>
-nnoremap <leader>sys :call GenSys()<CR>
+inoremap    <leader>call call <C-R>=GetComp("subroutine")<CR>
+inoremap    <leader>use use <C-R>=GetComp("module")<CR>
+
+nnoremap    <leader>amk     :call MakeAMake()<CR> 
+nnoremap    <leader>asc     :call MakeConf()<CR>
+nnoremap    <leader>sys     :call GenSys()<CR>
+
+nnoremap    <leader>cc      :call Compile()<CR>
+nnoremap    <leader>cl      :call Link()<CR>
+noremap     <leader>cr      :call Run()<CR>
+noremap     <leader>ca      :call CLArgs()<CR>
+
+inoremap `prg               <C-R>=Prog("prg")<cr><CR><Esc>gg=G<C-j>``
+nnoremap `prg               :call Prog("prg")<cr><CR><Esc>gg=G<C-j>
+inoremap `mod               <C-R>=Prog("mod")<cr><CR><Esc>gg=G<C-j>``
+nnoremap `mod               :call Prog("mod")<cr><CR><Esc>gg=G<C-j>
+
+
 
 "autocmd BufUnload *.f90 silent! exe "1," . 10 . "g/Last Modified :.*/s/Last Modified :.*/Last Modified : " .strftime("%c")
 "autocmd Bufwritepre,filewritepre *.f90 exe "1," . 10 . "g/Last Modified :.*/s/Last Modified :.*/Last Modified : " .strftime("%c")

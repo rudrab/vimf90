@@ -1,4 +1,5 @@
-" File: block.vim
+"########################################################################
+" File: fortran_block.vim
 " Author: Rudra Banerjee (bnrj DOT rudra at gmail.com) 
 " Version: 0.2
 " Copyright: Copyright (C) 2015 Rudra Banerjee
@@ -17,6 +18,7 @@
 "
 " Description: 
 "    This maps the <F7> key to complete Fortran 90 constructs"
+"########################################################################
 
 
 
@@ -93,3 +95,4 @@ EOF
 
 nmap <F7> :python fortran_complete()<cr>A
 imap <F7> :python fortran_complete()<cr>A
+

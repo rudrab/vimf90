@@ -1,0 +1,4 @@
+subroutine  [:EVAL:]expand('%:t:r')[:END:]
+Implicit None
+<++>                       
+end subroutine  [:EVAL:]expand('%:t:r')[:END:]
