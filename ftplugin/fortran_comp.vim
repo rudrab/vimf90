@@ -17,7 +17,7 @@
 " Description: This file completes lists of subprogram
 "########################################################################
  
-
+" GetComp: Menu and Sunroutine Completion {{{1
 function! GetComp(arg)
 "if ! exists('g:modpath')
   "let g:modpath = 'src,,.'
@@ -148,32 +148,34 @@ endfunction
 "EOF
 "endfunction
 
-function! FixName(arg)
-    let [buf, l, c, off] = getpos('.')
-    call cursor([1, 1, 0])
+"" FixName: Change Subprogram name {{{1
+"function! FixName(arg)
+"    let [buf, l, c, off] = getpos('.')
+"    call cursor([1, 1, 0])
 
-    let lnum = search('\v\c^\s*' . a:arg . '\s+', 'cnW')
-    if !lnum
-        call cursor(l, c, off)
-        return
-    endif
+"    let lnum = search('\v\c^\s*' . a:arg . '\s+', 'cnW')
+"    if !lnum
+"        call cursor(l, c, off)
+"        return
+"    endif
 
-    let parts = matchlist(getline(lnum), '\v\c^\s*' . a:arg . '\s+(\S*)\s*$')
-    if len(parts) < 2
-        call cursor(l, c, off)
-        return
-    endif
+"    let parts = matchlist(getline(lnum), '\v\c^\s*' . a:arg . '\s+(\S*)\s*$')
+"    if len(parts) < 2
+"        call cursor(l, c, off)
+"        return
+"    endif
 
-    let lnum = search('\v\c^\s*End\s*' . a:arg . '\s+', 'cnW')
-    call cursor(l, c, off)
-    if !lnum
-        return
-    endif
+"    let lnum = search('\v\c^\s*End\s*' . a:arg . '\s+', 'cnW')
+"    call cursor(l, c, off)
+"    if !lnum
+"        return
+"    endif
 
-    call setline(lnum, substitute(getline(lnum), '\v\c^\s*End\s*' . a:arg . '\s+\zs.*', parts[1], ''))
-endfunction
+"    call setline(lnum, substitute(getline(lnum), '\v\c^\s*End\s*' . a:arg . '\s+\zs.*', parts[1], ''))
+"endfunction
 
 "let s:plugin_dir = $HOME.'/.vim/bundle/vimf90/'
+"Prg: Expand snippets
 let s:plugin_dir=filter(split(&rtp, ','), 'v:val =~ "/vimf90"')[0]
 let s:templatedir=s:plugin_dir . '/templates/'
 function! Prog(arg)

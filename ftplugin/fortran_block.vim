@@ -64,18 +64,26 @@ class SyntaxElement:
 def fortran_complete():
 
     syntax_elements = [
-        SyntaxElement(re.compile(r'^\s*((?P<name>([a-zA-Z0-9_]+))\s*:)?\s*if\s*\(.*\)\s*then'),
-                      'end if ${name}' ),
-        SyntaxElement(re.compile(r'^\s*((?P<name>([a-zA-Z0-9_]+))\s*:)?\s*do'),
-                      'end do ${name}' ),
-        SyntaxElement(re.compile(r'^\s*select\s*case\s*'),
+        SyntaxElement(re.compile(r'^\s*\s*((?P<struc>(program)))\s*((?P<name>([a-zA-Z0-9_]+)))', re.IGNORECASE),
+                      'End ${struc} ${name}' ),
+        SyntaxElement(re.compile(r'^\s*\s*((?P<struc>(module)))\s*((?P<name>([a-zA-Z0-9_]+)))', re.IGNORECASE),
+                      'End ${struc} ${name}' ),
+        SyntaxElement(re.compile(r'^\s*\s*((?P<struc>(function)))\s*((?P<name>([a-zA-Z0-9_]+)))', re.IGNORECASE),
+                      'End ${struc} ${name}' ),
+        SyntaxElement(re.compile(r'^\s*\s*((?P<struc>(subroutine)))\s*((?P<name>([a-zA-Z0-9_]+)))', re.IGNORECASE),
+                      'End ${struc} ${name}' ),
+        SyntaxElement(re.compile(r'^\s*((?P<name>([a-zA-Z0-9_]+))\s*:)?\s*((?P<struc>if))\s*\(.*\)\s*then', re.IGNORECASE),
+                      'End ${struc} ${name}' ),
+        SyntaxElement(re.compile(r'^\s*((?P<name>([a-zA-Z0-9_]+))\s*:)?\s*((?P<struc>do))', re.IGNORECASE),
+                      'End ${struc} ${name}' ),
+        SyntaxElement(re.compile(r'^\s*select\s*case\s*', re.IGNORECASE),
                       'end select' ),
-        SyntaxElement(re.compile(r'^\s*forall\s*'),
+        SyntaxElement(re.compile(r'^\s*forall\s*', re.IGNORECASE),
                       'end forall' ),
-        SyntaxElement(re.compile(r'\s*open\((?:unit\s*=\s*?)((?P<name>([0-9]+))),.*\)'),
+        SyntaxElement(re.compile(r'\s*open\((?:unit\s*=\s*?)((?P<name>([0-9]+))),.*\)', re.IGNORECASE),
                       'close(${name})' ),                           
-        SyntaxElement(re.compile(r'^\s*?\s*type\s*::((?P<name>([a-zA-Z0-9_]+))\s*)'),
-                      'end typE ${name}' )
+        SyntaxElement(re.compile(r'^\s*?\s*type\s*(::?)\s*((?P<name>([a-zA-Z0-9_]+))\s*)', re.IGNORECASE),
+                      'end type ${name}' )
     ]
 
     cb = vim.current.buffer
@@ -95,4 +103,3 @@ EOF
 
 nmap <F7> :python fortran_complete()<cr>A
 imap <F7> :python fortran_complete()<cr>A
-

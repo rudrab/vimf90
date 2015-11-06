@@ -1,5 +1,5 @@
 !File=[:EVAL:]expand('%')[:END:]
-!Author=
+!Author=[:EVAL:]expand($USER)[:END:]
 !Created=[:EVAL:]strftime('%c')[:END:]
 !Last Modified=[:EVAL:]strftime('%c')[:END:]
 Program [:EVAL:]expand('%:t:r')[:END:]

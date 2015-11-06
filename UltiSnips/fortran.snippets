@@ -4,7 +4,7 @@ snippet prg
 ! Started at: `date +%d.%m.%y`
 ! Last Modified : Wed 17 Jun 2015 04:09:27 PM BST
 !
-Program  ${1:`!v expand('%:t:r')`}  !
+Program  ${1:<++`!v expand('%:t:r')`}
 Implicit None
 ${2:<++Start Typing++>}
 End Program  ${1/([^\n$]+).*/$1/}

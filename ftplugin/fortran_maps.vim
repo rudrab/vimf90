@@ -26,19 +26,24 @@
 inoremap    <leader>call call <C-R>=GetComp("subroutine")<CR>
 inoremap    <leader>use use <C-R>=GetComp("module")<CR>
 
-nnoremap    <leader>amk     :call MakeAMake()<CR> 
+nnoremap    <leader>amk     :call MakeMake()<CR> 
 nnoremap    <leader>asc     :call MakeConf()<CR>
 nnoremap    <leader>sys     :call GenSys()<CR>
+nnoremap    <leader>mk      :call Make()<CR>
 
 nnoremap    <leader>cc      :call Compile()<CR>
 nnoremap    <leader>cl      :call Link()<CR>
 noremap     <leader>cr      :call Run()<CR>
 noremap     <leader>ca      :call CLArgs()<CR>
 
-inoremap `prg               <C-R>=Prog("prg")<cr><CR><Esc>gg=G<C-j>``
+inoremap `prg               <Esc>:call Prog("prg")<cr><CR><Esc>gg=G<C-j>``
 nnoremap `prg               :call Prog("prg")<cr><CR><Esc>gg=G<C-j>
-inoremap `mod               <C-R>=Prog("mod")<cr><CR><Esc>gg=G<C-j>``
+inoremap `mod               <Esc>:call Prog("mod")<cr><CR><Esc>gg=G<C-j>``
 nnoremap `mod               :call Prog("mod")<cr><CR><Esc>gg=G<C-j>
+inoremap `sub               <Esc>:call Prog("sub")<cr><CR><Esc>gg=G<C-j>``
+nnoremap `sub               :call Prog("sub")<cr><CR><Esc>gg=G<C-j>
+inoremap `fun               <Esc>:call Prog("fun")<cr><CR><Esc>gg=G<C-j>``
+nnoremap `fun               :call Prog("fun")<cr><CR><Esc>gg=G<C-j>
 
 
 
