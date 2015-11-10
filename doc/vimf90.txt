@@ -37,9 +37,11 @@ Just add
 in your vundle environment if you are 
 already using it; or read the vundle readme for more.
 =====================================================================
+
 3. Mappings                                     *vimf90-Map*
 This explains mappings of this plugin.
 ---------------------------------------------------------------------
+
 3.1 construct                                   *vimf90-Construct*
 If,do,select etc statements, that are closed by a corresponding end
 is defined here. After typing the first line, pressing <F7> will
@@ -55,6 +57,7 @@ Avalable construct:
 NB: This part is largly copied from 
 (http://www.vim.org/scripts/script.php?script_id=2487)
 ---------------------------------------------------------------------
+
 3.2  Statements                                 *vimf90-stats*
 Some statements is included here for less typing. These are mostly
 one-liner or part of the line:
@@ -69,14 +72,12 @@ you type:           you get:~
 The <++> is a nice option, a <CTRL+J> will put your cursor in that 
 position.
 ---------------------------------------------------------------------
+
 3.3  subprograms                                *vimf90-subs*
-This part uses Ultisnips. If you don't have one, get it from vims
-repo.  There are many Ultisnips. I am using
-https://github.com/SirVer/ultisnips.  This key-combinations makes
-program and subprograms header.  It supports program(`prg),
-module(`mod), subroutine and function. As shown, typing the first 3
-letter and pressing <Shift-TAB> will complete the header section of
-the program. e.g.
+This key-combinations makes program and subprograms header.  
+It supports program(`prg), module(`mod), subroutine and function. 
+As shown, typing the first 3 letter and pressing <Shift-TAB>
+will complete the header section of the program. e.g.
 you type:                  you get:~
 >
  `prg    !This is file : <your file name>
@@ -89,11 +90,13 @@ you type:                  you get:~
          End Program  <program name you give, by default, filename>
 <
 ---------------------------------------------------------------------
+
 3.4 Fortran subprogram complete                 *vimf90-comp*
 vimf90 now supports subprogram completions.  *<leader>use* and
 *<leader>call* will popup a list of modules and subroutine inside
 present working dirs and fortran's standard module and subroutines.
 ---------------------------------------------------------------------
+
 3.5 List of Mappings                            *vimf90-List*
 Type:                                            get:~
 ---------------------------------------------------------------------
@@ -123,6 +126,7 @@ Program and Subprograms                         *vimf90-List-Subs*
  `sub                                           subroutine header
  `fun                                           function header
 =====================================================================
+
 4. Menu                                         *vimf90-Menu*
 Menu is added for gui-help. It helps building project using 
 gnu-autotool. Every fortran file will open with "Fortran90" element 
@@ -131,6 +135,7 @@ It currently has the option of Compile(Make, Make clean, build current
 file), Automake( A rudimentary configure.ac and Makefile.am file 
 generator) and Programing blocks (as given in |vimf90-subs|).
 =====================================================================
+
 5. Dependencies                                 *vimf90-Deps*
 i) This plugin depends on snippets. This should work on standard
 snippets engine.  I have tested it with
@@ -138,6 +143,7 @@ http://www.vim.org/scripts/script.php?script_id=2715.
 The latest version is always be found in 
 https://github.com/SirVer/ultisnips
 =====================================================================
+
 6. Change Log                                   *vimf90-Clog*
 v0.3
         * Major update

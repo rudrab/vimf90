@@ -35,8 +35,19 @@ if vim.eval("a:arg") == "module":
   flsts.append("omp_lib")
   flsts.append("omp_lib_kinds")
 if vim.eval("a:arg") == "subroutine":
+  flsts.append("alarm()")
+  flsts.append("date_and_time()")
+  flsts.append("backtrace")
+  flsts.append("c_f_procpointer()")
+  flsts.append("chdir()")
+  flsts.append("chmod()")
+  flsts.append("co_broadcast()")
   flsts.append("get_command()")
   flsts.append("get_command_argument()")
+  flsts.append("get_environment_variable()")
+  flsts.append("mvbits()")
+  flsts.append("random_number()")
+  flsts.append("random_seed()")
   
 path = "."
 for dirs, subdirs, files in os.walk(path):
