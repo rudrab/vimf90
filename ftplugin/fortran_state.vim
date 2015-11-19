@@ -19,13 +19,11 @@
 " For the laziest people, add a space around operators {{{1
 inoremap <expr> = stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>= " : getline(".")[col(".")-2] =~ '\s' ? "= " : "="
 inoremap <expr> > stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>> " : getline(".")[col(".")-2] =~ '\s' ? "> " : ">"
-inoremap <expr> + getline(".")[col(".")-2] =~ '[[:blank:])]' ? "+ " : "+" 
-inoremap <expr> - getline(".")[col(".")-2] =~ '[[:blank:])]' ? "- " : "-"
-inoremap <expr> * getline(".")[col(".")-2] =~ '[[:blank:])]' ? "* " : "*"
-inoremap <expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
-"inoremap <expr> > getline(".")[col(".")-2] =~ '[[:blank:])]' ? "> " : ">"
-"inoremap <expr> < getline(".")[col(".")-2] =~ '[[:blank:])]' ? "< " : "<"
-"inoremap <expr> /= getline(".")[col(".")-3] =~ '[[:blank:])]' ? "/= " : "/="
+inoremap <expr> + getline(".")[col(".")-2] =~ '\s' ? "+ " : "+" 
+inoremap <expr> - getline(".")[col(".")-2] =~ '\s' ? "- " : "-"
+inoremap <expr> * getline(".")[col(".")-2] =~ '\s' ? "* " : "*"
+inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
+"inoremap <expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
 
 " Declarations: {{{1
 call IMAP ('`wr',  'write(<++>,*)<++>',           "fortran")
