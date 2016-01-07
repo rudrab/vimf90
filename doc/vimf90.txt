@@ -9,6 +9,7 @@ __   _(_)_ __ ___  / _/ _ \ / _ \   _   ~
 CONTENTS                          *vimf90-contents*
 
 1. Introduction ................... |vimf90-Intro|
+   1.1 Features ................... |vimf90-Features|
 2. Installation ................... |vimf90-Inst|
 3. Mappings ....................... |vimf90-Map|
   3.1  construct .................. |vimf90-Construct|
@@ -21,11 +22,20 @@ CONTENTS                          *vimf90-contents*
 6. Change Log ..................... |vimf90-Clog|
 =====================================================================
 1. Introduction                                 *vimf90-Intro*
-This plugin is intended to make the coding with fortran easier in
-vim. But this is still in very nascent stage. Not much utility is
-included, and the different utility is not in sync properly(i.e.
-different types of expansion need different key combinations. This
-is explained in next part).
+This is a fortran IDE for vim. It is intended to make the coding with 
+fortran easier in vim. But this is still in very nascent stage. Not 
+much utility is included, and the different utility is not in sync 
+properly(i.e.  different types of expansion need different key 
+combinations. This is explained later).
+
+1.1 Features                                    *vimf90-Features*
+  * An IDE like environment for fortran 90+
+  * Increases development speed considerably.
+  * Easy to add new subprograms
+  * Auto completion of program blocks, like if-endif etc.
+  * Popup menu for standard and user defined modules and subroutines
+  * Support for menu mode
+  * Support for gnu-autotools (configure, make)
 =====================================================================
 2. Installation                                 *vimf90-Inst*
 The easiest way of installation is to use a vim plugin manager.  I
