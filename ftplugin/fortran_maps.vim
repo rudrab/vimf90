@@ -23,8 +23,9 @@
 ":execute 'imap `sub sub' . g:UltiSnipsExpandTrigger . '<Esc>gg=G<C-j>'
 ":execute 'imap `fun fun' . g:UltiSnipsExpandTrigger . '<Esc>gg=G<C-j>'
 
-inoremap    <leader>call call <C-R>=GetComp("subroutine")<CR>
-inoremap    <leader>use use <C-R>=GetComp("module")<CR>
+
+inoremap <leader>call  call <C-o>:set completefunc=GetSubroutine<CR><C-x><C-u>
+inoremap <leader>use  use <C-o>:set completefunc=GetModule<CR><C-x><C-u>
 
 nnoremap    <leader>amk     :call MakeMake()<CR> 
 nnoremap    <leader>asc     :call MakeConf()<CR>
