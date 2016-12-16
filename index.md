@@ -12,7 +12,6 @@ vimf90
   - [Completions](#vimf90-comp)
 - [Menu](#vimf90-menu)
 - [Dependencies](#vimf90-deps)
-- [Change log](#vimf90-clog)
 - [Contact](#contact)
 - [My other apps](#apps)
 
@@ -151,33 +150,6 @@ Dependencies
 - this plugin depends on snippets. this should work on standard
 snippets engine.  I have tested it with [ultisnips](https://github.com/sirver/ultisnips).
 
-ChangeLog
--------------
-### v0.3
-
-  * major update
-  * inclusion of fortran menu
-  * standard and inbuilt modules and subroutine pop up
-  * help with autotool
-
-### v0.2
-
-  * major update
-  * complete for subprogram
-  * formatting update
-  * major bugfixes 
-
-### v0.1.0
-
-  * first stable, usable release
-
-### v0.0.2
-
-  * mostly maintenance release 
-
-### v0.0.1
-
-  * initial repo
 
 Contacts
 -------
