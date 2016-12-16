@@ -3,6 +3,7 @@
 vimf90-Clog	vimf90.txt	/*vimf90-Clog*
 vimf90-Construct	vimf90.txt	/*vimf90-Construct*
 vimf90-Deps	vimf90.txt	/*vimf90-Deps*
+vimf90-Features	vimf90.txt	/*vimf90-Features*
 vimf90-Inst	vimf90.txt	/*vimf90-Inst*
 vimf90-Intro	vimf90.txt	/*vimf90-Intro*
 vimf90-List	vimf90.txt	/*vimf90-List*
@@ -16,4 +17,3 @@ vimf90-contents	vimf90.txt	/*vimf90-contents*
 vimf90-stats	vimf90.txt	/*vimf90-stats*
 vimf90-subs	vimf90.txt	/*vimf90-subs*
 vimf90.txt	vimf90.txt	/*vimf90.txt*
-vimf90-Features	vimf90.txt	/*vimf90-Features*
