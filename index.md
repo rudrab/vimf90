@@ -46,6 +46,7 @@ already using it; or read the vundle readme for more.
 
 Mappings
 --------
+
 #### This explains mappings of this plugin.
 
 ### construct
@@ -53,9 +54,11 @@ Mappings
 is defined here. After typing the first line, pressing `<F7>` will
 complete the construct. For example:
  you type:
+
 ```fortran
  trial: do i=1,10<F7>        
  ```
+
  you will get:
 
  ```fortran
@@ -73,6 +76,7 @@ NB: This part is largly copied from
 ### Statements
 Some statements is included here for less typing. These are mostly
 one-liner or part of the line:
+
 you type:    |       you get
 -------------|---------------
  \`wr        |        write(<cursor here>,*)<++>
@@ -94,12 +98,13 @@ It supports program(`prg), module(`mod), subroutine and function.
 As shown, typing the first 3 letter and pressing <Shift-TAB>
 will complete the header section of the program. e.g.
 you type: 
+
 ```fortran
  `prg
- ```
+```
  
  will yeild:
- ```fortran
+```fortran
 
          !This is file : <your file name>
          ! Author= <users login name>

@@ -1,6 +1,6 @@
 vimf90
 ======
-CONTENTS                          *vimf90-contents*
+**vimf90** converts vim to a fortran IDE, enhancing the development speed.
 
 - [Introduction](#vimf90-Intro)
    - [Features](#vimf90-Features)
