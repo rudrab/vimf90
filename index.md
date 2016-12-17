@@ -166,11 +166,11 @@ My other apps
 =============
 see other apps i have developed:
 
-- [mkbib](http://rudrab.github.io/mkbib/)
+- [MkBiB](http://rudrab.github.io/mkbib/)
 
-- [periodic table](http://rudrab.github.io/periodictable/)
+- [Periodic Table](http://rudrab.github.io/PeriodicTable/)
 
-- [shadow](http://rudrab.github.io/shadow/)
+- [Shadow](http://rudrab.github.io/shadow/)
 
 - [vimf90](http://rudrab.github.io/vimf90/)
 
