@@ -1,5 +1,5 @@
-Introduction
-============
+vimf90
+======
 **vimf90** enhances coding fortran in vim. It increases code-development speed.
 
 - [Introduction](#vimf90-intro)
@@ -15,14 +15,15 @@ Introduction
 - [Contact](#contact)
 - [My other apps](#apps)
 
+Introduction
+------------
 this is a fortran ide for vim. it is intended to make the coding with 
 fortran easier in vim. but this is still in very nascent stage. not 
 much utility is included, and the different utility is not in sync 
 properly(i.e.  different types of expansion need different key 
 combinations. this is explained later).
 
-Features 
-----------
+### Features 
   * an ide like environment for fortran 90+
   * increases development speed considerably.
   * easy to add new subprograms
@@ -32,7 +33,7 @@ Features
   * support for gnu-autotools (configure, make)
 
 Installation
-============
+------------
 the easiest way of installation is to use a vim plugin manager.  I
 have tested it with vundle(https://github.com/gmarik/vundle.vim)
 just add 
@@ -45,11 +46,9 @@ in your vundle environment if you are
 already using it; or read the vundle readme for more.
 
 Mappings
-========
+--------
 
-Construct
----------
-
+### Construct
 `if`,`do`,`select` etc statements, that are closed by a corresponding end
 is defined here. after typing the first line, pressing `<f7>` will
 complete the construct. for example:
@@ -67,7 +66,7 @@ trial: do i=1,10
 end do trial
 ```
 
-### avalable constructs:
+##### avalable constructs:
 
 |type:                         |   get               |
 |------------------------------|---------------------|
@@ -80,9 +79,7 @@ end do trial
 **NB**: this part is shamelessly copied from 
 [fortran-codec0mplete](http://www.vim.org/scripts/script.php?script_id=2487)
 
-Statements
-----------
-
+### Statements
 some statements is included here for less typing. these are mostly
 one-liner or part of the line:
 
@@ -101,9 +98,7 @@ one-liner or part of the line:
 the `<++>` is a nice option, a `<ctrl+j>` will put your cursor in that 
 position.
 
-Subprograms
------------
-
+### Subprograms
 These key-combinations makes program and subprograms header.  
 it supports program(`prg), module(`mod), subroutine and function. 
 as shown, typing the first 3 letter and pressing <shift-tab>
@@ -127,7 +122,7 @@ implicit none
 end program  <filename>
 ```
 
-### available constructs
+##### available constructs
 
 |type: |     get:|
 |------|---------|
@@ -136,14 +131,13 @@ end program  <filename>
 |\`sub |    subroutine header|
 |\`fun |    function header|  
 
-Fortran subprogram complete
----------------------------
+### Fortran subprogram complete
 vimf90 now supports subprogram completions.  `<leader>use` and
 `<leader>call` will popup a list of modules and subroutine inside
 present working dirs and fortran's standard module and subroutines.
 
 Menu
-====
+----
 **menu** is added for `gui`-help. it helps building project using 
 gnu-`autotool`. Every fortran file will open with `fortran90` element 
 in the menubar.
@@ -152,18 +146,18 @@ file`), `automake`( a rudimentary configure.ac and makefile.am file
 generator) and programing blocks (as given in [Subprograms](#vimf90-subs)).
 
 Dependencies
-============
+------------
 - this plugin depends on snippets. this should work on standard
 snippets engine.  I have tested it with [ultisnips](https://github.com/sirver/ultisnips).
 
 
 Contacts
-========
+-------
 the preferred way of contacting me is via [github project page](https://github.com/rudrab/vimf90/issues).
 
 
 My other apps
-=============
+-------------
 see other apps i have developed:
 
 - [mkbib](http://rudrab.github.io/mkbib/)
