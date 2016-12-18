@@ -161,16 +161,14 @@ Contacts
 ========
 the preferred way of contacting me is via [github project page](https://github.com/rudrab/vimf90/issues).
 
-
-My other apps
+My Other Apps
 =============
-see other apps i have developed:
+See other apps I have developed:
 
-- [MkBiB](http://rudrab.github.io/mkbib/)
+- [MkBiB](http://rudrab.github.io/mkbib/): BiBTeX Manager
 
-- [Periodic Table](http://rudrab.github.io/PeriodicTable/)
+- [Periodic Table](http://rudrab.github.io/PeriodicTable/): Periodic Table and Extra
 
-- [Shadow](http://rudrab.github.io/shadow/)
+- [Shadow](http://rudrab.github.io/Shadow/): Icon theme for Gnome desktop
 
-- [vimf90](http://rudrab.github.io/vimf90/)
-
+- [vimf90](http://rudrab.github.io/vimf90/): Firtran plugin for vim
