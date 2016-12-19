@@ -13,7 +13,7 @@ Introduction
 - [Menu](#vimf90-menu)
 - [Dependencies](#vimf90-deps)
 - [Contact](#contact)
-- - [Coffee and Cookies](#donate)
+- [Coffee and Cookies](#donate)
 - [My other apps](#apps)
 
 this is a fortran ide for vim. it is intended to make the coding with 
