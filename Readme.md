@@ -164,7 +164,7 @@ the preferred way of contacting me is via [github project page](https://github.c
 
 Coffee and Cookies
 ==================
-If you <em>really</em> like _Periodic Table_ and found it usefull, please buy me a coffee using [PayPal](https://www.paypal.me/RudraBanerjee)
+If you <em>really</em> like _Periodic Table_ and found it usefull, please buy me a coffee using [PayPal](https://www.paypal.me/RudraBanerjee).
 
 My Other Apps
 =============
@@ -176,4 +176,4 @@ See other apps I have developed:
 
 - [Shadow](http://rudrab.github.io/Shadow/): Icon theme for Gnome desktop
 
-- [vimf90](http://rudrab.github.io/vimf90/): Firtran plugin for vim
+- [vimf90](http://rudrab.github.io/vimf90/): Change vim to a fortran IDE
