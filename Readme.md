@@ -13,6 +13,7 @@ Introduction
 - [Menu](#vimf90-menu)
 - [Dependencies](#vimf90-deps)
 - [Contact](#contact)
+- - [Coffee and Cookies](#donate)
 - [My other apps](#apps)
 
 this is a fortran ide for vim. it is intended to make the coding with 
@@ -160,6 +161,10 @@ snippets engine.  I have tested it with [ultisnips](https://github.com/sirver/ul
 Contacts
 ========
 the preferred way of contacting me is via [github project page](https://github.com/rudrab/vimf90/issues).
+
+Coffee and Cookies
+==================
+If you <em>really</em> like _Periodic Table_ and found it usefull, please buy me a coffee using [PayPal](https://www.paypal.me/RudraBanerjee)
 
 My Other Apps
 =============
