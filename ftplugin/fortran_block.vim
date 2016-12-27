@@ -45,7 +45,7 @@ class SyntaxElement:
                     try:
                         replacement = match.group(variable_match.group('varname'))
                     except:
-                        print "Group %s is not defined in pattern" % variable_match.group('varname')
+                        print("Group %s is not defined in pattern" % variable_match.group('varname'))
                         replacement = variable_match.group('varname')
                     try:
                         closingline = closingline.replace(variable_match.group(0), replacement)
