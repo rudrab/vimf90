@@ -1,19 +1,16 @@
 # vimf90
 
-## Introduction
-
 **vimf90** enhances coding fortran in vim. It increases code-development speed.
 
-- [Introduction](#vimf90-intro)
-   - [Features](#vimf90-features)
+- [Features](#vimf90-features)
 - [Installation](#vimf90-inst)
+  - [Dependencies](#vimf90-deps)
 - [Mappings](#vimf90-map)
   - [Construct](#vimf90-construct)
   - [Statements](#vimf90-stats)
   - [Subprograms](#vimf90-subs)
   - [Completions](#vimf90-comp)
 - [Menu](#vimf90-menu)
-- [Dependencies](#vimf90-deps)
 - [Contact](#contact)
 - [Coffee and Cookies](#donate)
 - [My other apps](#apps)
@@ -24,7 +21,7 @@ much utility is included, and the different utility is not in sync
 properly(i.e.  different types of expansion need different key 
 combinations. this is explained later).
 
-### Features 
+## Features 
 
   * an ide like environment for fortran 90+
   * increases development speed considerably.
@@ -46,6 +43,9 @@ just add
 
 in your vundle environment if you are 
 already using it; or read the vundle readme for more.
+
+### Dependencies
+- Python 3
 
 ## Mappings
 
@@ -106,7 +106,6 @@ position.
 
 ### Subprograms
 
-
 These key-combinations makes program and subprograms header.  
 it supports program(`prg), module(`mod), subroutine and function. 
 as shown, typing the first 3 letter and pressing <shift-tab>
@@ -154,12 +153,6 @@ it currently has the option of compile(`make`, `make clean`, `build current
 file`), `automake`( a rudimentary configure.ac and makefile.am file 
 generator) and programing blocks (as given in [Subprograms](#vimf90-subs)).
 
-## Dependencies
-
-- this plugin depends on snippets. this should work on standard
-snippets engine.  I have tested it with [ultisnips](https://github.com/sirver/ultisnips).
-
-- Python 3
 
 ## Contacts
 
