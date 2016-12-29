@@ -240,7 +240,7 @@ for sdirs in dlsts:
           mak.write("endif\n")
           mak.write(binname+"_LDADD = \nEXTRA_DIST= \nCLEANFILES =*.mod,*.o")
 if os.path.isfile(ofn):
-  print "File "+ofn+" created. Check it before proceed."
+  print("File "+ofn+" created. Check it before proceed.")
 EOF
 endfunction
 
