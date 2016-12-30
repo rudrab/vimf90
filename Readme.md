@@ -70,7 +70,7 @@ trial: do i=1,10
 end do trial
 ```
 
-##### avalable constructs:
+#### avalable constructs:
 
 |type:                         |   get               |
 |------------------------------|---------------------|
@@ -129,7 +129,7 @@ implicit none
 end program  <filename>
 ```
 
-##### available constructs
+#### available constructs
 
 |type: |     get:|
 |------|---------|
