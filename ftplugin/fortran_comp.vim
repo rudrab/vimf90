@@ -106,3 +106,54 @@ function! Prog(arg)
   %substitute#\[:EVAL:\]\(.\{-\}\)\[:END:\]#\=eval(submatch(1))#ge
 endfunction
 "}}}
+"
+
+
+function! Edname(arg) 
+:let Cbuf = bufname("%")
+python<<EOF
+import vim
+import fileinput
+Cb=vim.eval("Cbuf")
+parg=vim.eval("a:arg")
+starg="end "+parg
+print parg
+print starg
+with open(Cb) as inp:
+    for line in inp:
+        if line.lstrip().lower().startswith(parg) :
+            var = line.rsplit(' ', 1)[-1].strip()
+        if line.lstrip().lower().startswith(starg):
+            v2 = line.strip()
+inp.close()
+STR=v2.rsplit(' ', 1)[0]+" "+var
+for line in fileinput.input(Cb, inplace=True):
+    print line.replace(v2, STR).rstrip()
+EOF
+endfunction
+
+" FixName: Change Subprogram name {{{1
+function! FixName(arg)
+    let [buf, l, c, off] = getpos('.')
+    call cursor([1, 1, 0])
+
+    let lnum = search('\v\c^\s*' . a:arg . '\s+', 'cnW')
+    if !lnum
+        call cursor(l, c, off)
+        return
+    endif
+
+    let parts = matchlist(getline(lnum), '\v\c^\s*' . a:arg . '\s+(\S{-})(\(.*\))?\s*$')
+    if len(parts) < 2
+        call cursor(l, c, off)
+        return
+    endif
+
+    let lnum = search('\v\c^\s*End\s*' . a:arg . '\s+', 'cnW')
+    call cursor(l, c, off)
+    if !lnum
+        return
+    endif
+
+    call setline(lnum, substitute(getline(lnum), '\v\c^\s*End\s*' . a:arg . '\s+\zs.*', parts[1], ''))
+endfunction

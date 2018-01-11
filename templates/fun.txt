@@ -1,4 +1,4 @@
-subroutine  [:EVAL:]expand('%:t:r')[:END:]
+function  [:EVAL:]expand('%:t:r')[:END:]
 Implicit None
 <++>                       
-end subroutine  [:EVAL:]expand('%:t:r')[:END:]
+end function  [:EVAL:]expand('%:t:r')[:END:]

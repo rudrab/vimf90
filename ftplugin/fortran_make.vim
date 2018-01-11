@@ -137,6 +137,7 @@ function! SearchMake()
   let s:Fmakefile= input("Search Makefile: ", getcwd(),"file")
 endfunction
 "}}}1
+
 " Make: run make {{{1
 function! Make()
   if empty(glob("\cmakefile")) && s:Fmakefile == " "
