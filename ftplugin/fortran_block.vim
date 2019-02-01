@@ -102,5 +102,5 @@ def fortran_complete():
             vim.current.window.cursor = (line+2, 1)
 EOF
 
-nmap <F7> :python fortran_complete()<cr>A
-imap <F7> :python fortran_complete()<cr>A
+nmap <F7> :python3 fortran_complete()<cr>A
+imap <F7> :python3 fortran_complete()<cr>A
