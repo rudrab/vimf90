@@ -23,7 +23,7 @@
 
 
 
-python << EOF
+python3 << EOF
 import re
 import vim
 
