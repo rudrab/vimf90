@@ -157,3 +157,11 @@ function! FixName(arg)
 
     call setline(lnum, substitute(getline(lnum), '\v\c^\s*End\s*' . a:arg . '\s+\zs.*', parts[1], ''))
 endfunction
+
+"let s:plugin_dir = $HOME.'/.vim/bundle/vimf90/'
+let s:plugin_dir=filter(split(&rtp, ','), 'v:val =~ "/vimf90"')[0]
+let s:templatedir=s:plugin_dir . '/templates/'
+function! Prog(arg)
+  execute 'r ' . s:templatedir . a:arg . '.txt'
+  %substitute#\[:EVAL:\]\(.\{-\}\)\[:END:\]#\=eval(submatch(1))#ge
+endfunction
