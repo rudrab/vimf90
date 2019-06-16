@@ -1,32 +1,66 @@
 snippet prg 
-!This is file : `!v expand('%:t:r')`
-! Author= `!v expand($USER)`
-! Started at: `date +%d.%m.%y`
-! Last Modified : Wed 17 Jun 2015 04:09:27 PM BST
-!
-Program  ${1:<++`!v expand('%:t:r')`}
-Implicit None
-${2:<++Start Typing++>}
-End Program  ${1/([^\n$]+).*/$1/}
+	!This is file : `!v expand('%:t:r')`
+	! Author= `!v expand($USER)`
+	! Started at: `date +%d.%m.%y`
+	! Last Modified : Sun 16 Jun 2019 12:22:11 IST
+	!
+	Program  ${1:<++`!v expand('%:t:r')`}
+	Implicit None
+	${2:<++Start Typing++>}
+	End Program  ${1/([^\n$]+).*/$1/}
 endsnippet
 
 snippet mod
-Module  m${1:`!v expand('%:t:r')`}  !
-Implicit None
-${2:<++Start Typing++>}
-End Module  m${1/([^\n$]+).*/$1/}
+	Module  m${1:`!v expand('%:t:r')`}  !
+	Implicit None
+	${2:<++Start Typing++>}
+	End Module  m${1/([^\n$]+).*/$1/}
 endsnippet
 
 snippet sub
-Subroutine  ${1:<Subroutine>}()
-Implicit None
-${2:<++Start Typing++>}
-End Subroutine ${1/([^\n$]+).*/$1/}
+	Subroutine  ${1:<Subroutine>}()
+	Implicit None
+	${2:<++Start Typing++>}
+	End Subroutine ${1/([^\n$]+).*/$1/}
 endsnippet
 
 snippet fun
-Function  ${1:<Function>}()
-Implicit None
-${2:<++Start Typing++>}
-End Function 
+	Function  ${1:<Function>}()
+	Implicit None
+	${2:<++Start Typing++>}
+	End Function 
+endsnippet
+
+snippet proc
+	procedure ${1:name}
+	${0}
+	end procedure $1
+endsnippet
+
+snippet iface
+	interface ${1:name}
+	${0}
+	end interface $1
+endsnippet
+snippet if
+	if (${1:condition}) then
+		$0
+	end if
+endsnippet
+snippet case
+	select case (${1:expr})
+		case ($2)
+		case default
+			$3
+	end select $0
+endsnippet
+snippet do
+	do ${1:i} = ${2:start}, ${3:end}, ${4:incr}
+		$0
+	end do
+endsnippet
+snippet dow
+	do while (${1:condition})
+		$2
+	end do
 endsnippet
