@@ -2,7 +2,7 @@ snippet prg
 	!This is file : `!v expand('%:t:r')`
 	! Author= `!v expand($USER)`
 	! Started at: `date +%d.%m.%y`
-	! Last Modified : Sun 16 Jun 2019 23:47:07 IST
+	! Last Modified : Mon 17 Jun 2019 08:47:53 IST
 	!
 	Program  ${1:<++`!v expand('%:t:r')`}
 	Implicit None
@@ -67,4 +67,19 @@ snippet dow
 	do while (${1:condition})
 		$2
 	end do
+endsnippet
+snippet pr
+	write($0,*) $1
+endsnippet
+snippet read
+	read(unit = ${1:fp}, file = ${2:filename}, iostat = ${3:ierr}) $0
+endsnippet
+snippet write
+	write(unit = ${1:fp}, file = ${2:filename}, iostat = ${3:ierr}) $0
+endsnippet
+snippet open
+	open(unit = ${1:fp}, file = ${2:filename}, status = ${3:unknown}, iostat = ${4:ierr}) $0
+endsnippet
+snippet close
+	close(unit = ${1:fp}) $0
 endsnippet

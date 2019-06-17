@@ -26,8 +26,9 @@ inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
 "inoremap <expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
 
 " Declarations: {{{1
-call IMAP ('`wr',  'write(<++>,*)<++>',           "fortran")
-call IMAP ('`rd',  'read(<++>,*)<++>',            "fortran")
+" call IMAP ('`wr',  'write(<++>,*)<++>',           "fortran")
+" call IMAP ('`rd',  'read(<++>,*)<++>',            "fortran")
+inoremap `wr pr<c-r>=UltiSnips#ExpandSnippet()<cr>
 call IMAP ('`re',  'real(<++>)::<++>',            "fortran")
 call IMAP ('`int', 'integer::<++>',               "fortran")
 call IMAP ('`ch',  'character(len=<++>)::<++>',   "fortran")
