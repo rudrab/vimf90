@@ -37,7 +37,8 @@ nnoremap    <leader>cl      :call Link()<CR>
 noremap     <leader>cr      :call Run()<CR>
 noremap     <leader>ca      :call CLArgs()<CR>
 
-inoremap `prg               <Esc>:call Prog("prg")<cr><CR><Esc>gg=G<C-j>``
+" inoremap `prg               <Esc>:call Prog("prg")<cr><CR><Esc>gg=G<C-j>``
+inoremap "prg prg<c-r>=UltiSnips#ExpandSnippet()<cr>
 nnoremap `prg               :call Prog("prg")<cr><CR><Esc>gg=G<C-j>
 inoremap `mod               <Esc>:call Prog("mod")<cr><CR><Esc>gg=G<c-j>``
 nnoremap `mod               :call Prog("mod")<cr><CR><Esc>gg=G<C-j>
@@ -52,4 +53,3 @@ nnoremap `fun               :call Prog("fun")<cr><CR><Esc>gg=G<C-j>
 "autocmd Bufwritepre,filewritepre *.f90 exe "1," . 10 . "g/Last Modified :.*/s/Last Modified :.*/Last Modified : " .strftime("%c")
 au BufWrite *.f90 let b:update_modified = 1
 au BufUnload *.f90 silent! if exists('b:update_modified') | exe "1," . 10 . "g/Last Modified :.*/s/Last Modified :.*/Last Modified : " .strftime("%c")| fi
-

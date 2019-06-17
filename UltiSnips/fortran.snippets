@@ -2,11 +2,11 @@ snippet prg
 	!This is file : `!v expand('%:t:r')`
 	! Author= `!v expand($USER)`
 	! Started at: `date +%d.%m.%y`
-	! Last Modified : Sun 16 Jun 2019 12:22:11 IST
+	! Last Modified : Sun 16 Jun 2019 23:47:07 IST
 	!
 	Program  ${1:<++`!v expand('%:t:r')`}
 	Implicit None
-	${2:<++Start Typing++>}
+	${2}
 	End Program  ${1/([^\n$]+).*/$1/}
 endsnippet
 
@@ -42,11 +42,13 @@ snippet iface
 	${0}
 	end interface $1
 endsnippet
+
 snippet if
 	if (${1:condition}) then
 		$0
 	end if
 endsnippet
+
 snippet case
 	select case (${1:expr})
 		case ($2)
@@ -54,11 +56,13 @@ snippet case
 			$3
 	end select $0
 endsnippet
+
 snippet do
-	do ${1:<++i++>} = ${2:<++start++>}, ${3:<++end++>}, ${4:<++incr++>}
+	do ${1:<++i++>} = ${2:<++start++>}, ${3:<++end++>} ${4:<++incr++>}
 		$0
 	end do
 endsnippet
+
 snippet dow
 	do while (${1:condition})
 		$2
