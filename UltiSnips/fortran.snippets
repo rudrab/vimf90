@@ -59,7 +59,7 @@ endsnippet
 
 snippet do
 	do ${1:<++iter++>} = ${2:<++start++>}, ${3:<++end++>} ${4:<++incr++>}
-		${1:<++>}
+		${5:<++>}
 	end do
 endsnippet
 
@@ -78,13 +78,13 @@ snippet read
 endsnippet
 
 snippet write
-	write(unit = ${1:<++fp++>}, file = ${2:<++filename++>}, iostat = ${3:<++ierr++>}) ${0:<++statment++>}
+	write(unit = ${1:<++fp++>}, file = ${2:<++filename++>}, iostat = ${3:<++ierr++>}) ${4:<++statment++>}
 endsnippet
 
 snippet open
-	open(unit = ${1:<++fp++>}, file = ${2:<++filename++>}, status = ${3:<++unknown++>}, iostat = ${4:<++ierr++>}) $0
+	open(unit = ${1:<++fp++>}, file = ${2:<++filename++>}, status = ${3:<++unknown++>}, iostat = ${4:<++ierr++>}) 
 endsnippet
 
 snippet close
-	close(unit = ${1:<++fp++>}) $0
+	close(unit = ${1:<++fp++>}) 
 endsnippet
