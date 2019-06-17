@@ -2,7 +2,7 @@ snippet prg
 	!This is file : `!v expand('%:t:r')`
 	! Author= `!v expand($USER)`
 	! Started at: `date +%d.%m.%y`
-	! Last Modified : Mon 17 Jun 2019 08:47:53 IST
+	! Last Modified : `!v expand(strftime("%c"))`
 	!
 	Program  ${1:<++`!v expand('%:t:r')`}
 	Implicit None
