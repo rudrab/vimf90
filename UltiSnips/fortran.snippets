@@ -2,89 +2,89 @@ snippet prg
 	!This is file : `!v expand('%:t:r')`
 	! Author= `!v expand($USER)`
 	! Started at: `date +%d.%m.%y`
-	! Last Modified : `!v expand(strftime("%c"))`
+	! Last Modified : Mon 17 Jun 2019 12:44:22 IST
 	!
 	Program  ${1:`!v expand('%:t:r')`}
 	Implicit None
-	${2: start here}
+	${2: <++start here++>}
 	End Program  ${1/([^\n$]+).*/$1/}
 endsnippet
 
 snippet mod
 	Module  m${1:`!v expand('%:t:r')`}  !
 	Implicit None
-	${2:Start Typing}
+	${2:<++Start Typing++>}
 	End Module  m${1/([^\n$]+).*/$1/}
 endsnippet
 
 snippet sub
-	Subroutine  ${1:<Subroutine>}()
+	Subroutine  ${1:<++Subroutine++>}()
 	Implicit None
-	${2:Start Typing}
+	${2:<++Start Typing++>}
 	End Subroutine ${1/([^\n$]+).*/$1/}
 endsnippet
 
 snippet fun
-	Function  ${1:<Function>}()
+	Function  ${1:<++Function++>}()
 	Implicit None
-	${2:Start Typing}
+	${2:<++Start Typing++>}
 	End Function 
 endsnippet
 
 snippet proc
-	procedure ${1:name}
-	${0}
+	procedure ${1:<++name++>}
+	${2:<++Start++>}
 	end procedure $1
 endsnippet
 
 snippet iface
-	interface ${1:name}
-	${0}
+	interface ${1:<++name++>}
+	${2:<++Start++>}
 	end interface $1
 endsnippet
 
 snippet if
-	if (${1:condition}) then
-		$0
+	if (${1:<++condition++>}) then
+		${2:<++Start++>}
 	end if
 endsnippet
 
 snippet case
-	select case (${1:expr})
-		case ($2)
+	select case (${1:<++expr++>})
+		case (${2:<++case++>})
 		case default
-			$3
+			${3:<++>}
 	end select $0
 endsnippet
 
 snippet do
-	do ${1:iter} = ${2:start}, ${3:end} ${4:incr}
-		$0
+	do ${1:<++iter++>} = ${2:<++start++>}, ${3:<++end++>} ${4:<++incr++>}
+		${1:<++>}
 	end do
 endsnippet
 
 snippet dow
-	do while (${1:condition})
-		$2
+	do while (${1:<++condition++>})
+		${2:<++condition++>}
 	end do
 endsnippet
 
 snippet pr
-	write(${1:fp},*) ${2:stetement}
+	write(${1:<++fp++>},*) ${2:<++stetement++>}
 endsnippet
 
 snippet read
-	read(${1:fp}, ${2:*}) ${3:statment}
+	read(${1:<++fp++>}, ${2:<++*++>}) ${3:<++statment++>}
 endsnippet
 
 snippet write
-	write(unit = ${1:fp}, file = ${2:filename}, iostat = ${3:ierr}) ${0:statment}
+	write(unit = ${1:<++fp++>}, file = ${2:<++filename++>}, iostat = ${3:<++ierr++>}) ${0:<++statment++>}
 endsnippet
 
 snippet open
-	open(unit = ${1:fp}, file = ${2:filename}, status = ${3:unknown}, iostat = ${4:ierr}) $0
+	open(unit = ${1:<++fp++>}, file = ${2:<++filename++>}, status = ${3:<++unknown++>}, iostat = ${4:<++ierr++>}) $0
 endsnippet
 
 snippet close
-	close(unit = ${1:fp}) $0
+	close(unit = ${1:<++fp++>}) $0
 endsnippet
