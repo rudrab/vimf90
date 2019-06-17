@@ -68,18 +68,23 @@ snippet dow
 		$2
 	end do
 endsnippet
+
 snippet pr
 	write($0,*) $1
 endsnippet
+
 snippet read
 	read(unit = ${1:fp}, file = ${2:filename}, iostat = ${3:ierr}) $0
 endsnippet
+
 snippet write
 	write(unit = ${1:fp}, file = ${2:filename}, iostat = ${3:ierr}) $0
 endsnippet
+
 snippet open
 	open(unit = ${1:fp}, file = ${2:filename}, status = ${3:unknown}, iostat = ${4:ierr}) $0
 endsnippet
+
 snippet close
 	close(unit = ${1:fp}) $0
 endsnippet
