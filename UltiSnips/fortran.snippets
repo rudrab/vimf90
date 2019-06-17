@@ -70,15 +70,15 @@ snippet dow
 endsnippet
 
 snippet pr
-	write($1,*) $2
+	write(${1:fp},*) ${2:stetement}
 endsnippet
 
 snippet read
-	read(unit = ${1:fp}, file = ${2:filename}, iostat = ${3:ierr}) $0
+	read(unit = ${1:fp}, file = ${2:filename}, iostat = ${3:ierr}) ${4:statment}
 endsnippet
 
 snippet write
-	write(unit = ${1:fp}, file = ${2:filename}, iostat = ${3:ierr}) $0
+	write(unit = ${1:fp}, file = ${2:filename}, iostat = ${3:ierr}) ${0:statment}
 endsnippet
 
 snippet open
