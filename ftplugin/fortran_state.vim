@@ -32,13 +32,14 @@ inoremap `rd    read<c-r>=UltiSnips#ExpandSnippet()<cr>
 inoremap `re    real<c-r>=UltiSnips#ExpandSnippet()<cr>
 inoremap `int    int<c-r>=UltiSnips#ExpandSnippet()<cr>
 inoremap `char  char<c-r>=UltiSnips#ExpandSnippet()<cr>
-inoremap `dim   dimension(<++>)
+inoremap `dim    dim<c-r>=UltiSnips#ExpandSnippet()<cr>
+inoremap `sle    sle<c-r>=UltiSnips#ExpandSnippet()<cr>
 " call IMAP ('`wr',  'write(<++>,*)<++>',           "fortran")
 " call IMAP ('`rd',  'read(<++>,*)<++>',            "fortran")
 " call IMAP ('`re',  'real(<++>)::<++>',            "fortran")
 " call IMAP ('`int', 'integer::<++>',               "fortran")
 " call IMAP ('`ch',  'character(len=<++>)::<++>',   "fortran")
-call IMAP ('`dim', 'dimension(<++>)',             "fortran")
+" call IMAP ('`dim', 'dimension(<++>)',             "fortran")
 call IMAP ('`par', 'parameter',                   "fortran")
 call IMAP ('`sre', 'selected_real_kind(<++>)',    "fortran")
 call IMAP ('`sie', 'selected_integer_kind(<++>)', "fortran")
