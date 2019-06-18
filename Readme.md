@@ -2,18 +2,20 @@ Introduction
 ============
 **vimf90** enhances coding fortran in vim. It increases code-development speed.
 
-- [Introduction](#vimf90-intro)
-   - [Features](#vimf90-features)
-- [Installation](#vimf90-inst)
-   - [Dependency](#vimf90-deps)
-- [Mappings](#vimf90-map)
-  - [Construct](#vimf90-construct)
-  - [Statements](#vimf90-stats)
-  - [Subprograms](#vimf90-subs)
-  - [Completions](#vimf90-comp)
-- [Menu](#vimf90-menu)
+- [Introduction](#introduction)
+   - [Features](#features)
+- [Install](#install)
+   - [Dependencies](#dependencies)
+- [Completions](#completions)
+  - [Inbuilt](#inbuilt)
+  - [Ultisnips](#ultisnips)
+  <!-- - [Constructs](#constructs) -->
+  <!-- - [Statements](#stats) -->
+  <!-- - [Subprograms](#vimf90-subs) -->
+  <!-- - [Completions](#vimf90-comp) -->
+- [Menu](#menu)
 - [Contact](#contact)
-- [My other apps](#apps)
+- [My other apps](#my-other-apps)
 
 This is a `fortran` `ide` for `vim`. It is intended to make the coding with `fortran` **easier** and
 **faster** in vim.
@@ -28,7 +30,7 @@ Features
   * support for menu mode
   * support for gnu-autotools (configure, make)
 
-Installation
+Install
 ============
 the easiest way of installation is to use a vim plugin manager. 
 
@@ -51,15 +53,13 @@ the easiest way of installation is to use a vim plugin manager.
       protocol](https://github.com/hansec/fortran-language-server). Check further dependencies
       [here](https://github.com/neoclide/coc.nvim/wiki/Language-servers#fortran).
 
-Mappings
+Completions
 ========
 
-Construct
----------
+There are two ways to do the completions. One is [Inbuilt Completions](#inbuilt) and
+[Completions using Ultisnips](#ultisnips)
 
-There are two ways to do the completions. One is [Inbuilt Completions](#vimf90-inbuilt) and
-[Completions using Ultisnips](#vimf90-ultisnips)
-### i. Inbuilt completions
+### Inbuilt 
 
 `if`,`do`,`select` etc statements, that are closed by a corresponding `end`
 is defined here. after typing the first line, pressing `<f7>` will
@@ -79,7 +79,7 @@ end do trial
 ```
 
 
-#### Constructs:
+##### Constructs:
 
 |type:                         |   get               |
 |------------------------------|---------------------|
@@ -93,7 +93,7 @@ end do trial
 [fortran-codecomplete](http://www.vim.org/scripts/script.php?script_id=2487)
 
 
-#### Statements
+##### Statements
 
 some statements is included here for less typing. these are mostly
 one-liner or part of the line:
@@ -118,7 +118,7 @@ The `<++>` is a nice option, a `<c-j>` will put your cursor in that position. Us
 
  in your `.vimrc` for this feature.
 
-### ii. Completions using Ultisnips 
+### Ultisnips 
 Completions can also be achieved using Ultisnips (Few snippets are supplied with this code, as
 ultisnips does not provide fortran snippets. **More snippets are welcome!**). `if`, `do`, `do while`
 etc is inbuilt. 
@@ -185,7 +185,7 @@ generator) and programing blocks (as given in [Subprograms](#vimf90-subs)).
 <!-- snippets engine.  I have tested it with [ultisnips](https://github.com/sirver/ultisnips). -->
 
 
-Contacts
+Contact
 ========
 the preferred way of contacting me is via [github project page](https://github.com/rudrab/vimf90/issues).
 
