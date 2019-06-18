@@ -2,10 +2,10 @@ Introduction
 ============
 **vimf90** enhances coding fortran in vim. It increases code-development speed.
 
-- [Introduction](#Introduction)
-   - [Features](#Features)
-- [Install](#Install)
-   - [Dependency](#Dependency)
+- [Introduction](#introduction)
+   - [Features](#features)
+- [Install](#install)
+   - [Dependencies](#dependencies)
 - [Mappings](#vimf90-map)
   - [Construct](#vimf90-construct)
   - [Statements](#vimf90-stats)
