@@ -1,27 +1,22 @@
-Introduction
-============
+# Introduction
 **vimf90** enhances coding fortran in vim. It increases code-development speed.
 
 - [Introduction](#introduction)
    - [Features](#features)
 - [Install](#install)
    - [Dependencies](#dependencies)
-- [Completions](#completions)
-  - [Inbuilt](#inbuilt)
-  - [Ultisnips](#ultisnips)
-  <!-- - [Constructs](#constructs) -->
-  <!-- - [Statements](#stats) -->
-  <!-- - [Subprograms](#vimf90-subs) -->
-  <!-- - [Completions](#vimf90-comp) -->
-- [Menu](#menu)
+- [Features](#features)
+   - [Completions](#completions)
+     - [Inbuilt](#inbuilt)
+     - [Ultisnips](#ultisnips)
+   - [Menu](#menu)
 - [Contact](#contact)
 - [My other apps](#my-other-apps)
 
-This is a `fortran` `ide` for `vim`. It is intended to make the coding with `fortran` **easier** and
+This is a `fortran ide` for `vim`. It is intended to make the coding with `fortran` **easier** and
 **faster** in vim.
 
-Features 
-----------
+## Features 
   * an ide like environment for fortran 90+
   * increases development speed considerably.
   * easy to add new subprograms
@@ -30,9 +25,8 @@ Features
   * support for menu mode
   * support for gnu-autotools (configure, make)
 
-Install
-============
-the easiest way of installation is to use a vim plugin manager. 
+# Install
+The easiest way of installation is to use a vim plugin manager. 
 
  * [Vundle](https://github.com/gmarik/vundle.vim)
 
@@ -46,16 +40,15 @@ the easiest way of installation is to use a vim plugin manager.
  Plug 'rudrab/vimf90' 
 ```
 
-### Dependencies
+## Dependencies
 1. [Ultisnips](https://github.com/SirVer/ultisnips): (Essential) Snippetes
 2. [coc-nvim](https://github.com/neoclide/coc.nvim): (Optional, but highly recommended)
       Autocompletion and [language server
       protocol](https://github.com/hansec/fortran-language-server). Check further dependencies
       [here](https://github.com/neoclide/coc.nvim/wiki/Language-servers#fortran).
 
-Completions
-========
-
+# Features
+## Completions
 There are two ways to do the completions. One is [Inbuilt Completions](#inbuilt) and
 [Completions using Ultisnips](#ultisnips)
 
@@ -74,7 +67,7 @@ you will get:
 
 ```fortran
 trial: do i=1,10
-  <cursor here>
+  &#9014;
 end do trial
 ```
 
@@ -100,11 +93,11 @@ one-liner or part of the line:
 
 |you type:    |       you get|
 |-------------|---------------|
-|\`wr        |   write(<cursor here>,*)<++>|
-|\`rd        |   read(<cursor here>,*)<++>|
-|\`re        |   real(<cursor here>)::<++>|
-|\`int       |   integer::<cursor here>|
-|\`ch        |   character(len=<cursor here>)::<++> |
+|\`wr        |   write(&#9014;,*)<++>|
+|\`rd        |   read(&#9014;,*)<++>|
+|\`re        |   real(&#9014;)::<++>|
+|\`int       |   integer(&#9014;)::<++>|
+|\`ch        |   character(len=&#9014;)::<++> |
 |\`par       |   parameter|
 |\`sre       |   selected_real_kind()|
 |\`sie       |   selected_integer_kind()|
@@ -121,10 +114,15 @@ The `<++>` is a nice option, a `<c-j>` will put your cursor in that position. Us
 ### Ultisnips 
 Completions can also be achieved using Ultisnips (Few snippets are supplied with this code, as
 ultisnips does not provide fortran snippets. **More snippets are welcome!**). `if`, `do`, `do while`
-etc is inbuilt. 
+etc is inbuilt. You should define your ultisnips trigger in your vimrc(`<c-b>` here).
+|Type|Get|
+|-----|-----|
+|do\<c-b\>|do construct|
+|if\<c-b\>|if construct|
+and so on. Please check `vimf90/Ultisnips/fortran.snippets` in your `.vim/` for complete list. 
+(Too lazy to type all.)
 
-Subprograms
------------
+## Subprograms
 
 These key-combinations makes program and subprograms header.  it supports program(`prg),
 module(`mod), subroutine and function.  as shown, typing the first 3 letter and pressing **\`**
@@ -162,17 +160,16 @@ end program  <filename>
 |\`sub |    subroutine header|
 |\`fun |    function header|
 
-Fortran subprogram complete
----------------------------
+## Fortran subprogram complete
 vimf90 now supports subprogram completions.  `<leader>use` and
 `<leader>call` will popup a list of modules and subroutine inside
 present working dirs and fortran's standard module and subroutines.
 **Update:** _Moving completions competely to `coc-nvim` and LSP implemented there. See
 [dependencies](#vimf90-deps) section._ 
 
-Menu
-====
-**menu** is added for `gui`-help. it helps building project using 
+## Menu
+
+Menu is added for `gui`-help. it helps building project using 
 gnu-`autotool`. Every fortran file will open with `fortran90` element 
 in the menubar.
 it currently has the option of compile(`make`, `make clean`, `build current 
@@ -185,13 +182,11 @@ generator) and programing blocks (as given in [Subprograms](#vimf90-subs)).
 <!-- snippets engine.  I have tested it with [ultisnips](https://github.com/sirver/ultisnips). -->
 
 
-Contact
-========
-the preferred way of contacting me is via [github project page](https://github.com/rudrab/vimf90/issues).
+# Contact
+The preferred way of contacting me is via [github project page](https://github.com/rudrab/vimf90/issues).
 
 
-My other apps
-=============
+# My other apps
 Other apps I have developed:
 
 - [MkBiB](http://rudrab.github.io/mkbib/): BibTeX maker.
