@@ -28,7 +28,7 @@ snippet fun
 Function  ${1:<++Function++>}()
 Implicit None
 ${2:<++Start Typing++>}
-End Function 
+End Function ${1/([^\n$]+).*/$1/}
 endsnippet
 
 snippet proc
@@ -44,7 +44,7 @@ end interface $1
 endsnippet
 
 snippet if
-${1:<name>}if (${2:<++condition++>}) then
+${1:<++name++>}if (${2:<++condition++>}) then
 	${3:<++Start++>}
 end if ${1/([^\n$]+).*/$1/}
 endsnippet
