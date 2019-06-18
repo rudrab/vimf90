@@ -60,7 +60,10 @@ Mappings
 Construct
 ---------
 
-`if`,`do`,`select` etc statements, that are closed by a corresponding end
+There are two ways to do the completions.
+### 1. Inbuilt completions
+
+`if`,`do`,`select` etc statements, that are closed by a corresponding `end`
 is defined here. after typing the first line, pressing `<f7>` will
 complete the construct. for example:
  you type:
@@ -77,7 +80,8 @@ trial: do i=1,10
 end do trial
 ```
 
-### avalable constructs:
+
+#### Constructs:
 
 |type:                         |   get               |
 |------------------------------|---------------------|
@@ -88,10 +92,10 @@ end do trial
 |`type::name<f7>`                |  type  construct|
 
 **NB**: this part is shamelessly copied from 
-[fortran-codec0mplete](http://www.vim.org/scripts/script.php?script_id=2487)
+[fortran-codecomplete](http://www.vim.org/scripts/script.php?script_id=2487)
 
-Statements
-----------
+
+#### Statements
 
 some statements is included here for less typing. these are mostly
 one-liner or part of the line:
@@ -110,6 +114,10 @@ one-liner or part of the line:
 
 the `<++>` is a nice option, a `<ctrl+j>` will put your cursor in that 
 position.
+
+### 2. Using Snippetes
+Completions can also be achieved using Ultisnips (supplied with this code, as ultisnips does not
+provide fortran snippets. More snippets are welcome!). `if`, `do`, `do while` etc is inbuilt. 
 
 Subprograms
 -----------
