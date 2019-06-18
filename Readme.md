@@ -60,8 +60,9 @@ Mappings
 Construct
 ---------
 
-There are two ways to do the completions.
-### 1. Inbuilt completions
+There are two ways to do the completions. One is [Inbuilt Completions](#vimf90-inbuilt) and
+[Completions using Ultisnips](#vimf90-ultisnips)
+### i. Inbuilt completions
 
 `if`,`do`,`select` etc statements, that are closed by a corresponding `end`
 is defined here. after typing the first line, pressing `<f7>` will
@@ -112,26 +113,36 @@ one-liner or part of the line:
 |\`sie       |   selected_integer_kind()|
 
 
-the `<++>` is a nice option, a `<ctrl+j>` will put your cursor in that 
-position.
+The `<++>` is a nice option, a `<c-j>` will put your cursor in that position. Use 
 
-### 2. Using Snippetes
-Completions can also be achieved using Ultisnips (supplied with this code, as ultisnips does not
-provide fortran snippets. More snippets are welcome!). `if`, `do`, `do while` etc is inbuilt. 
+ ```vim
+ inoremap <c-j> <Esc>/<++><CR><Esc><cf>
+ ```
+
+ in your `.vimrc` for this feature.
+
+### ii. Completions using Ultisnips 
+Completions can also be achieved using Ultisnips (Few snippets are supplied with this code, as
+ultisnips does not provide fortran snippets. **More snippets are welcome!**). `if`, `do`, `do while`
+etc is inbuilt. 
 
 Subprograms
 -----------
 
-These key-combinations makes program and subprograms header.  
-it supports program(`prg), module(`mod), subroutine and function. 
-as shown, typing the first 3 letter and pressing <shift-tab>
-will complete the header section of the program. e.g.
-you type: 
+These key-combinations makes program and subprograms header.  it supports program(`prg),
+module(`mod), subroutine and function.  as shown, typing the first 3 letter and pressing **\`**
+will complete the header section of the program. This can also be achieved by Ultisnips, as: you
+type: 
 
 ```bash
 `prg
 ```
- 
+or 
+
+ ```bash
+ prg <Your Ultisnip Trigger>
+ ```
+
  will yeild:
 
 ```fortran
@@ -184,12 +195,14 @@ the preferred way of contacting me is via [github project page](https://github.c
 
 My other apps
 =============
-see other apps i have developed:
+Other apps I have developed:
 
-- [mkbib](http://rudrab.github.io/mkbib/)
+- [MkBiB](http://rudrab.github.io/mkbib/): BibTeX maker.
 
-- [periodic table](http://rudrab.github.io/periodictable/)
+- [Periodic Table](http://rudrab.github.io/periodictable/): Modern Periodic Table based on Gtk-3
 
-- [shadow](http://rudrab.github.io/shadow/)
+- [Shadow](http://rudrab.github.io/Shadow/): Icon theme for Linux desktop
 
-- [vimf90](http://rudrab.github.io/vimf90/)
+- [Dual](http://rudrab.github.io/dual/) : Icon theme for Linux desktop
+
+- [Vimf90](http://rudrab.github.io/vimf90/): Fortran Plugin for vim
