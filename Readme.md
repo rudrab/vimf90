@@ -56,10 +56,10 @@ the easiest way of installation is to use a vim plugin manager.
 Completions
 ========
 
-There are two ways to do the completions. One is [Inbuilt Completions](#vimf90-inbuilt) and
-[Completions using Ultisnips](#vimf90-ultisnips)
+There are two ways to do the completions. One is [Inbuilt Completions](#inbuilt) and
+[Completions using Ultisnips](#ultisnips)
 
-### Inbuilt completions
+### Inbuilt 
 
 `if`,`do`,`select` etc statements, that are closed by a corresponding `end`
 is defined here. after typing the first line, pressing `<f7>` will
@@ -118,7 +118,7 @@ The `<++>` is a nice option, a `<c-j>` will put your cursor in that position. Us
 
  in your `.vimrc` for this feature.
 
-### ii. Completions using Ultisnips 
+### Ultisnips 
 Completions can also be achieved using Ultisnips (Few snippets are supplied with this code, as
 ultisnips does not provide fortran snippets. **More snippets are welcome!**). `if`, `do`, `do while`
 etc is inbuilt. 
