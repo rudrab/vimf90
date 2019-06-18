@@ -2,7 +2,7 @@ snippet prg
 !This is file : `!v expand('%:t:r')`
 ! Author= `!v expand($USER)`
 ! Started at: `date +%d.%m.%y`
-! Last Modified : Tue 18 Jun 2019 09:47:13 IST
+! Last Modified : Tue 18 Jun 2019 12:28:22 IST
 !
 Program  ${1:`!v expand('%:t:r')`}
 Implicit None
@@ -46,7 +46,7 @@ endsnippet
 snippet if
 ${1:<++name++>} if (${2:<++condition++>}) then
 	${3:<++Start++>}
-end if ${1/://} <++>
+end if ${1/://} $0
 endsnippet
 
 snippet case
