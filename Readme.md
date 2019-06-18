@@ -1,10 +1,11 @@
-# vimf90
-
+Introduction
+============
 **vimf90** enhances coding fortran in vim. It increases code-development speed.
 
-- [Features](#vimf90-features)
+- [Introduction](#vimf90-intro)
+   - [Features](#vimf90-features)
 - [Installation](#vimf90-inst)
-  - [Dependencies](#vimf90-deps)
+   - [Dependency](#vimf90-deps)
 - [Mappings](#vimf90-map)
   - [Construct](#vimf90-construct)
   - [Statements](#vimf90-stats)
@@ -12,7 +13,6 @@
   - [Completions](#vimf90-comp)
 - [Menu](#vimf90-menu)
 - [Contact](#contact)
-- [Coffee and Cookies](#donate)
 - [My other apps](#apps)
 
 this is a fortran ide for vim. it is intended to make the coding with 
@@ -21,37 +21,44 @@ much utility is included, and the different utility is not in sync
 properly(i.e.  different types of expansion need different key 
 combinations. this is explained later).
 
-## Features 
-
+Features 
+----------
   * an ide like environment for fortran 90+
   * increases development speed considerably.
   * easy to add new subprograms
-  * auto completion of program blocks, like if-endif etc.
+  * auto completion of program blocks, like `if-endif` etc.
   * popup menu for standard and user defined modules and subroutines
   * support for menu mode
   * support for gnu-autotools (configure, make)
 
-## Installation
+Installation
+============
+the easiest way of installation is to use a vim plugin manager. 
 
-the easiest way of installation is to use a vim plugin manager.  I
-have tested it with [vundle](https://github.com/gmarik/vundle.vim)
-just add 
+ * [Vundle](https://github.com/gmarik/vundle.vim)
 
 ```bash
- plugin 'rudrab/vimf90' 
+ Plugin 'rudrab/vimf90' 
 ```
 
-in your vundle environment if you are 
-already using it; or read the vundle readme for more.
+ * [vim-plug](https://github.com/junegunn/vim-plug)
+
+```bash
+ Plug 'rudrab/vimf90' 
+```
 
 ### Dependencies
-- Python 3
+1. [Ultisnips](https://github.com/SirVer/ultisnips): (Essential) Snippetes
+2. [coc-nvim](https://github.com/neoclide/coc.nvim): (Optional, but highly recommended)
+      Autocompletion and [language server
+      protocol](https://github.com/hansec/fortran-language-server). Check further dependencies
+      [here](https://github.com/neoclide/coc.nvim/wiki/Language-servers#fortran).
 
-## Mappings
+Mappings
+========
 
-
-### Construct
-
+Construct
+---------
 
 `if`,`do`,`select` etc statements, that are closed by a corresponding end
 is defined here. after typing the first line, pressing `<f7>` will
@@ -70,7 +77,7 @@ trial: do i=1,10
 end do trial
 ```
 
-#### avalable constructs:
+### avalable constructs:
 
 |type:                         |   get               |
 |------------------------------|---------------------|
@@ -83,8 +90,8 @@ end do trial
 **NB**: this part is shamelessly copied from 
 [fortran-codec0mplete](http://www.vim.org/scripts/script.php?script_id=2487)
 
-### Statements
-
+Statements
+----------
 
 some statements is included here for less typing. these are mostly
 one-liner or part of the line:
@@ -104,7 +111,8 @@ one-liner or part of the line:
 the `<++>` is a nice option, a `<ctrl+j>` will put your cursor in that 
 position.
 
-### Subprograms
+Subprograms
+-----------
 
 These key-combinations makes program and subprograms header.  
 it supports program(`prg), module(`mod), subroutine and function. 
@@ -129,23 +137,25 @@ implicit none
 end program  <filename>
 ```
 
-#### available constructs
+### available constructs
 
 |type: |     get:|
 |------|---------|
 |\`prg |    program header |
 |\`mod |    module header|
 |\`sub |    subroutine header|
-|\`fun |    function header|  
+|\`fun |    function header|
 
-### Fortran subprogram complete
-
+Fortran subprogram complete
+---------------------------
 vimf90 now supports subprogram completions.  `<leader>use` and
 `<leader>call` will popup a list of modules and subroutine inside
 present working dirs and fortran's standard module and subroutines.
+**Update:** _Moving completions competely to `coc-nvim` and LSP implemented there. See
+[dependencies](#vimf90-deps) section._ 
 
-## Menu
-
+Menu
+====
 **menu** is added for `gui`-help. it helps building project using 
 gnu-`autotool`. Every fortran file will open with `fortran90` element 
 in the menubar.
@@ -153,23 +163,25 @@ it currently has the option of compile(`make`, `make clean`, `build current
 file`), `automake`( a rudimentary configure.ac and makefile.am file 
 generator) and programing blocks (as given in [Subprograms](#vimf90-subs)).
 
+<!-- Dependencies -->
+<!-- ============ -->
+<!-- - this plugin depends on snippets. this should work on standard -->
+<!-- snippets engine.  I have tested it with [ultisnips](https://github.com/sirver/ultisnips). -->
 
-## Contacts
 
-The preferred way of contacting me is via [github project page](https://github.com/rudrab/vimf90/issues).
+Contacts
+========
+the preferred way of contacting me is via [github project page](https://github.com/rudrab/vimf90/issues).
 
-## Coffee and Cookies
 
-If you <em>really</em> like _Periodic Table_ and found it usefull, please buy me a coffee using [PayPal](https://www.paypal.me/RudraBanerjee).
+My other apps
+=============
+see other apps i have developed:
 
-## My Other Apps
+- [mkbib](http://rudrab.github.io/mkbib/)
 
-See other apps I have developed:
+- [periodic table](http://rudrab.github.io/periodictable/)
 
-- [MkBiB](http://rudrab.github.io/MkBiB/): BiBTeX Manager
+- [shadow](http://rudrab.github.io/shadow/)
 
-- [Periodic Table](http://rudrab.github.io/PeriodicTable/): Periodic Table and Extra
-
-- [Shadow](http://rudrab.github.io/Shadow/): Icon theme for Gnome desktop
-
-- [vimf90](http://rudrab.github.io/vimf90/): Change vim to a fortran IDE
+- [vimf90](http://rudrab.github.io/vimf90/)
