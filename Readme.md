@@ -115,10 +115,13 @@ The `<++>` is a nice option, a `<c-j>` will put your cursor in that position. Us
 Completions can also be achieved using Ultisnips (Few snippets are supplied with this code, as
 ultisnips does not provide fortran snippets. **More snippets are welcome!**). `if`, `do`, `do while`
 etc is inbuilt. You should define your ultisnips trigger in your vimrc(`<c-b>` here).
+
 |Type|Get|
 |-----|-----|
 |do\<c-b\>|do construct|
 |if\<c-b\>|if construct|
+
+
 and so on. Please check `vimf90/Ultisnips/fortran.snippets` in your `.vim/` for complete list. 
 (Too lazy to type all.)
 
