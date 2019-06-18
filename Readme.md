@@ -7,8 +7,8 @@ Introduction
 - [Install](#install)
    - [Dependencies](#dependencies)
 - [Completions](#completions)
-  - [Inbuilt completion](#inbuilt-completion)
-  - [Completion using Ultisnips](#completion-using-ultisnips)
+  - [Inbuilt](#inbuilt)
+  - [Ultisnips](#ultisnips)
   <!-- - [Constructs](#constructs) -->
   <!-- - [Statements](#stats) -->
   <!-- - [Subprograms](#vimf90-subs) -->
