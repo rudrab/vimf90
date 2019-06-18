@@ -6,14 +6,16 @@ Introduction
    - [Features](#features)
 - [Install](#install)
    - [Dependencies](#dependencies)
-- [Mappings](#vimf90-map)
-  - [Construct](#vimf90-construct)
-  - [Statements](#vimf90-stats)
-  - [Subprograms](#vimf90-subs)
-  - [Completions](#vimf90-comp)
-- [Menu](#vimf90-menu)
+- [Completions](#completions)
+  - [Inbuilt completion](#inbuilt-completion)
+  - [Completion using Ultisnips](#completion-using-ultisnips)
+  <!-- - [Constructs](#constructs) -->
+  <!-- - [Statements](#stats) -->
+  <!-- - [Subprograms](#vimf90-subs) -->
+  <!-- - [Completions](#vimf90-comp) -->
+- [Menu](#menu)
 - [Contact](#contact)
-- [My other apps](#apps)
+- [My other apps](#my-other-apps)
 
 This is a `fortran` `ide` for `vim`. It is intended to make the coding with `fortran` **easier** and
 **faster** in vim.
@@ -51,7 +53,7 @@ the easiest way of installation is to use a vim plugin manager.
       protocol](https://github.com/hansec/fortran-language-server). Check further dependencies
       [here](https://github.com/neoclide/coc.nvim/wiki/Language-servers#fortran).
 
-Mappings
+Completions
 ========
 
 Construct
@@ -59,7 +61,7 @@ Construct
 
 There are two ways to do the completions. One is [Inbuilt Completions](#vimf90-inbuilt) and
 [Completions using Ultisnips](#vimf90-ultisnips)
-### i. Inbuilt completions
+### Inbuilt completions
 
 `if`,`do`,`select` etc statements, that are closed by a corresponding `end`
 is defined here. after typing the first line, pressing `<f7>` will
@@ -79,7 +81,7 @@ end do trial
 ```
 
 
-#### Constructs:
+##### Constructs:
 
 |type:                         |   get               |
 |------------------------------|---------------------|
@@ -93,7 +95,7 @@ end do trial
 [fortran-codecomplete](http://www.vim.org/scripts/script.php?script_id=2487)
 
 
-#### Statements
+##### Statements
 
 some statements is included here for less typing. these are mostly
 one-liner or part of the line:
@@ -185,7 +187,7 @@ generator) and programing blocks (as given in [Subprograms](#vimf90-subs)).
 <!-- snippets engine.  I have tested it with [ultisnips](https://github.com/sirver/ultisnips). -->
 
 
-Contacts
+Contact
 ========
 the preferred way of contacting me is via [github project page](https://github.com/rudrab/vimf90/issues).
 
