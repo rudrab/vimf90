@@ -28,9 +28,10 @@ inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
 " Declarations: {{{1
 " call IMAP ('<localleader>wr',  'write(<++>,*)<++>',           "fortran")
 " call IMAP ('<localleader>rd',  'read(<++>,*)<++>',            "fortran")
-inoremap <localleader>wr pr<c-r>=UltiSnips#ExpandSnippet()<cr>
+inoremap <localleader>wr   pr<c-r>=UltiSnips#ExpandSnippet()<cr>
 inoremap <localleader>rd read<c-r>=UltiSnips#ExpandSnippet()<cr>
-call IMAP ('<localleader>re',  'real(<++>)::<++>',            "fortran")
+inoremap <localleader>re real<c-r>=UltiSnips#ExpandSnippet()<cr>
+" call IMAP ('<localleader>re',  'real(<++>)::<++>',            "fortran")
 call IMAP ('<localleader>int', 'integer::<++>',               "fortran")
 call IMAP ('<localleader>ch',  'character(len=<++>)::<++>',   "fortran")
 call IMAP ('<localleader>dim', 'dimension(<++>)',             "fortran")
