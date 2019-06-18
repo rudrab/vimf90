@@ -26,26 +26,26 @@ inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
 "inoremap <expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
 
 " Declarations: {{{1
-" call IMAP ('`wr',  'write(<++>,*)<++>',           "fortran")
-" call IMAP ('`rd',  'read(<++>,*)<++>',            "fortran")
-inoremap `wr pr<c-r>=UltiSnips#ExpandSnippet()<cr>
-inoremap `rd read<c-r>=UltiSnips#ExpandSnippet()<cr>
-call IMAP ('`re',  'real(<++>)::<++>',            "fortran")
-call IMAP ('`int', 'integer::<++>',               "fortran")
-call IMAP ('`ch',  'character(len=<++>)::<++>',   "fortran")
-call IMAP ('`dim', 'dimension(<++>)',             "fortran")
-call IMAP ('`par', 'parameter',                   "fortran")
-call IMAP ('`sre', 'selected_real_kind(<++>)',    "fortran")
-call IMAP ('`sie', 'selected_integer_kind(<++>)', "fortran")
+" call IMAP ('<localleader>wr',  'write(<++>,*)<++>',           "fortran")
+" call IMAP ('<localleader>rd',  'read(<++>,*)<++>',            "fortran")
+inoremap <localleader>wr pr<c-r>=UltiSnips#ExpandSnippet()<cr>
+inoremap <localleader>rd read<c-r>=UltiSnips#ExpandSnippet()<cr>
+call IMAP ('<localleader>re',  'real(<++>)::<++>',            "fortran")
+call IMAP ('<localleader>int', 'integer::<++>',               "fortran")
+call IMAP ('<localleader>ch',  'character(len=<++>)::<++>',   "fortran")
+call IMAP ('<localleader>dim', 'dimension(<++>)',             "fortran")
+call IMAP ('<localleader>par', 'parameter',                   "fortran")
+call IMAP ('<localleader>sre', 'selected_real_kind(<++>)',    "fortran")
+call IMAP ('<localleader>sie', 'selected_integer_kind(<++>)', "fortran")
 
 "INTRINSIC PROCEDURES:  {{{1
-:call IMAP ('`fab',     'abort',                  "fortran")
-:call IMAP ('`fabs',    'abs(<++>)',              "fortran")
-:call IMAP ('`facc',    'access(<++>,<++>)',      "fortran")
-:call IMAP ('`fach',    'achar(<++>)',            "fortran")
-:call IMAP ('`facos',   'acos(<++>)',             "fortran")
-:call IMAP ('`facosh',  'acosh(<++>)',            "fortran")
-:call IMAP ('`fadl',    'adjustl(<++>)',          "fortran")
-:call IMAP ('`fadr',    'adjustr(<++>)',          "fortran")
-:call IMAP ('`faim',    'aimag(<++>)',            "fortran")
-:call IMAP ('`faint',   'aint(<++>)',             "fortran")
+:call IMAP ('<localleader>fab',     'abort',                  "fortran")
+:call IMAP ('<localleader>fabs',    'abs(<++>)',              "fortran")
+:call IMAP ('<localleader>facc',    'access(<++>,<++>)',      "fortran")
+:call IMAP ('<localleader>fach',    'achar(<++>)',            "fortran")
+:call IMAP ('<localleader>facos',   'acos(<++>)',             "fortran")
+:call IMAP ('<localleader>facosh',  'acosh(<++>)',            "fortran")
+:call IMAP ('<localleader>fadl',    'adjustl(<++>)',          "fortran")
+:call IMAP ('<localleader>fadr',    'adjustr(<++>)',          "fortran")
+:call IMAP ('<localleader>faim',    'aimag(<++>)',            "fortran")
+:call IMAP ('<localleader>faint',   'aint(<++>)',             "fortran")
