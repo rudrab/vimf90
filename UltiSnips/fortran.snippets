@@ -89,6 +89,14 @@ snippet close
 close(unit = ${1:<++fp++>}) 
 endsnippet
 
+snippet int
+integer($1):: ${2:variables}
+endsnippet
+
+snippet char
+character(len=$1):: ${2:variables}
+endsnippet
+
 snippet real
-real($0):: ${1:variables}
+real($1):: ${2:variables}
 endsnippet

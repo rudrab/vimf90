@@ -31,9 +31,11 @@ inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
 inoremap <localleader>wr   pr<c-r>=UltiSnips#ExpandSnippet()<cr>
 inoremap <localleader>rd read<c-r>=UltiSnips#ExpandSnippet()<cr>
 inoremap <localleader>re real<c-r>=UltiSnips#ExpandSnippet()<cr>
+inoremap <localleader>int int<c-r>=UltiSnips#ExpandSnippet()<cr>
+inoremap <localleader>char char<c-r>=UltiSnips#ExpandSnippet()<cr>
 " call IMAP ('<localleader>re',  'real(<++>)::<++>',            "fortran")
-call IMAP ('<localleader>int', 'integer::<++>',               "fortran")
-call IMAP ('<localleader>ch',  'character(len=<++>)::<++>',   "fortran")
+" call IMAP ('<localleader>int', 'integer::<++>',               "fortran")
+" call IMAP ('<localleader>ch',  'character(len=<++>)::<++>',   "fortran")
 call IMAP ('<localleader>dim', 'dimension(<++>)',             "fortran")
 call IMAP ('<localleader>par', 'parameter',                   "fortran")
 call IMAP ('<localleader>sre', 'selected_real_kind(<++>)',    "fortran")
