@@ -15,11 +15,8 @@ Introduction
 - [Contact](#contact)
 - [My other apps](#apps)
 
-this is a fortran ide for vim. it is intended to make the coding with 
-fortran easier in vim. but this is still in very nascent stage. not 
-much utility is included, and the different utility is not in sync 
-properly(i.e.  different types of expansion need different key 
-combinations. this is explained later).
+This is a `fortran` `ide` for `vim`. It is intended to make the coding with `fortran` **easier** and
+**faster** in vim.
 
 Features 
 ----------
