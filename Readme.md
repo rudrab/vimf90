@@ -2,10 +2,10 @@ Introduction
 ============
 **vimf90** enhances coding fortran in vim. It increases code-development speed.
 
-- [Introduction](#vimf90-intro)
-   - [Features](#vimf90-features)
-- [Installation](#vimf90-inst)
-   - [Dependency](#vimf90-deps)
+- [Introduction](#Introduction)
+   - [Features](#Features)
+- [Install](#Install)
+   - [Dependency](#Dependency)
 - [Mappings](#vimf90-map)
   - [Construct](#vimf90-construct)
   - [Statements](#vimf90-stats)
@@ -28,7 +28,7 @@ Features
   * support for menu mode
   * support for gnu-autotools (configure, make)
 
-Installation
+Install
 ============
 the easiest way of installation is to use a vim plugin manager. 
 
