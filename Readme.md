@@ -56,11 +56,9 @@ the easiest way of installation is to use a vim plugin manager.
 Completions
 ========
 
-Construct
----------
-
 There are two ways to do the completions. One is [Inbuilt Completions](#vimf90-inbuilt) and
 [Completions using Ultisnips](#vimf90-ultisnips)
+
 ### Inbuilt completions
 
 `if`,`do`,`select` etc statements, that are closed by a corresponding `end`
