@@ -2,7 +2,7 @@ snippet prg
 !This is file : `!v expand('%:t:r')`
 ! Author= `!v expand($USER)`
 ! Started at: `date +%d.%m.%y`
-! Last Modified : Tue 18 Jun 2019 12:28:22 IST
+! Last Modified : Tue 18 Jun 2019 12:36:14 IST
 !
 Program  ${1:`!v expand('%:t:r')`}
 Implicit None
@@ -58,15 +58,15 @@ end select $0
 endsnippet
 
 snippet do
-do ${1:<++iter++>} = ${2:<++start++>}, ${3:<++end++>} ${4:<++incr++>}
+${1:<++name++>} do ${1:<++iter++>} = ${2:<++start++>}, ${3:<++end++>} ${4:<++incr++>}
 ${5:<++loop++>}
-end do
+end do ${1/://} $0
 endsnippet
 
 snippet dow
-do while (${1:<++condition++>})
+${1:<++name++>} do while (${1:<++condition++>})
 ${2:<++condition++>}
-end do
+end do  ${1/://} $0
 endsnippet
 
 snippet pr
