@@ -28,7 +28,7 @@ inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
 let g:VimF90Leader = get(g:, "VimF90Leader", "\?")
 echo g:VimF90Leader
 " Declarations: {{{1
-inoremap <g:VimF90Leader>wr      pr<c-r>=UltiSnips#ExpandSnippet()<cr>
+:execute 'inoremap' g.VimF90Leader.'wr'      pr<c-r>=UltiSnips#ExpandSnippet()<cr>
 inoremap `rd    read<c-r>=UltiSnips#ExpandSnippet()<cr>
 inoremap `re    real<c-r>=UltiSnips#ExpandSnippet()<cr>
 inoremap `int    int<c-r>=UltiSnips#ExpandSnippet()<cr>
