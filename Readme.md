@@ -118,8 +118,8 @@ etc is inbuilt. You should define your ultisnips trigger in your vimrc(`<c-b>` h
 
 |Type|Get|
 |-----|-----|
-|do\<c-b\>|do construct|
-|if\<c-b\>|if construct|
+|`do<c-b>`|do construct|
+|`if<c-b>`|if construct|
 
 
 and so on. Please check `vimf90/Ultisnips/fortran.snippets` in your `.vim/` for complete list. 
