@@ -10,7 +10,8 @@ CONTENTS                          *vimf90-contents*
 
 1. Introduction ................... |vimf90-Intro|
    1.1 Features ................... |vimf90-Features|
-2. Installation ................... |vimf90-Inst|
+2. Install ........................ |vimf90-Install|
+   2.1 Dependencies ............... |vimf90-Dependencies|
 3. Mappings ....................... |vimf90-Map|
   3.1  construct .................. |vimf90-Construct|
   3.2  statements ................. |vimf90-Stats|
@@ -23,10 +24,7 @@ CONTENTS                          *vimf90-contents*
 =====================================================================
 1. Introduction                                 *vimf90-Intro*
 This is a fortran IDE for vim. It is intended to make the coding with 
-fortran easier in vim. But this is still in very nascent stage. Not 
-much utility is included, and the different utility is not in sync 
-properly(i.e.  different types of expansion need different key 
-combinations. This is explained later).
+
 
 1.1 Features                                    *vimf90-Features*
   * An IDE like environment for fortran 90+
@@ -37,15 +35,24 @@ combinations. This is explained later).
   * Support for menu mode
   * Support for gnu-autotools (configure, make)
 =====================================================================
-2. Installation                                 *vimf90-Inst*
-The easiest way of installation is to use a vim plugin manager.  I
-have tested it with vundle(https://github.com/gmarik/Vundle.vim)
-Just add 
+2. Install                                      *vimf90-Install*
+The easiest way of installation is to use a vim plugin manager.  
+
+Using Vundle:
 >
- Plugin 'rudrab/vimf90' 
+  Plugin 'rudrab/vimf90' 
 <
-in your vundle environment if you are 
-already using it; or read the vundle readme for more.
+
+Using vim-plug:
+>
+  Plug 'rudrab/vimf90'
+<
+
+2.1 Dependencies                                *vimf90-Dependencies*
+Not to reinventing the wheel, this pluging depends on other awesome plugins:
+   * Ultisnips: (Essential)
+   * coc-nvim:  (Optional) For Language server support
+
 =====================================================================
 
 3. Mappings                                     *vimf90-Map*
