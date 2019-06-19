@@ -7,6 +7,7 @@
    - [Completions](#completions)
      - [Inbuilt](#inbuilt)
      - [Ultisnips](#ultisnips)
+   - [Linting](#linting) 
    - [Menu](#menu)
 - [Contact](#contact)
 - [My other apps](#my-other-apps)
@@ -160,8 +161,19 @@ and so on. Please check `vimf90/Ultisnips/fortran.snippets` in your `.vim/` for 
 vimf90 now supports subprogram completions.  `<leader>use` and `<leader>call` will popup a list of
 modules and subroutine inside present working dirs and fortran's standard module and subroutines.
 
-**Update:** _Moving completions competely to `coc-nvim` and LSP implemented there. See
+**Update:** _Moving completions completely to `coc-nvim` and LSP implemented there. See
 [dependencies](#vimf90-deps) section._ 
+
+## Linting
+Basic linting is enabled. So, when a operator is typed preceded by a space, e.g. `A =B`&#9014;, a space is
+automatically inserted, yielding `A = B`&#9014;. You can configure linting behaviour using 
+```vim
+let g:VimF90Linter =0/1/-1
+```
+where 
+ * `0`: linting as you write. But this will check every keystroke. Use cautiously.
+ * `1`: Default. Lint only when you save a buffer
+ * `-1`: Disable Linting.
 
 ## Menu
 

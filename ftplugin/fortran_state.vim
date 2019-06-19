@@ -19,8 +19,8 @@
 let g:VimF90Leader = get(g:, "VimF90Leader", "\`")
 " g:VimF90Linter 0: Lint on the fly; 1: Lint on BufWrite; -1: No Lint atall
 let g:VimF90Linter = get(g:, "VimF90Linter", 0)   
-if  g:VimF90Linter == 0
 " For the laziest people, add a space around operators {{{
+if  g:VimF90Linter == 0  " Check on the fly, not recommended
   inoremap <expr> = stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>= " : getline(".")[col(".")-2] =~ '\s' ? "= " : "="
   inoremap <expr> > stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>> " : getline(".")[col(".")-2] =~ '\s' ? "> " : ">"
   inoremap <expr> + getline(".")[col(".")-2] =~ '\s' ? "+ " : "+" 
@@ -28,10 +28,9 @@ if  g:VimF90Linter == 0
   inoremap <expr> * getline(".")[col(".")-2] =~ '\s' ? "* " : "*"
   inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
 "inoremap <expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
-elseif g:VimF90Linter == 1
-  au BufWritePre *.f90 echo "Lint Here"
-  " au BufWritePre *.f90 silent! exe "%s/\v(\w) ?(\+|-|\*|\/|\>\=|\<\=|!\=|\=|\=\=) ?(\w|-)/\1 \2 \3/g"
-  au BufWritePre *.f90 silent! exe "%s/\v(\w) ?(=) ?(\w|-)/\1 \2 \3/"
+elseif g:VimF90Linter == 1  " Check on save, default
+  au BufWritePre *.f90 silent! :%s/\v(\w) ?(\+|-|\*|\/|\>\=|\<\=|\/\=|\=|\=\=|\*\*) ?(\w|-)/\1 \2 \3/
+  au BufWritePre *.f90 silent! :%s/\v(\w) ?(.AND.|.NOT.|.XOR.) ?(\w|-)/\1 \2 \3/
 endif
 "}}}
 
