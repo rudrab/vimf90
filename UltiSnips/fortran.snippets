@@ -1,0 +1,114 @@
+snippet prg 
+!This is file : `!v expand('%:t:r')`
+! Author= `!v expand($USER)`
+! Started at: `date +%d.%m.%y`
+! Last Modified : Wed 19 Jun 2019 09:03:41 IST
+!
+Program  ${1:`!v expand('%:t:r')`}
+Implicit None
+${2: <++start here++>}
+End Program  ${1/([^\n$]+).*/$1/}
+endsnippet
+
+snippet mod
+Module  m${1:`!v expand('%:t:r')`}  !
+Implicit None
+${2:<++Start Typing++>}
+End Module  m${1/([^\n$]+).*/$1/}
+endsnippet
+
+snippet sub
+Subroutine  ${1:<++Subroutine++>}()
+Implicit None
+${2:<++Start Typing++>}
+End Subroutine ${1/([^\n$]+).*/$1/}
+endsnippet
+
+snippet fun
+Function  ${1:<++Function++>}()
+Implicit None
+${2:<++Start Typing++>}
+End Function ${1/([^\n$]+).*/$1/}
+endsnippet
+
+snippet proc
+procedure ${1:<++name++>}
+${2:<++Start++>}
+end procedure $1
+endsnippet
+
+snippet iface
+interface ${1:<++name++>}
+${2:<++Start++>}
+end interface $1
+endsnippet
+
+snippet if
+${1:<++name++>} if (${2:<++condition++>}) then
+	${3:<++Start++>}
+end if ${1/://} $0
+endsnippet
+
+snippet case
+select case (${1:<++expr++>})
+case (${2:<++case++>})
+case default
+${3:<++>}
+end select $0
+endsnippet
+
+snippet do
+${1:<++name++>} do ${1:<++iter++>} = ${2:<++start++>}, ${3:<++end++>} ${4:<++incr++>}
+${5:<++loop++>}
+end do ${1/://} $0
+endsnippet
+
+snippet dow
+${1:<++name++>} do while (${1:<++condition++>})
+${2:<++condition++>}
+end do  ${1/://} $0
+endsnippet
+
+snippet pr
+write(${1:<++fp++>},*) ${2:<++stetement++>}
+endsnippet
+
+snippet read
+read(${1:<++fp++>}, ${2:<++*++>}) ${3:<++statment++>}
+endsnippet
+
+snippet write
+write(unit = ${1:<++fp++>}, file = ${2:<++filename++>}, iostat = ${3:<++ierr++>}) ${4:<++statment++>}
+endsnippet
+
+snippet open
+open(unit = ${1:<++fp++>}, file = ${2:<++filename++>}, status = ${3:<++unknown++>}, iostat = ${4:<++ierr++>}) 
+endsnippet
+
+snippet close
+close(unit = ${1:<++fp++>}) 
+endsnippet
+
+snippet int
+integer($1):: ${2:variables}
+endsnippet
+
+snippet char
+character(len=$1):: ${2:variables}
+endsnippet
+
+snippet real
+real($1):: ${2:variables}
+endsnippet
+
+snippet dim
+dimension($1)$2
+endsnippet
+
+snippet par
+parameter$1
+endsnippet
+
+snippet sle
+selected_$1_kind($2)
+endsnippet
