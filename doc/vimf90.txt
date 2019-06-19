@@ -9,10 +9,10 @@ __   _(_)_ __ ___  / _/ _ \ / _ \   _   ~
 CONTENTS                          *vimf90-contents*
 
 1. Introduction ................... |vimf90-Intro|
-   1.1 Features ................... |vimf90-Features|
+   1.1 What it is................... |vimf90-About|
 2. Install ........................ |vimf90-Install|
    2.1 Dependencies ............... |vimf90-Dependencies|
-3. Mappings ....................... |vimf90-Map|
+3. Features ....................... |vimf90-Features|
   3.1  construct .................. |vimf90-Construct|
   3.2  statements ................. |vimf90-Stats|
   3.3  subprograms ................ |vimf90-Subs|
@@ -23,10 +23,10 @@ CONTENTS                          *vimf90-contents*
 6. Change Log ..................... |vimf90-Clog|
 =====================================================================
 1. Introduction                                 *vimf90-Intro*
-This is a fortran IDE for vim. It is intended to make the coding with 
+This is a fortran IDE for vim. It is intended to write fortran code faster and easier in vim.
 
 
-1.1 Features                                    *vimf90-Features*
+1.1 Features                                    *vimf90-About*
   * An IDE like environment for fortran 90+
   * Increases development speed considerably.
   * Easy to add new subprograms
@@ -55,7 +55,13 @@ Not to reinventing the wheel, this pluging depends on other awesome plugins:
 
 =====================================================================
 
-3. Mappings                                     *vimf90-Map*
+3. Features                                    *vimf90-Features*
+Default `leader` key used here is **`**. You can change this by using:
+>
+let g:VimF90Leader = "your chosen key"
+<
+in your .vimrc.
+
 This explains mappings of this plugin.
 ---------------------------------------------------------------------
 
