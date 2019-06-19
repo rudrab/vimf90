@@ -41,9 +41,9 @@ inoremap `sle    sle<c-r>=UltiSnips#ExpandSnippet()<cr>
 " call IMAP ('`int', 'integer::<++>',               "fortran")
 " call IMAP ('`ch',  'character(len=<++>)::<++>',   "fortran")
 " call IMAP ('`dim', 'dimension(<++>)',             "fortran")
-call IMAP ('`par', 'parameter',                   "fortran")
-call IMAP ('`sre', 'selected_real_kind(<++>)',    "fortran")
-call IMAP ('`sie', 'selected_integer_kind(<++>)', "fortran")
+" call IMAP ('`par', 'parameter',                   "fortran")
+" call IMAP ('`sre', 'selected_real_kind(<++>)',    "fortran")
+" call IMAP ('`sie', 'selected_integer_kind(<++>)', "fortran")
 "}}}
 
 " intrinsic procedures:  {{{1
