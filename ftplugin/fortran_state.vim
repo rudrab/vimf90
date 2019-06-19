@@ -29,8 +29,9 @@ if  g:VimF90Linter == 0
   inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
 "inoremap <expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
 elseif g:VimF90Linter == 1
-  echo "Lint Here"
-  au QuitPre *.f90 silent! exe "s/\v(\w) ?(\+|-|\*|\/|\>\=|\<\=|!\=|\=|\=\=) ?(\w|-)/\1 \2 \3/g"
+  au BufWritePre *.f90 echo "Lint Here"
+  au BufWritePre *.f90 silent! exe "s/A/a/"
+  " au BufWritePre *.f90 silent! exe "s/\v(\w) ?(\+|-|\*|\/|\>\=|\<\=|!\=|\=|\=\=) ?(\w|-)/\1 \2 \3/g"
 endif
 "}}}
 
