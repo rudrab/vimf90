@@ -24,6 +24,11 @@ CONTENTS                          *vimf90-contents*
 =====================================================================
 1. Introduction                                 *vimf90-Intro*
 This is a fortran IDE for vim. It is intended to write fortran code faster and easier in vim.
+Unfortunately, due to shortage of time, this help file is not often updated. Please check the
+Readme in github or the project page for updated info. 
+
+ * https://rudrab.github.io/vimf90/
+ * https://github.com/rudrab/vimf90#introduction
 
 
 1.1 Features                                    *vimf90-About*
@@ -62,7 +67,7 @@ Default `<Leader>` key used here is **`**. You can change this by using:
   let g:VimF90Leader = "your chosen key"
 <
 
-in your .vimrc.
+in your `.vimrc`.
 
 This explains mappings of this plugin.
 ---------------------------------------------------------------------
