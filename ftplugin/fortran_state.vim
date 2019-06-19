@@ -31,7 +31,7 @@ if  g:VimF90Linter == 0
 elseif g:VimF90Linter == 1
   au BufWritePre *.f90 echo "Lint Here"
   au BufWritePre *.f90 silent! exe "s/A/a/"
-  au BufWritePre *.f90 silent! exe "s/\v(\w) ?(\+|-|\*|\/|\>\=|\<\=|!\=|\=|\=\=) ?(\w|-)/\1 \2 \3"
+  au FileWritePre *.f90 silent! exe "s/\v(\w) ?(\+|-|\*|\/|\>\=|\<\=|!\=|\=|\=\=) ?(\w|-)/\1 \2 \3"
 endif
 "}}}
 
