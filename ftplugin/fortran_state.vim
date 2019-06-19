@@ -25,7 +25,8 @@ inoremap <expr> * getline(".")[col(".")-2] =~ '\s' ? "* " : "*"
 inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
 "inoremap <expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
 "}}}
-let g:VimF90Leader = get(g:, "VimF90Leader", "\?")
+let g:VimF90Leader = get(g:, "VimF90Leader", "\`")
+
 " Declarations: {{{1
 :execute 'inoremap' g:VimF90Leader.'wr'      "pr<c-r>=UltiSnips#ExpandSnippet()<cr>"
 :execute 'inoremap' g:VimF90Leader.'rd'    "read<c-r>=UltiSnips#ExpandSnippet()<cr>"
@@ -35,11 +36,6 @@ let g:VimF90Leader = get(g:, "VimF90Leader", "\?")
 :execute 'inoremap' g:VimF90Leader.'dim'    "dim<c-r>=UltiSnips#ExpandSnippet()<cr>"
 :execute 'inoremap' g:VimF90Leader.'par'    "par<c-r>=UltiSnips#ExpandSnippet()<cr>"
 :execute 'inoremap' g:VimF90Leader.'sle'    "sle<c-r>=UltiSnips#ExpandSnippet()<cr>"
-" call IMAP ('`ch',  'character(len=<++>)::<++>',   "fortran")
-" call IMAP ('`dim', 'dimension(<++>)',             "fortran")
-" call IMAP ('`par', 'parameter',                   "fortran")
-" call IMAP ('`sre', 'selected_real_kind(<++>)',    "fortran")
-" call IMAP ('`sie', 'selected_integer_kind(<++>)', "fortran")
 "}}}
 
 " intrinsic procedures:  {{{1
