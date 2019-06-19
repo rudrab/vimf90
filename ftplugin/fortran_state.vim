@@ -17,12 +17,13 @@
 " of fortran90+ Formatting
 "
 " For the laziest people, add a space around operators {{{
-inoremap <expr> = stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>= " : getline(".")[col(".")-2] =~ '\s' ? "= " : "="
-inoremap <expr> > stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>> " : getline(".")[col(".")-2] =~ '\s' ? "> " : ">"
-inoremap <expr> + getline(".")[col(".")-2] =~ '\s' ? "+ " : "+" 
-inoremap <expr> - getline(".")[col(".")-2] =~ '\s' ? "- " : "-"
-inoremap <expr> * getline(".")[col(".")-2] =~ '\s' ? "* " : "*"
-inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
+" inoremap <expr> = stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>= " : getline(".")[col(".")-2] =~ '\s' ? "= " : "="
+" inoremap <expr> > stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>> " : getline(".")[col(".")-2] =~ '\s' ? "> " : ">"
+" inoremap <expr> + getline(".")[col(".")-2] =~ '\s' ? "+ " : "+" 
+" inoremap <expr> - getline(".")[col(".")-2] =~ '\s' ? "- " : "-"
+" inoremap <expr> * getline(".")[col(".")-2] =~ '\s' ? "* " : "*"
+" inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
+inoremap <expr> (\+|-|\*|\/|\>\=|\<\=|!\=|\=|\=\=) \v(\w) ?(\+|-|\*|\/|\>\=|\<\=|!\=|\=|\=\=) ?(\w|-)/\1 \2 \3/g
 "inoremap <expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
 "}}}
 let g:VimF90Leader = get(g:, "VimF90Leader", "\`")
@@ -37,16 +38,3 @@ let g:VimF90Leader = get(g:, "VimF90Leader", "\`")
 :execute 'inoremap' g:VimF90Leader.'par'    "par<c-r>=UltiSnips#ExpandSnippet()<cr>"
 :execute 'inoremap' g:VimF90Leader.'sle'    "sle<c-r>=UltiSnips#ExpandSnippet()<cr>"
 "}}}
-
-" intrinsic procedures:  {{{1
-" :call IMAP ('`fab',     'abort',                  "fortran")
-" :call IMAP ('`fabs',    'abs(<++>)',              "fortran")
-" :call IMAP ('`facc',    'access(<++>,<++>)',      "fortran")
-" :call IMAP ('`fach',    'achar(<++>)',            "fortran")
-" :call IMAP ('`facos',   'acos(<++>)',             "fortran")
-" :call IMAP ('`facosh',  'acosh(<++>)',            "fortran")
-" :call IMAP ('`fadl',    'adjustl(<++>)',          "fortran")
-" :call IMAP ('`fadr',    'adjustr(<++>)',          "fortran")
-" :call IMAP ('`faim',    'aimag(<++>)',            "fortran")
-" :call IMAP ('`faint',   'aint(<++>)',             "fortran")
-" }}}
