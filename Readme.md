@@ -3,7 +3,7 @@
    - [Features](#features)
 - [Install](#install)
    - [Dependencies](#dependencies)
-- [Features](#features)
+- [Features](#features-1)
    - [Completions](#completions)
      - [Inbuilt](#inbuilt)
      - [Ultisnips](#ultisnips)
