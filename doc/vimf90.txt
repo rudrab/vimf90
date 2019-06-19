@@ -59,7 +59,7 @@ Not to reinventing the wheel, this pluging depends on other awesome plugins:
 Default `<Leader>` key used here is **`**. You can change this by using:
 
 >
-let g:VimF90Leader = "your chosen key"
+  let g:VimF90Leader = "your chosen key"
 <
 
 in your .vimrc.
