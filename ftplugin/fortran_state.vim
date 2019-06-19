@@ -29,7 +29,7 @@ if  g:VimF90Linter == 0
   inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
 "inoremap <expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
 elseif g:VimF90Linter == 1 
-  au BufWrite *.f90 silent!exe "%s/\v(\w) ?(\+|-|\*|\/|\>\=|\<\=|!\=|\=|\=\=) ?(\w|-)/\1 \2 \3/g"
+  au BufWrite *.f90 silent! exe "s/\v(\w) ?(\+|-|\*|\/|\>\=|\<\=|!\=|\=|\=\=) ?(\w|-)/\1 \2 \3/g"
 endif
 "}}}
 
