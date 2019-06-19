@@ -1,6 +1,4 @@
 # Introduction
-**vimf90** enhances coding fortran in vim. It increases code-development speed.
-
 - [Introduction](#introduction)
    - [Features](#features)
 - [Install](#install)
@@ -48,6 +46,11 @@ The easiest way of installation is to use a vim plugin manager.
       [here](https://github.com/neoclide/coc.nvim/wiki/Language-servers#fortran).
 
 # Features
+Default `leader` key used here is **`**. You can change this by using:
+```vim
+let g:VimF90Leader = "your chosen key"
+```
+in your `.vimrc`.
 ## Completions
 There are two ways to do the completions. One is [Inbuilt Completions](#inbuilt) and
 [Completions using Ultisnips](#ultisnips)
@@ -70,7 +73,34 @@ trial: do i=1,10
   &#9014;
 end do trial
 ```
+##### Subprograms
 
+These key-combinations makes program and subprograms header.  it supports program(\``prg`),
+module(\``mod`), subroutine(\``sub`) and function(\``fun`). For example,
+```bash
+`prg
+```
+will yeild:
+
+```fortran
+!this is file : <your file name>
+! author= <users login name>
+! started at: <current time>
+! 
+program  <filename>
+implicit none
+  <++start typing++>
+end program  <filename>
+```
+
+###### available constructs
+
+|type: |     get:|
+|------|---------|
+|\`prg |    program header |
+|\`mod |    module header|
+|\`sub |    subroutine header|
+|\`fun |    function header|
 
 ##### Constructs:
 
@@ -99,8 +129,8 @@ one-liner or part of the line:
 |\`int       |   integer(&#9014;)::<++>|
 |\`ch        |   character(len=&#9014;)::<++> |
 |\`par       |   parameter|
-|\`sre       |   selected_real_kind()|
-|\`sie       |   selected_integer_kind()|
+|\`sre       |   selected_real_kind(&#9014;)|
+|\`sie       |   selected_integer_kind(&#9014;)|
 
 
 The `<++>` is a nice option, a `<c-j>` will put your cursor in that position. Use 
@@ -125,43 +155,6 @@ etc is inbuilt. You should define your ultisnips trigger in your vimrc(`<c-b>` h
 and so on. Please check `vimf90/Ultisnips/fortran.snippets` in your `.vim/` for complete list. 
 (Too lazy to type all.)
 
-## Subprograms
-
-These key-combinations makes program and subprograms header.  it supports program(`prg),
-module(`mod), subroutine and function.  as shown, typing the first 3 letter and pressing **\`**
-will complete the header section of the program. This can also be achieved by Ultisnips, as: you
-type: 
-
-```bash
-`prg
-```
-or 
-
- ```bash
- prg <Your Ultisnip Trigger>
- ```
-
- will yeild:
-
-```fortran
-!this is file : <your file name>
-! author= <users login name>
-! started at: <current time>
-! 
-program  <filename>
-implicit none
-  <++start typing++>
-end program  <filename>
-```
-
-### available constructs
-
-|type: |     get:|
-|------|---------|
-|\`prg |    program header |
-|\`mod |    module header|
-|\`sub |    subroutine header|
-|\`fun |    function header|
 
 ## Fortran subprogram complete
 vimf90 now supports subprogram completions.  `<leader>use` and
@@ -178,11 +171,6 @@ in the menubar.
 it currently has the option of compile(`make`, `make clean`, `build current 
 file`), `automake`( a rudimentary configure.ac and makefile.am file 
 generator) and programing blocks (as given in [Subprograms](#vimf90-subs)).
-
-<!-- Dependencies -->
-<!-- ============ -->
-<!-- - this plugin depends on snippets. this should work on standard -->
-<!-- snippets engine.  I have tested it with [ultisnips](https://github.com/sirver/ultisnips). -->
 
 
 # Contact
