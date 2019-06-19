@@ -25,7 +25,8 @@ inoremap <expr> * getline(".")[col(".")-2] =~ '\s' ? "* " : "*"
 inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
 "inoremap <expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
 "}}}
-
+let g:VimF90Leader = get(g:, "VimF90Leader", "\?")
+echo g:VimF90Leader
 " Declarations: {{{1
 inoremap `wr      pr<c-r>=UltiSnips#ExpandSnippet()<cr>
 inoremap `rd    read<c-r>=UltiSnips#ExpandSnippet()<cr>
