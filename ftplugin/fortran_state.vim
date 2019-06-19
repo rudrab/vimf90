@@ -17,13 +17,12 @@
 " of fortran90+ Formatting
 "
 " For the laziest people, add a space around operators {{{
-" inoremap <expr> = stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>= " : getline(".")[col(".")-2] =~ '\s' ? "= " : "="
-" inoremap <expr> > stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>> " : getline(".")[col(".")-2] =~ '\s' ? "> " : ">"
-" inoremap <expr> + getline(".")[col(".")-2] =~ '\s' ? "+ " : "+" 
-" inoremap <expr> - getline(".")[col(".")-2] =~ '\s' ? "- " : "-"
-" inoremap <expr> * getline(".")[col(".")-2] =~ '\s' ? "* " : "*"
-" inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
-inoremap <expr> (\+|-|\*|\/|\>\=|\<\=|!\=|\=|\=\=) \v(\w) ?(\+|-|\*|\/|\>\=|\<\=|!\=|\=|\=\=) ?(\w|-)/\1 \2 \3/g
+inoremap <expr> = stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>= " : getline(".")[col(".")-2] =~ '\s' ? "= " : "="
+inoremap <expr> > stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>> " : getline(".")[col(".")-2] =~ '\s' ? "> " : ">"
+inoremap <expr> + getline(".")[col(".")-2] =~ '\s' ? "+ " : "+" 
+inoremap <expr> - getline(".")[col(".")-2] =~ '\s' ? "- " : "-"
+inoremap <expr> * getline(".")[col(".")-2] =~ '\s' ? "* " : "*"
+inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
 "inoremap <expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
 "}}}
 let g:VimF90Leader = get(g:, "VimF90Leader", "\`")
