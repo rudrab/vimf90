@@ -2,7 +2,7 @@
 " File: fortran_menu.vim
 " Author: Rudra Banerjee (bnrj DOT rudra at gmail.com) 
 " Version: 0.2
-" Copyright: Copyright (C) 2015 Rudra Banerjee
+" Copyright: Copyright (C) 2019 Rudra Banerjee
 " 
 "    This program is free software: you can redistribute it and/or modify
 "    it under the terms of the GNU General Public License as published by

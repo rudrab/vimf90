@@ -2,7 +2,7 @@
 " File: fortran_comp.vim
 " Author: Rudra Banerjee (bnrj DOT rudra at gmail.com) 
 " Version: 0.2
-" Copyright: Copyright (C) 2015 Rudra Banerjee
+" Copyright: Copyright (C) 2019 Rudra Banerjee
 " 
 "    This program is free software: you can redistribute it and/or modify
 "    it under the terms of the GNU General Public License as published by
@@ -16,8 +16,10 @@
 "
 " Description: This file completes lists of subprogram
 "########################################################################
- 
-" GetComp: Menu and Sunroutine Completion {{{1
+
+" Deprecated {{{
+" Should be handed over to dedicated completor
+" GetComp: Menu and Sunroutine Completion {{{
 function! GetSubroutine(findstart, base)
 if a:findstart
     " locate the start of the word
@@ -56,9 +58,9 @@ endfor
 return flstsI
 endif
 endfunction
+"}}}
 
-
-
+" GetModule {{{
 function! GetModule(findstart, base)
 if a:findstart
     " locate the start of the word
@@ -106,9 +108,11 @@ function! Prog(arg)
   %substitute#\[:EVAL:\]\(.\{-\}\)\[:END:\]#\=eval(submatch(1))#ge
 endfunction
 "}}}
-"
+"}}}
 
-
+" Edname{{{
+" Not sure what this is doing
+" I should always comment
 function! Edname(arg) 
 :let Cbuf = bufname("%")
 python<<EOF
@@ -131,37 +135,43 @@ for line in fileinput.input(Cb, inplace=True):
     print line.replace(v2, STR).rstrip()
 EOF
 endfunction
+"}}}
 
-" FixName: Change Subprogram name {{{1
+" FixName: Change Subprogram name {{{
 function! FixName(arg)
-    let [buf, l, c, off] = getpos('.')
-    call cursor([1, 1, 0])
+  let [buf, l, c, off] = getpos('.')
+  call cursor([1, 1, 0])
 
-    let lnum = search('\v\c^\s*' . a:arg . '\s+', 'cnW')
-    if !lnum
-        call cursor(l, c, off)
-        return
-    endif
-
-    let parts = matchlist(getline(lnum), '\v\c^\s*' . a:arg . '\s+(\S{-})(\(.*\))?\s*$')
-    if len(parts) < 2
-        call cursor(l, c, off)
-        return
-    endif
-
-    let lnum = search('\v\c^\s*End\s*' . a:arg . '\s+', 'cnW')
+  let lnum = search('\v\c^\s*' . a:arg . '\s+', 'cnW')
+  if !lnum
     call cursor(l, c, off)
-    if !lnum
-        return
-    endif
+    return
+  endif
 
-    call setline(lnum, substitute(getline(lnum), '\v\c^\s*End\s*' . a:arg . '\s+\zs.*', parts[1], ''))
+  let parts = matchlist(getline(lnum), '\v\c^\s*' . a:arg . '\s+(\S{-})(\(.*\))?\s*$')
+  if len(parts) < 2
+    call cursor(l, c, off)
+    return
+  endif
+
+  let lnum = search('\v\c^\s*End\s*' . a:arg . '\s+', 'cnW')
+  call cursor(l, c, off)
+  if !lnum
+    return
+  endif
+
+  call setline(lnum, substitute(getline(lnum), '\v\c^\s*End\s*' . a:arg . '\s+\zs.*', parts[1], ''))
 endfunction
+"}}}
 
+" Templates:  {{{
+" NOT USING TEMPLATES ANY MORE.
+" THINGS ARE MOVED TO ULTISNIPS
 "let s:plugin_dir = $HOME.'/.vim/bundle/vimf90/'
-let s:plugin_dir=filter(split(&rtp, ','), 'v:val =~ "/vimf90"')[0]
-let s:templatedir=s:plugin_dir . '/templates/'
-function! Prog(arg)
-  execute 'r ' . s:templatedir . a:arg . '.txt'
-  %substitute#\[:EVAL:\]\(.\{-\}\)\[:END:\]#\=eval(submatch(1))#ge
-endfunction
+" let s:plugin_dir=filter(split(&rtp, ','), 'v:val =~ "/vimf90"')[0]
+" let s:templatedir=s:plugin_dir . '/templates/'
+" function! Prog(arg)
+" execute 'r ' . s:templatedir . a:arg . '.txt'
+" %substitute#\[:EVAL:\]\(.\{-\}\)\[:END:\]#\=eval(submatch(1))#ge
+" endfunction
+" }}}

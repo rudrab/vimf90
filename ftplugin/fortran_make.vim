@@ -1,6 +1,6 @@
 "########################################################################
 " Filename:      fortran_make.vim
-" Copyright: Copyright (C) 2015 Rudra Banerjee
+" Copyright: Copyright (C) 2019 Rudra Banerjee
 " 
 "    This program is free software: you can redistribute it and/or modify
 "    it under the terms of the GNU General Public License as published by

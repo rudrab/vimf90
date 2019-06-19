@@ -2,7 +2,7 @@
 " File: fortran_block.vim
 " Author: Rudra Banerjee (bnrj DOT rudra at gmail.com) 
 " Version: 0.2
-" Copyright: Copyright (C) 2015 Rudra Banerjee
+" Copyright: Copyright (C) 2019 Rudra Banerjee
 " THIS FILE IS AN UPDATE OF fortran_codecomplete.vim
 " (http://www.vim.org/scripts/script.php?script_id=2487) BY Michael Goerz
 " 
