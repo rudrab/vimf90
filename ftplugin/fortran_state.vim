@@ -28,16 +28,13 @@ inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
 let g:VimF90Leader = get(g:, "VimF90Leader", "\?")
 " Declarations: {{{1
 :execute 'inoremap' g:VimF90Leader.'wr'      "pr<c-r>=UltiSnips#ExpandSnippet()<cr>"
-inoremap `rd    read<c-r>=UltiSnips#ExpandSnippet()<cr>
-inoremap `re    real<c-r>=UltiSnips#ExpandSnippet()<cr>
-inoremap `int    int<c-r>=UltiSnips#ExpandSnippet()<cr>
-inoremap `char  char<c-r>=UltiSnips#ExpandSnippet()<cr>
-inoremap `dim    dim<c-r>=UltiSnips#ExpandSnippet()<cr>
-inoremap `sle    sle<c-r>=UltiSnips#ExpandSnippet()<cr>
-" call IMAP ('`wr',  'write(<++>,*)<++>',           "fortran")
-" call IMAP ('`rd',  'read(<++>,*)<++>',            "fortran")
-" call IMAP ('`re',  'real(<++>)::<++>',            "fortran")
-" call IMAP ('`int', 'integer::<++>',               "fortran")
+:execute 'inoremap' g:VimF90Leader.'rd'    "read<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' g:VimF90Leader.'re'    "real<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' g:VimF90Leader.'int'    "int<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' g:VimF90Leader.'char'  "char<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' g:VimF90Leader.'dim'    "dim<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' g:VimF90Leader.'par'    "par<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' g:VimF90Leader.'sle'    "sle<c-r>=UltiSnips#ExpandSnippet()<cr>"
 " call IMAP ('`ch',  'character(len=<++>)::<++>',   "fortran")
 " call IMAP ('`dim', 'dimension(<++>)',             "fortran")
 " call IMAP ('`par', 'parameter',                   "fortran")
