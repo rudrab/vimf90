@@ -30,7 +30,7 @@ if  g:VimF90Linter == 0  " Check on the fly, not recommended
 "inoremap <expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
 elseif g:VimF90Linter == 1  " Check on save, default
   au BufWritePre *.f90 silent! :%s/\v(\w) ?(\+|-|\*|\/|\>\=|\<\=|\/\=|\=|\=\=|\*\*) ?(\w|-)/\1 \2 \3/
-  au BufWritePre *.f90 silent! :%s/\v(\w) ?(.AND.|.NOT.|.XOR.) ?(\w|-)/\1 \2 \3/
+  au BufWritePre *.f90 silent! :%s/\v(\w) ?(\c.and.|\c.not.|\c.xor.) ?(\w|-)/\1 \2 \3/
 endif
 "}}}
 
