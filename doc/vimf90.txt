@@ -93,11 +93,14 @@ Some statements is included here for less typing. These are mostly
 one-liner or part of the line:
 you type:           you get:~
 >
- `wr                 write(<cursor here>,*)<++>
- `rd                 read(<cursor here>,*)<++>
- `re                 real(<cursor here>)::<++>
- `int                integer::<cursor here>
- `ch                 character(len=<cursor here>)::<++> 
+\`wr        write(&#9014;,*)<++>
+\`rd        read(&#9014;,*)<++>
+\`re        real(&#9014;)::<++>
+\`int       integer(&#9014;)::<++>
+\`ch        character(len=&#9014;)::<++> 
+\`par       parameter
+\`sre       selected_real_kind(&#9014;)
+\`sie       selected_integer_kind(&#9014;)
 <
 The <++> is a nice option, a <CTRL+J> will put your cursor in that 
 position.
