@@ -8,8 +8,8 @@
      - [Inbuilt](#inbuilt)
      - [Ultisnips](#ultisnips)
    - [Linting](#linting) 
-- [Other Suggested Plugins](#other)
    - [Menu](#menu)
+- [Other Suggested Plugins](#other-suggested-plugins)
 - [Contact](#contact)
 - [My other apps](#my-other-apps)
 
@@ -42,10 +42,6 @@ The easiest way of installation is to use a vim plugin manager.
 
 ## Dependencies
 1. [Ultisnips](https://github.com/SirVer/ultisnips): (Essential) Snippetes
-2. [coc-nvim](https://github.com/neoclide/coc.nvim): (Optional, but highly recommended)
-      Autocompletion and [language server 
-      protocol](https://github.com/hansec/fortran-language-server). vimf90 does not have an
-      dependency on `coc`, but `coc` do code completion, and actually enhances the experience.
       
 # Features
 Default `leader` key used here is **`**. You can change this by using:
@@ -188,6 +184,11 @@ file`), `automake`( a rudimentary configure.ac and makefile.am file
 generator) and programing blocks (as given in [Subprograms](#vimf90-subs)).
 
 # Other Suggested Plugins
+1. [coc-nvim](https://github.com/neoclide/coc.nvim): (Highly Recommended) Autocompletion and
+   [language server protocol](https://github.com/hansec/fortran-language-server). vimf90 does not
+   have an dependency on `coc`, but `coc` do code completion, and actually enhances the experience.
+2. [ALE](https://github.com/w0rp/ale): (Recommended) Dedicated plugin for Linting
+   and syntax checking.
 
 # Contact
 The preferred way of contacting me is via [github project page](https://github.com/rudrab/vimf90/issues).
