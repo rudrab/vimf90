@@ -93,7 +93,7 @@ Some statements is included here for less typing. These are mostly
 one-liner or part of the line:
 you type:           you get:~
 >
-\`wr        write(&#9014;,*)<++>
+\`wr        write(U+2336;,*)<++>
 \`rd        read(&#9014;,*)<++>
 \`re        real(&#9014;)::<++>
 \`int       integer(&#9014;)::<++>
