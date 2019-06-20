@@ -9,6 +9,7 @@
      - [Ultisnips](#ultisnips)
    - [Linting](#linting) 
    - [Menu](#menu)
+- [Other Suggested Plugins](#other-suggested-plugins)
 - [Contact](#contact)
 - [My other apps](#my-other-apps)
 
@@ -41,11 +42,7 @@ The easiest way of installation is to use a vim plugin manager.
 
 ## Dependencies
 1. [Ultisnips](https://github.com/SirVer/ultisnips): (Essential) Snippetes
-2. [coc-nvim](https://github.com/neoclide/coc.nvim): (Optional, but highly recommended)
-      Autocompletion and [language server
-      protocol](https://github.com/hansec/fortran-language-server). Check further dependencies
-      [here](https://github.com/neoclide/coc.nvim/wiki/Language-servers#fortran).
-
+      
 # Features
 Default `leader` key used here is **`**. You can change this by using:
 ```vim
@@ -119,8 +116,7 @@ end program  <filename>
 
 ##### Statements
 
-some statements is included here for less typing. these are mostly
-one-liner or part of the line:
+Some statements is included here for less typing. these are mostly one-liner or part of the line:
 
 |you type:    |       you get|
 |-------------|---------------|
@@ -175,6 +171,9 @@ where
  * `1`: Default. Lint only when you save a buffer
  * `-1`: Disable Linting.
 
+For more, use dedicated linting packages like 
+[fortran-syntax](https://github.com/cphyc/fortran-syntax) or [ALE](https://github.com/w0rp/ale).
+
 ## Menu
 
 Menu is added for `gui`-help. it helps building project using 
@@ -184,6 +183,12 @@ it currently has the option of compile(`make`, `make clean`, `build current
 file`), `automake`( a rudimentary configure.ac and makefile.am file 
 generator) and programing blocks (as given in [Subprograms](#vimf90-subs)).
 
+# Other Suggested Plugins
+1. [coc-nvim](https://github.com/neoclide/coc.nvim): (Highly Recommended) Autocompletion and
+   [language server protocol](https://github.com/hansec/fortran-language-server). vimf90 does not
+   have an dependency on `coc`, but `coc` do code completion, and actually enhances the experience.
+2. [ALE](https://github.com/w0rp/ale): (Recommended) Dedicated plugin for Linting
+   and syntax checking.
 
 # Contact
 The preferred way of contacting me is via [github project page](https://github.com/rudrab/vimf90/issues).
