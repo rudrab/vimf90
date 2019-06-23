@@ -164,7 +164,7 @@ function! FixName(arg)
 endfunction
 "}}}
 
-" Templates:  {{{
+" templates:  {{{
 " NOT USING TEMPLATES ANY MORE.
 " THINGS ARE MOVED TO ULTISNIPS
 "let s:plugin_dir = $HOME.'/.vim/bundle/vimf90/'

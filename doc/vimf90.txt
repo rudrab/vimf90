@@ -93,14 +93,14 @@ Some statements is included here for less typing. These are mostly
 one-liner or part of the line:
 you type:           you get:~
 >
-\`wr        write(⌶,*)<++>
-\`rd        read(⌶,*)<++>
-\`re        real(⌶)::<++>
-\`int       integer(⌶)::<++>
-\`ch        character(len=⌶)::<++> 
-\`par       parameter
-\`sre       selected_real_kind(⌶)
-\`sie       selected_integer_kind(⌶)
+`wr        write(⌶,*)<++>
+`rd        read(⌶,*)<++>
+`re        real(⌶)::<++>
+`int       integer(⌶)::<++>
+`ch        character(len=⌶)::<++> 
+`par       parameter
+`sre       selected_real_kind(⌶)
+`sie       selected_integer_kind(⌶)
 
 where ⌶ is the current cursor position.
 <
