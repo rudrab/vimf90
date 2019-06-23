@@ -32,9 +32,9 @@ elseif g:VimF90Linter == 1  " Check on save, default {{{
   au BufWritePre *.f90 silent! :%s/\v(\w) ?(\+|-|\*|\/|\>\=|\<\=|\/\=|\=|\=\=|\*\*|\>|\<) ?(\w|-)/\1 \2 \3/g
   au BufWritePre *.f90 silent! :%s/\v(\w) ?(\c\.eq\.|\c\.ne\.|\c\.gt\.|\c\.lt\.|\c\.ge\.|\c\.le\.) ?(\w|-)/\1 \2 \3/g
   au BufWritePre *.f90 silent! :%s/\v(\w) ?(\c\.and\.|\c\.not\.|\c\.or\.|\c\.eqv\.|\c\.neqv\.) ?(\w|-)/\1 \2 \3/g
-  au BufWritePre *.f90 silent! :%s/\v(\w|\)) ?(\,|\;) ?/\1\2 \3/g
-  au BufWritePre *.f90 silent! :%s/\v(\w|\)) ?(\:\:) ?(\w|-)/\1 \2 \3/g
-  au BufWritePre *.f90 silent! :%s/\v(\w|\)) ?(!) ?(\w|-)/\1  \2 \3/g
+  au BufWritePre *.f90 silent! :%s/\v(\w|\)) ?(\,|\;) ?/\1\2 \3/g           " comma and semicolon
+  au BufWritePre *.f90 silent! :%s/\v(\w|\)) ?(\:\:) ?(\w|-)/\1 \2 \3/g     " `::`
+  au BufWritePre *.f90 silent! :%s/\v(\w|\)) ?(!) ?(\w|-)/\1  \2 \3/g       " inline comment
   "}}}
 endif
 "}}}
