@@ -162,13 +162,16 @@ modules and subroutine inside present working dirs and fortran's standard module
 
 ## Linting
 Basic linting is enabled. So, when a operator is typed preceded by a space, e.g. `A =B`&#9014;, a space is
-automatically inserted, yielding `A = B`&#9014;. You can configure linting behaviour using 
+automatically inserted, yielding `A = B`&#9014;. 
+This basically enables `pep8`'s whitespace rule in fortran.
+You can enable/disable linting behaviour using 
 ```vim
 let g:VimF90Linter =0/1/-1
 ```
 where 
- * `0`: linting as you write. But this will check every keystroke. Use cautiously.
- * `1`: Default. Lint only when you save a buffer
+ *  `0`: linting as you write. But this will check every keystroke. Use cautiously. Mostly for
+     testing purpose.
+ *  `1`: Default. Lint only when you save a buffer
  * `-1`: Disable Linting.
 
 For more, use dedicated linting packages like 
@@ -185,8 +188,7 @@ generator) and programing blocks (as given in [Subprograms](#vimf90-subs)).
 
 # Other Suggested Plugins
 1. [coc-nvim](https://github.com/neoclide/coc.nvim): (Highly Recommended) Autocompletion and
-   [language server protocol](https://github.com/hansec/fortran-language-server). vimf90 does not
-   have an dependency on `coc`, but `coc` do code completion, and actually enhances the experience.
+   [language server protocol](https://github.com/hansec/fortran-language-server).
 2. [ALE](https://github.com/w0rp/ale): (Recommended) Dedicated plugin for Linting
    and syntax checking.
 
