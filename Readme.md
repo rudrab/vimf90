@@ -161,9 +161,10 @@ modules and subroutine inside present working dirs and fortran's standard module
 [dependencies](#vimf90-deps) section._ 
 
 ## Linting
-Basic linting is enabled. So, when a operator is typed preceded by a space, e.g. `A =B`&#9014;, a space is
-automatically inserted, yielding `A = B`&#9014;. 
-This basically enables `pep8`'s whitespace rule in fortran.
+Basic linting is enabled. So, when a operator is typed preceded by a space, e.g. `A =B`&#9014;, a
+space is automatically inserted, yielding `A = B`&#9014;.  This basically enables 
+[pep8's whitespace rule](https://www.python.org/dev/peps/pep-0008/#whitespace-in-expressions-and-statements) in
+fortran.
 You can enable/disable linting behaviour using 
 ```vim
 let g:VimF90Linter =0/1/-1
@@ -174,8 +175,7 @@ where
  *  `1`: Default. Lint only when you save a buffer
  * `-1`: Disable Linting.
 
-For more, use dedicated linting packages like 
-[fortran-syntax](https://github.com/cphyc/fortran-syntax) or [ALE](https://github.com/w0rp/ale).
+For more, use dedicated linting packages like [ALE](https://github.com/w0rp/ale).
 
 ## Menu
 
