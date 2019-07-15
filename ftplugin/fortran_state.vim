@@ -30,7 +30,7 @@ if  g:VimF90Linter == 0  " Check on the fly, not recommended {{{
   "}}}
 elseif g:VimF90Linter == 1  " Check on save, default {{{
   au BufWritePre <buffer> silent! :%s/\v(\w) ?(\+|\-|\/|\*|\*\*) ?(\w|-)/\1\2\3/g   " No space between arithmetics
-  au BufWritePre <buffer> silent! :%s/\v(\w) ?(\>\=|\<\=|\/\=|\=|\=\=|\>|\<) ?(\w|-)/\1 \2 \3/g  " Space between equals
+  au BufWritePre <buffer> silent! :%s/\v(\w) +?(\>\=|\<\=|\/\=|\=|\=\=|\>|\<) ?(\w|-)/\1 \2 \3/g  " Space between equals
   au BufWritePre <buffer> silent! :%s/\v(\w) ?(\c\.eq\.|\c\.ne\.|\c\.gt\.|\c\.lt\.|\c\.ge\.|\c\.le\.) ?(\w|-)/\1 \2 \3/g
   au BufWritePre <buffer> silent! :%s/\v(\w) ?(\c\.and\.|\c\.not\.|\c\.or\.|\c\.eqv\.|\c\.neqv\.) ?(\w|-)/\1 \2 \3/g
   au BufWritePre <buffer> silent! :%s/\v(\w|\)) ?(\,|\;) ?/\1\2 \3/g           " comma and semicolon
