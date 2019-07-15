@@ -38,7 +38,7 @@ elseif g:VimF90Linter == 1  " Check on save, default {{{
   au BufWritePre <buffer> silent! :%s/\v(\w|\)) ?(!) ?(\w|-)/\1  \2 \3/g       " inline comment
   "}}}
 elseif g:VimF90Linter == 2 " use fprettify{{{
-  au BufWritePre <buffer> :silent %!fprettify--silent
+  au BufWritePre <buffer> :silent %!fprettify --silent
   "}}}
 endif
 "}}}
