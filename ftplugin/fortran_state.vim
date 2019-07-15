@@ -36,8 +36,6 @@ elseif g:VimF90Linter == 1  " Check on save, default {{{
   au BufWritePre *.f90 silent! :%s/\v(\w|\)) ?(\:\:) ?(\w|-)/\1 \2 \3/g     " `::`
   au BufWritePre *.f90 silent! :%s/\v(\w|\)) ?(!) ?(\w|-)/\1  \2 \3/g       " inline comment
   "}}}
-elseif g:VimF90Linter == 2 " if you have fprettify
-  au Filetype fortran setlocal formatprg=fprettify\ --silent
 endif
 "}}}
 
