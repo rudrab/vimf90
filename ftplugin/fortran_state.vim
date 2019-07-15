@@ -43,6 +43,7 @@ elseif g:VimF90Linter == 2 " use fprettify{{{
   else
     :echom "fprettify doesn't exists! falling back to inbuilt linter"
     let g:VimF90Linter = 1
+  endif
   "}}}
 endif
 "}}}
