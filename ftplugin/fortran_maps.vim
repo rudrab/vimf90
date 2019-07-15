@@ -55,5 +55,6 @@ inoremap `fun fun<c-r>=UltiSnips#ExpandSnippet()<cr>
 
 "autocmd BufUnload *.f90 silent! exe "1," . 10 . "g/Last Modified :.*/s/Last Modified :.*/Last Modified : " .strftime("%c")
 "autocmd Bufwritepre,filewritepre *.f90 exe "1," . 10 . "g/Last Modified :.*/s/Last Modified :.*/Last Modified : " .strftime("%c")
+au BufWritePre <buffer> silent! :normal gg=G
 au BufWrite *.f90 let b:update_modified = 1
 au BufUnload *.f90 silent! if exists('b:update_modified') | exe "1," . 10 . "g/Last Modified :.*/s/Last Modified :.*/Last Modified : " .strftime("%c")| fi
