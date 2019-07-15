@@ -20,31 +20,25 @@ let g:VimF90Leader = get(g:, "VimF90Leader", "\`")
 " g:VimF90Linter 0: Lint on the fly; 1: Lint on BufWrite; -1: No Lint atall {{{
 let g:VimF90Linter = get(g:, "VimF90Linter", 1)   
 if  g:VimF90Linter == 0  " Check on the fly, not recommended {{{
-  inoremap < expr> = stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>= " : getline(".")[col(".")-2] =~ '\s' ? "= " : "="
-  inoremap < expr> > stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>> " : getline(".")[col(".")-2] =~ '\s' ? "> " : ">"
-  inoremap < expr> + getline(".")[col(".")-2] =~ '\s' ? "+ " : "+" 
-  inoremap < expr > - getline(".")[col(".")-2] =~ '\s' ? "- " : "-"
-  inoremap < expr> * getline(".")[col(".")-2] =~ '\s' ? "* " : "*"
-  inoremap < expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
+  inoremap <expr> = stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>= " : getline(".")[col(".")-2] =~ '\s' ? "= " : "="
+  inoremap <expr> > stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>> " : getline(".")[col(".")-2] =~ '\s' ? "> " : ">"
+  inoremap <expr> + getline(".")[col(".")-2] =~ '\s' ? "+ " : "+" 
+  inoremap <expr> - getline(".")[col(".")-2] =~ '\s' ? "- " : "-"
+  inoremap <expr> * getline(".")[col(".")-2] =~ '\s' ? "* " : "*"
+  inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
   "inoremap < expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
   "}}}
 elseif g:VimF90Linter == 1  " Check on save, default {{{
-  au BufWritePre < buffer > silent! :%s/\v(\w) ?(\+|\-|\/|\*|\*\*) ?(\w|-)/\1\2\3/g   " No space between arithmetics
-  au BufWritePre < buffer > silent! :%s/\v(\w) ?(\>\=|\<\=|\/\=|\=|\=\=|\>|\<) ?(\w|-)/\1 \2 \3/g  " Space between equals
-  au BufWritePre < buffer > silent! :%s/\v(\w) ?(\c\.eq\.|\c\.ne\.|\c\.gt\.|\c\.lt\.|\c\.ge\.|\c\.le\.) ?(\w|-)/\1 \2 \3/g
-  au BufWritePre < buffer > silent! :%s/\v(\w) ?(\c\.and\.|\c\.not\.|\c\.or\.|\c\.eqv\.|\c\.neqv\.) ?(\w|-)/\1 \2 \3/g
-  au BufWritePre < buffer > silent! :%s/\v(\w|\)) ?(\,|\;) ?/\1\2 \3/g           " comma and semicolon
-  au BufWritePre < buffer > silent! :%s/\v(\w|\)) ?(\:\:) ?(\w|-)/\1\2 \3/g     " `::`
-  au BufWritePre < buffer > silent! :%s/\v(\w|\)) ?(!) ?(\w|-)/\1  \2 \3/g       " inline comment
+  au BufWritePre <buffer> silent! :%s/\v(\w) ?(\+|\-|\/|\*|\*\*) ?(\w|-)/\1\2\3/g   " No space between arithmetics
+  au BufWritePre <buffer> silent! :%s/\v(\w) ?(\>\=|\<\=|\/\=|\=|\=\=|\>|\<) ?(\w|-)/\1 \2 \3/g  " Space between equals
+  au BufWritePre <buffer> silent! :%s/\v(\w) ?(\c\.eq\.|\c\.ne\.|\c\.gt\.|\c\.lt\.|\c\.ge\.|\c\.le\.) ?(\w|-)/\1 \2 \3/g
+  au BufWritePre <buffer> silent! :%s/\v(\w) ?(\c\.and\.|\c\.not\.|\c\.or\.|\c\.eqv\.|\c\.neqv\.) ?(\w|-)/\1 \2 \3/g
+  au BufWritePre <buffer> silent! :%s/\v(\w|\)) ?(\,|\;) ?/\1\2 \3/g           " comma and semicolon
+  au BufWritePre <buffer> silent! :%s/\v(\w|\)) ?(\:\:) ?(\w|-)/\1\2 \3/g     " `::`
+  au BufWritePre <buffer> silent! :%s/\v(\w|\)) ?(!) ?(\w|-)/\1  \2 \3/g       " inline comment
   "}}}
 elseif g:VimF90Linter == 2 " use fprettify{{{
-  if executable('fprettify') == 1 
-    au BufWritePre < buffer> :silent %!fprettify--silent
-  else
-    echo "fprettify does not exists  ! falling back to inbuilt linter"
-    let g:VimF90Linter = 1
-    :normal gg = G
-  endif
+  au BufWritePre <buffer> :silent %!fprettify--silent
   "}}}
 endif
 "}}}
