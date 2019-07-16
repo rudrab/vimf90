@@ -17,7 +17,7 @@
 " of fortran90+Formatting
 "
 let g:VimF90Leader = get(g:, "VimF90Leader", "\`")
-" g:VimF90Linter 0: Lint on the fly; 1: Lint on BufWrite; -1: No Lint atall {{{
+" g:VimF90Linter 0: Lint on the fly; 1: Lint on BufWrite; 2: use fprettify; -1: No Lint atall {{{
 let g:VimF90Linter = get(g:, "VimF90Linter", 1)   
 " Linting options {{{
 if  g:VimF90Linter == 0  " Check on the fly, not recommended {{{
