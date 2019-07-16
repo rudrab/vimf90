@@ -17,8 +17,9 @@
 " of fortran90+Formatting
 "
 let g:VimF90Leader = get(g:, "VimF90Leader", "\`")
-" g:VimF90Linter 0: Lint on the fly; 1: Lint on BufWrite; -1: No Lint atall {{{
+" g:VimF90Linter 0: Lint on the fly; 1: Lint on BufWrite; 2: use fprettify; -1: No Lint atall {{{
 let g:VimF90Linter = get(g:, "VimF90Linter", 1)   
+" Linting options {{{
 if  g:VimF90Linter == 0  " Check on the fly, not recommended {{{
   inoremap <expr> = stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>= " : getline(".")[col(".")-2] =~ '\s' ? "= " : "="
   inoremap <expr> > stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>> " : getline(".")[col(".")-2] =~ '\s' ? "> " : ">"
@@ -49,12 +50,12 @@ endif
 "}}}
 
 " Declarations: {{{1
-:execute 'inoremap' g:VimF90Leader.'wr'      "pr < c-r >= UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' g:VimF90Leader.'rd'    "read < c-r >= UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' g:VimF90Leader.'re'    "real < c-r >= UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' g:VimF90Leader.'int'    "int < c-r >= UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' g:VimF90Leader.'char'  "char < c-r >= UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' g:VimF90Leader.'dim'    "dim < c-r >= UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' g:VimF90Leader.'par'    "par < c-r >= UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' g:VimF90Leader.'sle'    "sle < c-r >= UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' g:VimF90Leader.'wr'      "pr<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' g:VimF90Leader.'rd'    "read<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' g:VimF90Leader.'re'    "real<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' g:VimF90Leader.'int'    "int<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' g:VimF90Leader.'char'  "char<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' g:VimF90Leader.'dim'    "dim<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' g:VimF90Leader.'par'    "par<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' g:VimF90Leader.'sle'    "sle<c-r>=UltiSnips#ExpandSnippet()<cr>"
 "}}}

@@ -2,33 +2,33 @@ snippet prg
 !This is file : `!v expand('%:t:r')`
 ! Author= `!v expand($USER)`
 ! Started at: `date +%d.%m.%y`
-! Last Modified : Tue 18 Jun 2019 18:58:51 IST
+! Last Modified : Tue 16 Jul 2019 10:45:01 IST
 !
 Program  ${1:`!v expand('%:t:r')`}
 Implicit None
 ${2: <++start here++>}
-End Program  ${1/([^\n$]+).*/$1/}
+End Program  ${1/([^\n$]+).*/$1/} $0
 endsnippet
 
 snippet mod
-Module  m${1:`!v expand('%:t:r')`}  !
+Module  ${1:`!v expand('%:t:r')`}  !
 Implicit None
 ${2:<++Start Typing++>}
-End Module  m${1/([^\n$]+).*/$1/}
+End Module  ${1/([^\n$]+).*/$1/} $0
 endsnippet
 
 snippet sub
 Subroutine  ${1:<++Subroutine++>}()
 Implicit None
 ${2:<++Start Typing++>}
-End Subroutine ${1/([^\n$]+).*/$1/}
+End Subroutine ${1/([^\n$]+).*/$1/} $0
 endsnippet
 
 snippet fun
 Function  ${1:<++Function++>}()
 Implicit None
 ${2:<++Start Typing++>}
-End Function ${1/([^\n$]+).*/$1/}
+End Function ${1/([^\n$]+).*/$1/} $0
 endsnippet
 
 snippet proc
@@ -44,7 +44,7 @@ end interface $1
 endsnippet
 
 snippet if
-${1:<++name++>} if (${2:<++condition++>}) then
+${1:<++name++>}if (${2:<++condition++>}) then
 	${3:<++Start++>}
 end if ${1/://} $0
 endsnippet
@@ -58,23 +58,23 @@ end select $0
 endsnippet
 
 snippet do
-${1:<++name++>} do ${2:<++iter++>} = ${3:<++start++>}, ${4:<++end++>} ${5:<++incr++>}
-${6:<++loop++>}
+${1:<++name++>}do ${2:<++iter++>} = ${3:<++start++>}, ${4:<++end++>}
+${5:<++loop++>}
 end do ${1/://} $0
 endsnippet
 
 snippet dow
-${1:<++name++>} do while (${2:<++condition++>})
+${1:<++name++>}do while (${2:<++condition++>})
 ${3:<++condition++>}
 end do  ${1/://} $0
 endsnippet
 
 snippet pr
-write(${1:<++fp++>},*) ${2:<++stetement++>}
+write(${1:fp},${2:*}) ${3:<++stetement++>}
 endsnippet
 
 snippet read
-read(${1:<++fp++>}, ${2:<++*++>}) ${3:<++statment++>}
+read(${1:<++fp++>}, ${2:*}) ${3:<++statment++>}
 endsnippet
 
 snippet write
