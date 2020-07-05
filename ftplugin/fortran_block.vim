@@ -104,5 +104,5 @@ EOF
 
 let b:VimF90Completer = get(b:, "VimF90Completer", "<F3>")
 
-nmap b:VimF90Completer :python3 fortran_complete()<cr>A
-imap b:VimF90Completer :python3 fortran_complete()<cr>A
+:execute 'nmap' b:VimF90Completer :python3 fortran_complete()<cr>A
+:execute 'imap' b:VimF90Completer :python3 fortran_complete()<cr>A
