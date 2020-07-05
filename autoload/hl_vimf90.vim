@@ -10,8 +10,8 @@ let s:EXCEPT_ETERNAL_LOOP_COUNT = 30
 let s:last_cursor_moved = reltime()
 
 function! hl_vimf90#enable()
-  let ft = (exists('g:hl_vimf90_allow_ft') && '' != g:hl_vimf90_allow_ft) ?
-        \ g:hl_vimf90_allow_ft : '*'
+  let ft = (exists('b:hl_vimf90_allow_ft') && '' != b:hl_vimf90_allow_ft) ?
+        \ b:hl_vimf90_allow_ft : '*'
   augroup hl_vimf90
     au!
     exec 'au FileType' ft 'call hl_vimf90#enable_buffer()'
@@ -31,7 +31,7 @@ endfunction
 function! hl_vimf90#enable_buffer()
   call hl_vimf90#disable_buffer()
   augroup hl_vimf90
-    if 0 < g:hl_vimf90_cursor_wait
+    if 0 < b:hl_vimf90_cursor_wait
       au CursorMoved,CursorHold <buffer> call hl_vimf90#do_highlight_lazy()
     else
       au CursorMoved <buffer> call hl_vimf90#do_highlight()
@@ -58,7 +58,7 @@ endfunction
 function! hl_vimf90#do_highlight_lazy()
   let dt = str2float(reltimestr(reltime(s:last_cursor_moved)))
   echo "hl_vimf90: ".string(dt)
-  if g:hl_vimf90_cursor_wait < dt
+  if b:hl_vimf90_cursor_wait < dt
     call hl_vimf90#do_highlight()
   endif
   let s:last_cursor_moved = reltime()
@@ -72,14 +72,14 @@ function! hl_vimf90#do_highlight()
     call hl_vimf90#hide()
 
     let l = getline('.')
-    if g:hl_vimf90_speed_level <= s:SPEED_MOST_IMPORTANT
+    if b:hl_vimf90_speed_level <= s:SPEED_MOST_IMPORTANT
         if l =~ '[(){}]'
             return
         endif
     endif
     let char = l[col('.')-1]
 
-    if g:hl_vimf90_speed_level <= s:SPEED_DEFAULT
+    if b:hl_vimf90_speed_level <= s:SPEED_DEFAULT
         if char !~ '\w'
             return
         endif
@@ -127,7 +127,7 @@ function! hl_vimf90#do_highlight()
             " final \& part of the regexp is a hack to improve html
             let pattern = '.*\%(' . lcre . '\).*\&' . mwre . '\&\%(<\_[^>]\+>\|.*\)'
             let b:hl_vimf90_current_match_id =
-                  \ matchadd(g:hl_vimf90_hl_groupname, pattern, g:hl_vimf90_hl_priority)
+                  \ matchadd(b:hl_vimf90_hl_groupname, pattern, b:hl_vimf90_hl_priority)
         endif
         call winrestview(wsv)
     finally
