@@ -26,9 +26,9 @@ if !exists('g:hl_vimf90_allow_ft')
   let g:hl_vimf90_allow_ft = ''
 endif
 
-if !exists('g:hl_vimf90_allow_ft_regexp')
-  echoerr 'hl_vimf90: g:hl_vimf90_allow_ft_regexp is removed. use g:hl_vimf90_allow_ft'
-endif
+" if !exists('g:hl_vimf90_allow_ft_regexp')
+  " echoerr 'hl_vimf90: g:hl_vimf90_allow_ft_regexp is removed. use g:hl_vimf90_allow_ft'
+" endif
 
 
 
