@@ -12,6 +12,10 @@ let s:last_cursor_moved = reltime()
 function! hl_vimf90#enable()
   let ft = (exists('b:hl_vimf90_allow_ft') && '' != b:hl_vimf90_allow_ft) ?
         \ b:hl_vimf90_allow_ft : '*'
+<<<<<<< HEAD
+=======
+  packadd matchit
+>>>>>>> devel
   augroup hl_vimf90
     au!
     exec 'au FileType' ft 'call hl_vimf90#enable_buffer()'
