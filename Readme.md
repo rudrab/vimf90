@@ -25,6 +25,10 @@ This is a `fortran ide` for `vim`. It is intended to make the coding with `fortr
   * support for menu mode
   * support for gnu-autotools (configure, make)
 
+# Major update
+subroutines and modules completions are removed. It is unnecessary in the era of LSP. I have tried
+and used it with coc-nvim and fortls, which is working fine.
+
 # Install
 The easiest way of installation is to use a vim plugin manager. 
 
@@ -42,6 +46,7 @@ The easiest way of installation is to use a vim plugin manager.
 
 ## Dependencies
 1. [Ultisnips](https://github.com/SirVer/ultisnips): (Essential) Snippetes
+
       
 # Features
 Default `leader` key used here is **`**. You can change this by using:
