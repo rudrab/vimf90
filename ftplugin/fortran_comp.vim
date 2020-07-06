@@ -17,88 +17,89 @@
 " Description: This file completes lists of subprogram
 "########################################################################
 
-" Deprecated {{{
-" Should be handed over to dedicated completor
-" GetComp: Menu and Sunroutine Completion {{{
-function! GetSubroutine(findstart, base)
-if a:findstart
-    " locate the start of the word
-    let line = getline('.')
-    let start = col('.') - 1
-    while start > 0 && line[start - 1] =~ '\a'
-        let start -= 1
-    endwhile
-    return start
-else
-    echomsg '**** completing' a:base
-python << EOF
-import vim
-import os
-flsts = []
-path = "."
-for dirs, subdirs, files in os.walk(path):
-    for tfile in files:
-        if tfile.endswith(('f90', 'F90', 'f', 'F')):
-            ofile = open(dirs+'/'+tfile)
-            for line in ofile:
-                if line.lower().strip().startswith("subroutine"):
-                    modname = line.split()[1]
-                    flsts.append(modname)
-vim.command("let flstsI = %s"%flsts)                    
-EOF
-for m in [
-      \"alarm()", "date_and_time()", "backtrace", "c_f_procpointer()", "chdir()", "chmod()", 
-      \"co_broadcast()", "get_command()", "get_command_argument()", "get_environment_variable()", 
-      \"mvbits()", "random_number()", "random_seed()"
-      \]
-  if m =~ "^" . a:base
-    call add(flstsI, m)
-  endif
-endfor
-return flstsI
-endif
-endfunction
-"}}}
+" " Deprecated {{{
+"   FORTLS 
+" " Should be handed over to dedicated completor
+" " GetComp: Menu and Sunroutine Completion {{{
+" function! GetSubroutine(findstart, base)
+" if a:findstart
+"     " locate the start of the word
+"     let line = getline('.')
+"     let start = col('.') - 1
+"     while start > 0 && line[start - 1] =~ '\a'
+"         let start -= 1
+"     endwhile
+"     return start
+" else
+"     echomsg '**** completing' a:base
+" python << EOF
+" import vim
+" import os
+" flsts = []
+" path = "."
+" for dirs, subdirs, files in os.walk(path):
+"     for tfile in files:
+"         if tfile.endswith(('f90', 'F90', 'f', 'F')):
+"             ofile = open(dirs+'/'+tfile)
+"             for line in ofile:
+"                 if line.lower().strip().startswith("subroutine"):
+"                     modname = line.split()[1]
+"                     flsts.append(modname)
+" vim.command("let flstsI = %s"%flsts)                    
+" EOF
+" for m in [
+"       \"alarm()", "date_and_time()", "backtrace", "c_f_procpointer()", "chdir()", "chmod()", 
+"       \"co_broadcast()", "get_command()", "get_command_argument()", "get_environment_variable()", 
+"       \"mvbits()", "random_number()", "random_seed()"
+"       \]
+"   if m =~ "^" . a:base
+"     call add(flstsI, m)
+"   endif
+" endfor
+" return flstsI
+" endif
+" endfunction
+" "}}}
 
-" GetModule {{{
-function! GetModule(findstart, base)
-if a:findstart
-    " locate the start of the word
-    let line = getline('.')
-    let start = col('.') - 1
-    while start > 0 && line[start - 1] =~ '\a'
-        let start -= 1
-    endwhile
-    return start
-else
-    echomsg '**** completing' a:base
-python << EOF
-import vim
-import os
-flsts = []
-path = "."
-for dirs, subdirs, files in os.walk(path):
-    for tfile in files:
-        if tfile.endswith(('f90', 'F90', 'f', 'F')):
-            ofile = open(dirs+'/'+tfile)
-            for line in ofile:
-                if line.lower().strip().startswith("module"):
-                    modname = line.split()[1]
-                    flsts.append(modname)
-vim.command("let flstsI = %s"%flsts)                    
-EOF
-for m in ["ieee_arithmatic", "ieee_exceptions", "ieee_features", 
-      \"iso_c_bindings", "iso_fortran_env",  
-      \"omp_lib", "omp_lib_kinds"
-      \]
-  if m =~ "^" . a:base
-    call add(flstsI, m)
-  endif
-endfor
-return flstsI
-endif
-endfunction
-"}}}
+" " GetModule {{{
+" function! GetModule(findstart, base)
+" if a:findstart
+"     " locate the start of the word
+"     let line = getline('.')
+"     let start = col('.') - 1
+"     while start > 0 && line[start - 1] =~ '\a'
+"         let start -= 1
+"     endwhile
+"     return start
+" else
+"     echomsg '**** completing' a:base
+" python << EOF
+" import vim
+" import os
+" flsts = []
+" path = "."
+" for dirs, subdirs, files in os.walk(path):
+"     for tfile in files:
+"         if tfile.endswith(('f90', 'F90', 'f', 'F')):
+"             ofile = open(dirs+'/'+tfile)
+"             for line in ofile:
+"                 if line.lower().strip().startswith("module"):
+"                     modname = line.split()[1]
+"                     flsts.append(modname)
+" vim.command("let flstsI = %s"%flsts)                    
+" EOF
+" for m in ["ieee_arithmatic", "ieee_exceptions", "ieee_features", 
+"       \"iso_c_bindings", "iso_fortran_env",  
+"       \"omp_lib", "omp_lib_kinds"
+"       \]
+"   if m =~ "^" . a:base
+"     call add(flstsI, m)
+"   endif
+" endfor
+" return flstsI
+" endif
+" endfunction
+" "}}}
 
 "Prg: Expand snippets {{{!
 let s:plugin_dir=filter(split(&rtp, ','), 'v:val =~ "/vimf90"')[0]
