@@ -9,7 +9,7 @@ __   _(_)_ __ ___  / _/ _ \ / _ \   _   ~
 CONTENTS                          *vimf90-contents*
 
 1. Introduction ................... |vimf90-Intro|
-   1.1 What it is................... |vimf90-About|
+   1.1 What it is.................. |vimf90-About|
 2. Install ........................ |vimf90-Install|
    2.1 Dependencies ............... |vimf90-Dependencies|
 3. Features ....................... |vimf90-Features|
@@ -17,7 +17,7 @@ CONTENTS                          *vimf90-contents*
   3.2  statements ................. |vimf90-Stats|
   3.3  subprograms ................ |vimf90-Subs|
   3.4  completions ................ |vimf90-Comp|
-  3.5  List of  available mappings. |vimf90-List|
+  3.5  List of available mappings . |vimf90-List|
 4. Menu                             |vimf90-Menu|
 5. Dependencies ................... |vimf90-Deps|
 6. Change Log ..................... |vimf90-Clog|
