@@ -158,9 +158,9 @@ and so on. Please check `vimf90/Ultisnips/fortran.snippets` in your `.vim/` for 
 (Too lazy to type all.)
 
 
-## Fortran subprogram complete
-vimf90 now supports subprogram completions.  `<leader>use` and `<leader>call` will popup a list of
-modules and subroutine inside present working dirs and fortran's standard module and subroutines.
+<!-- ## Fortran subprogram complete -->
+<!-- vimf90 now supports subprogram completions.  `<leader>use` and `<leader>call` will popup a list of -->
+<!-- modules and subroutine inside present working dirs and fortran's standard module and subroutines. -->
 
 **Update:** _Moving completions completely to `coc-nvim` and LSP implemented there. See
 [dependencies](#vimf90-deps) section._ 
