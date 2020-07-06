@@ -25,7 +25,7 @@ This is a `fortran ide` for `vim`. It is intended to make the coding with `fortr
   * support for menu mode
   * support for gnu-autotools (configure, make)
 
-# Major update
+# Major update (6th July,2020)
 subroutines and modules completions are removed. It is unnecessary in the era of LSP. I have tried
 and used it with coc-nvim and fortls, which is working fine.
 
@@ -180,7 +180,7 @@ where
  * `-1`: Disable Linting.
 
 For more, use dedicated linting packages like 
-[fortran-syntax](https://github.com/cphyc/fortran-syntax) or [ALE](https://github.com/w0rp/ale).
+[fortran-language-server](https://github.com/hansec/fortran-language-server) or [ALE](https://github.com/w0rp/ale).
 
 ## Menu
 
