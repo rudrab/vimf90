@@ -180,6 +180,9 @@ https://github.com/SirVer/ultisnips
 =====================================================================
 
 6. Change Log                                   *vimf90-Clog*
+v1.0
+        * Major Update
+        * subroutine and module search is removed. This can be handed better with dedicated LSP
 v0.3
         * Major update
         * Inclusion of Fortran Menu
