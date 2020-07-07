@@ -28,17 +28,25 @@ import re
 import vim
 
 class SyntaxElement:
-    def __init__(self, pattern, closingline):
-        self.pattern = pattern
+    def __init__(self, openningline, closingline):
+        self.openningline = openningline
         self.closingline = closingline
     def match(self, line): 
         """ Return (indent, closingline) or (None, None)"""
-        match = self.pattern.search(line)
+        match = self.openningline.search(line)
         if match:
             indentpattern = re.compile(r'^\s*')
             variablepattern = re.compile(r'\$\{(?P<varname>[a-zA-Z0-9_]*)\}')
             indent = indentpattern.search(line).group(0)
-            closingline = self.closingline
+            matched = match.group(0)
+            if matched.istitle():
+                closingline = self.closingline.title()
+            elif matched.isupper():
+                closingline = self.closingline.upper()
+            elif matched.islower():
+                closingline = self.closingline.lower()
+            else:
+              closingline = self.closingline
             # expand variables in closingline
             while True:
                 variable_match = variablepattern.search(closingline)
@@ -65,26 +73,28 @@ class SyntaxElement:
 def fortran_complete():
 
     syntax_elements = [
-        SyntaxElement(re.compile(r'^\s*\s*((?P<struc>(program)))\s*((?P<name>([a-zA-Z0-9_]+)))', re.IGNORECASE),
-                      'End ${struc} ${name}' ),
-        SyntaxElement(re.compile(r'^\s*\s*((?P<struc>(module)))\s*((?P<name>([a-zA-Z0-9_]+)))', re.IGNORECASE),
-                      'End ${struc} ${name}' ),
-        SyntaxElement(re.compile(r'^\s*\s*((?P<struc>(function)))\s*((?P<name>([a-zA-Z0-9_]+)))', re.IGNORECASE),
-                      'End ${struc} ${name}' ),
-        SyntaxElement(re.compile(r'^\s*\s*((?P<struc>(subroutine)))\s*((?P<name>([a-zA-Z0-9_]+)))', re.IGNORECASE),
-                      'End ${struc} ${name}' ),
-        SyntaxElement(re.compile(r'^\s*((?P<name>([a-zA-Z0-9_]+))\s*:)?\s*((?P<struc>if))\s*\(.*\)\s*then', re.IGNORECASE),
-                      'End ${struc} ${name}' ),
-        SyntaxElement(re.compile(r'^\s*((?P<name>([a-zA-Z0-9_]+))\s*:)?\s*((?P<struc>do))', re.IGNORECASE),
-                      'End ${struc} ${name}' ),
-        SyntaxElement(re.compile(r'^\s*select\s*case\s*', re.IGNORECASE),
-                      'end select' ),
-        SyntaxElement(re.compile(r'^\s*forall\s*', re.IGNORECASE),
-                      'EndForall' ),
-        SyntaxElement(re.compile(r'\s*open\((?:unit\s*=\s*?)((?P<name>([0-9]+))),.*\)', re.IGNORECASE),
-                      'close(${name})' ),                           
-        SyntaxElement(re.compile(r'^\s*?\s*type\s*(::?)\s*((?P<name>([a-zA-Z0-9_]+))\s*)', re.IGNORECASE),
-                      'end type ${name}' )
+        SyntaxElement(re.compile(r'^\s*\s*((?P<struc>([A-z0-9]*)))\ *((?P<name>([a-zA-Z0-9_]+)))', re.IGNORECASE),
+                      'End ${struc}' ),
+         SyntaxElement(re.compile(r'^\s*\s*((?P<struc>(program)))\s*((?P<name>([a-zA-Z0-9_]+)))', re.IGNORECASE),
+                       'End ${struc} ${name}' ),
+         SyntaxElement(re.compile(r'^\s*\s*((?P<struc>(module)))\s*((?P<name>([A-z0-9_-]+)))', ),
+                       'End ${struc} ${name}' ),
+         SyntaxElement(re.compile(r'^\s*\s*((?P<struc>(function)))\s*((?P<name>([a-zA-Z0-9_]+)))', re.IGNORECASE),
+                       'End ${struc} ${name}' ),
+         SyntaxElement(re.compile(r'^\s*\s*((?P<struc>(subroutine)))\s*((?P<name>([a-zA-Z0-9_]+)))', re.IGNORECASE),
+                       'End ${struc} ${name}' ),
+         SyntaxElement(re.compile(r'^\s*((?P<name>([a-zA-Z0-9_]+))\s*:)?\s*((?P<struc>if))\s*\(.*\)\s*then', re.IGNORECASE),
+                       'End ${struc} ${name}' ),
+         SyntaxElement(re.compile(r'^\s*((?P<name>([a-zA-Z0-9_]+))\s*:)?\s*((?P<struc>do))', re.IGNORECASE),
+                       'End ${struc} ${name}' ),
+         SyntaxElement(re.compile(r'^\s*select\s*case\s*', re.IGNORECASE),
+                       'end select' ),
+         SyntaxElement(re.compile(r'^\s*forall\s*', re.IGNORECASE),
+                       'EndForall' ),
+         SyntaxElement(re.compile(r'\s*open\((?:unit\s*=\s*?)((?P<name>([0-9]+))),.*\)', re.IGNORECASE),
+                       'close(${name})' ),                           
+         SyntaxElement(re.compile(r'^\s*?\s*type\s*(::?)\s*((?P<name>([a-zA-Z0-9_]+))\s*)', re.IGNORECASE),
+                       'end type ${name}' )
     ]
 
     cb = vim.current.buffer
