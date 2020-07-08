@@ -39,6 +39,7 @@ Readme in github or the project page for updated info.
   * Popup menu for standard and user defined modules and subroutines
   * Support for menu mode
   * Support for gnu-autotools (configure, make)
+  * IMPORTANT: All options are properly updated at the github's README. Please have a look.
 =====================================================================
 2. Install                                      *vimf90-Install*
 The easiest way of installation is to use a vim plugin manager.  

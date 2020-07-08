@@ -9,7 +9,8 @@
      - [Ultisnips](#ultisnips)
    - [Linting](#linting) 
    - [Menu](#menu)
-- [Other Suggested Plugins](#other-suggested-plugins)
+- [Enable Language Server](#lsp)
+- [Options](#options)
 - [Contact](#contact)
 - [My other apps](#my-other-apps)
 
@@ -27,7 +28,7 @@ This is a `fortran ide` for `vim`. It is intended to make the coding with `fortr
 
 # Major update (6th July,2020)
 subroutines and modules completions are removed. It is unnecessary in the era of LSP. I have tried
-and used it with coc-nvim and fortls, which is working fine.
+and used it with [coc-nvim](https://github.com/neoclide/coc.nvim) and [fortls](https://github.com/hansec/fortran-language-server), which is working fine.
 
 # Install
 The easiest way of installation is to use a vim plugin manager. 
@@ -45,7 +46,13 @@ The easiest way of installation is to use a vim plugin manager.
 ```
 
 ## Dependencies
-1. [Ultisnips](https://github.com/SirVer/ultisnips): (Essential) Snippetes
+1.  **Modern vim**, tested and developed  with `8+`. Vim must be build with `python3+`
+2. [Ultisnips](https://github.com/SirVer/ultisnips): (Essential) Snippetes
+3. [coc-nvim](https://github.com/neoclide/coc.nvim): (Highly Recommended)
+4. [language server protocol aka fortls](https://github.com/hansec/fortran-language-server)
+5. [fprettify](https://github.com/pseewald/fprettify)
+
+`fortls` and `fprettify` will be installed automatically if you enable the feature (see below.)
 
       
 # Features
@@ -191,15 +198,44 @@ it currently has the option of compile(`make`, `make clean`, `build current
 file`), `automake`( a rudimentary configure.ac and makefile.am file 
 generator) and programing blocks (as given in [Subprograms](#vimf90-subs)).
 
-# Other Suggested Plugins
-1. [coc-nvim](https://github.com/neoclide/coc.nvim): (Highly Recommended) Autocompletion and
-   [language server protocol](https://github.com/hansec/fortran-language-server).
-2. [ALE](https://github.com/w0rp/ale): (Recommended) Dedicated plugin for Linting
-   and syntax checking.
+
+# Enable Language Server
+
+To enable language server, we need [coc-nvim](https://github.com/neoclide/coc.nvim) and [language
+server protocol aka fortls](https://github.com/hansec/fortran-language-server). coc-nvim is a vim plugin, use
+your favourite plugin manager to install it. For `fortls`, do
+```bash
+pip3 install --user fortran-language-server
+```
+An example `vimrc` for `fortls` using `coc-nvim` is shown here
+
+```vim
+let g:coc_start_at_startup = 0
+augroup coc
+  autocmd!
+  autocmd VimEnter * :silent CocStart
+augroup end
+let g:coc_user_config = {
+      \   'languageserver': {
+      \     'fortran': {
+      \       'command': '/home/rudra/.local/bin/fortls',
+      \       'args': ['--lowercase_intrinsics'],
+      \       'filetypes': ['fortran'],
+      \       'rootPatterns': ['.fortls', '.git/'],
+      \     }
+      }
+```
+
+# Options
+
+1. `VimF90Leader`: set your leader. default is "\`"
+2. `VimF90Linter`: indent (default is `1`. `2` is preferred). Option 2 will install `fprettify`
+   and `fortls`.
+3. `VimF90Completer` = Completing do, if etc. Default is `<F3>`
+4. `b:hl_vimf90_enable_on_vim_startup` = 1
 
 # Contact
 The preferred way of contacting me is via [github project page](https://github.com/rudrab/vimf90/issues).
-
 
 # My other apps
 Other apps I have developed:

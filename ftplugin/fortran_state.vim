@@ -16,11 +16,11 @@
 " Description:  completes some most used statements and declarations 
 " of fortran90+Formatting
 "
-let g:VimF90Leader = get(g:, "VimF90Leader", "\`")
-" g:VimF90Linter 0: Lint on the fly; 1: Lint on BufWrite; 2: use fprettify; -1: No Lint atall {{{
-let g:VimF90Linter = get(g:, "VimF90Linter", 1)   
+let b:VimF90Leader = get(g:, "VimF90Leader", "\`")
+" b:VimF90Linter 0: Lint on the fly; 1: Lint on BufWrite; 2: use fprettify; -1: No Lint atall {{{
+let b:VimF90Linter = get(g:, "VimF90Linter", 1)   
 " Linting options {{{
-if  g:VimF90Linter == 0  " Check on the fly, not recommended {{{
+if  b:VimF90Linter == 0  " Check on the fly, not recommended {{{
   inoremap <expr> = stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>= " : getline(".")[col(".")-2] =~ '\s' ? "= " : "="
   inoremap <expr> > stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>> " : getline(".")[col(".")-2] =~ '\s' ? "> " : ">"
   inoremap <expr> + getline(".")[col(".")-2] =~ '\s' ? "+ " : "+" 
@@ -29,7 +29,7 @@ if  g:VimF90Linter == 0  " Check on the fly, not recommended {{{
   inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
   "inoremap < expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
   "}}}
-elseif g:VimF90Linter == 1  " Check on save, default {{{
+elseif b:VimF90Linter == 1  " Check on save, default {{{
   au BufWritePre <buffer> silent! :%s/\v(\w) ?(\+|\-|\/|\*|\*\*) ?(\w|-)/\1\2\3/g   " No space between arithmetics
   au BufWritePre <buffer> silent! :%s/\v(\w) ?(\>\=|\<\=|\/\=|\=|\=\=|\>|\<) ?(\w|-)/\1 \2 \3/g  " Space between equals
   au BufWritePre <buffer> silent! :%s/\v(\w) ?(\c\.eq\.|\c\.ne\.|\c\.gt\.|\c\.lt\.|\c\.ge\.|\c\.le\.) ?(\w|-)/\1 \2 \3/g
@@ -38,24 +38,30 @@ elseif g:VimF90Linter == 1  " Check on save, default {{{
   au BufWritePre <buffer> silent! :%s/\v(\w|\)) ?(\:\:) ?(\w|-)/\1\2 \3/g     " `::`
   au BufWritePre <buffer> silent! :%s/\v(\w|\)) ?(!) ?(\w|-)/\1  \2 \3/g       " inline comment
   "}}}
-elseif g:VimF90Linter == 2 " use fprettify{{{
+elseif b:VimF90Linter == 2 " use fprettify{{{
   if executable('fprettify')
     au BufWritePre <buffer> :silent %!fprettify --silent
   else
-    :echom "fprettify doesn't exists! falling back to inbuilt linter"
-    let g:VimF90Linter = 1
+    :let choice =confirm("fprettify doesn't exists! Install fprettify and fortls?", "&Yes\n&No(use fallback)")
+    if choice == 1
+      :execute ':!pip3 install fprettify --user -q'
+      :execute ':!pip3 install fortran-language-server --user -q'
+      au BufWritePre <buffer> :silent %!fprettify --silent
+    elseif choice == 2
+      let b:VimF90Linter = 1
+    endif
   endif
   "}}}
 endif
 "}}}
 
 " Declarations: {{{1
-:execute 'inoremap' g:VimF90Leader.'wr'      "pr<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' g:VimF90Leader.'rd'    "read<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' g:VimF90Leader.'re'    "real<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' g:VimF90Leader.'int'    "int<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' g:VimF90Leader.'char'  "char<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' g:VimF90Leader.'dim'    "dim<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' g:VimF90Leader.'par'    "par<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' g:VimF90Leader.'sle'    "sle<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' b:VimF90Leader.'wr'      "pr<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' b:VimF90Leader.'rd'    "read<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' b:VimF90Leader.'re'    "real<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' b:VimF90Leader.'int'    "int<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' b:VimF90Leader.'char'  "char<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' b:VimF90Leader.'dim'    "dim<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' b:VimF90Leader.'par'    "par<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute 'inoremap' b:VimF90Leader.'sle'    "sle<c-r>=UltiSnips#ExpandSnippet()<cr>"
 "}}}

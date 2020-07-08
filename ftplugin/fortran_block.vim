@@ -73,8 +73,6 @@ class SyntaxElement:
 def fortran_complete():
 
     syntax_elements = [
-        SyntaxElement(re.compile(r'^\s*\s*((?P<struc>([A-z0-9]*)))\ *((?P<name>([a-zA-Z0-9_]+)))', re.IGNORECASE),
-                      'End ${struc}' ),
          SyntaxElement(re.compile(r'^\s*\s*((?P<struc>(program)))\s*((?P<name>([a-zA-Z0-9_]+)))', re.IGNORECASE),
                        'End ${struc} ${name}' ),
          SyntaxElement(re.compile(r'^\s*\s*((?P<struc>(module)))\s*((?P<name>([A-z0-9_-]+)))', ),
@@ -112,7 +110,7 @@ def fortran_complete():
             vim.current.window.cursor = (line+2, 1)
 EOF
 
-let b:VimF90Completer = get(b:, "VimF90Completer", "<F3>")
+let g:VimF90Completer = get(g:, "VimF90Completer", "<F3>")
 
-:execute 'nmap' b:VimF90Completer ":python3 fortran_complete()<cr>A"
-:execute 'imap' b:VimF90Completer ":python3 fortran_complete()<cr>A"
+:execute 'nmap' g:VimF90Completer ":python3 fortran_complete()<cr>A"
+:execute 'imap' g:VimF90Completer ":python3 fortran_complete()<cr>A"
