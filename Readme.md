@@ -1,4 +1,3 @@
-# Introduction
 - [Introduction](#introduction)
    - [Features](#features)
 - [Install](#install)
@@ -9,14 +8,16 @@
      - [Ultisnips](#ultisnips)
    - [Linting](#linting) 
    - [Menu](#menu)
-- [Other Suggested Plugins](#other-suggested-plugins)
+- [Enable Language Server](#lsp)
+- [Options](#options)
 - [Contact](#contact)
 - [My other apps](#my-other-apps)
 
+## Introduction
 This is a `fortran ide` for `vim`. It is intended to make the coding with `fortran` **easier** and
 **faster** in vim.
 
-## Features 
+### Features 
   * an ide like environment for fortran 90+
   * increases development speed considerably.
   * easy to add new subprograms
@@ -25,7 +26,12 @@ This is a `fortran ide` for `vim`. It is intended to make the coding with `fortr
   * support for menu mode
   * support for gnu-autotools (configure, make)
 
-# Install
+### Major update (6th July,2020)
+subroutines and modules completions are removed. It is unnecessary in the era of LSP. I have tried
+and used it with [coc-nvim](https://github.com/neoclide/coc.nvim) and
+[fortls](https://github.com/hansec/fortran-language-server), which is working fine.
+
+## Install
 The easiest way of installation is to use a vim plugin manager. 
 
  * [Vundle](https://github.com/gmarik/vundle.vim)
@@ -41,19 +47,27 @@ The easiest way of installation is to use a vim plugin manager.
 ```
 
 ## Dependencies
-1. [Ultisnips](https://github.com/SirVer/ultisnips): (Essential) Snippetes
+1.  **Modern vim**, tested and developed  with `8+`. Vim must be build with `python3+`
+2. [Ultisnips](https://github.com/SirVer/ultisnips): (Essential) Snippetes
+3. [coc-nvim](https://github.com/neoclide/coc.nvim): Highly Recommended
+4. [language server protocol aka fortls](https://github.com/hansec/fortran-language-server): Highly
+   recommended
+5. [fprettify](https://github.com/pseewald/fprettify)
+
+`fortls` and `fprettify` will be installed automatically if you enable the feature (see below.)
+
       
-# Features
+## Features
 Default `leader` key used here is **`**. You can change this by using:
 ```vim
 let g:VimF90Leader = "your chosen key"
 ```
 in your `.vimrc`.
-## Completions
+### Completions
 There are two ways to do the completions. One is [Inbuilt Completions](#inbuilt) and
 [Completions using Ultisnips](#ultisnips)
 
-### Inbuilt 
+#### Inbuilt 
 
 `if`,`do`,`select` etc statements, that are closed by a corresponding `end`
 is defined here. after typing the first line, pressing `<f7>` will
@@ -136,9 +150,9 @@ The `<++>` is a nice option, a `<c-j>` will put your cursor in that position. Us
  inoremap <c-j> <Esc>/<++><CR><Esc><cf>
  ```
 
- in your `.vimrc` for this feature.
+in your `.vimrc` for this feature.
 
-### Ultisnips 
+#### Ultisnips 
 Completions can also be achieved using Ultisnips (Few snippets are supplied with this code, as
 ultisnips does not provide fortran snippets. **More snippets are welcome!**). `if`, `do`, `do while`
 etc is inbuilt. You should define your ultisnips trigger in your vimrc(`<c-b>` here).
@@ -153,31 +167,31 @@ and so on. Please check `vimf90/Ultisnips/fortran.snippets` in your `.vim/` for 
 (Too lazy to type all.)
 
 
-## Fortran subprogram complete
-vimf90 now supports subprogram completions.  `<leader>use` and `<leader>call` will popup a list of
-modules and subroutine inside present working dirs and fortran's standard module and subroutines.
+<!-- ### Fortran subprogram complete -->
+<!-- vimf90 now supports subprogram completions.  `<leader>use` and `<leader>call` will popup a list of -->
+<!-- modules and subroutine inside present working dirs and fortran's standard module and subroutines. -->
+<!-- **Update:** Moving completions completely to `coc-nvim` and LSP implemented there. See -->
+<!-- \[dependencies](#vimf90-deps) section. -->
 
-**Update:** _Moving completions completely to `coc-nvim` and LSP implemented there. See
-[dependencies](#vimf90-deps) section._ 
-
-## Linting
-Basic linting is enabled. So, when a operator is typed preceded by a space, e.g. `A =B`&#9014;, a
-space is automatically inserted, yielding `A = B`&#9014;.  This basically enables 
-[pep8's whitespace rule](https://www.python.org/dev/peps/pep-0008/#whitespace-in-expressions-and-statements) in
-fortran.
+#### Linting
+Basic linting is enabled. So, when a operator is typed preceded by a space, e.g. `A =B`&#9014;, a space is
+automatically inserted, yielding `A = B`&#9014;. 
+This basically enables `pep8`'s whitespace rule in fortran.
 You can enable/disable linting behaviour using 
 ```vim
-let g:VimF90Linter =0/1/-1
+let g:VimF90Linter =0/1/2/-1
 ```
 where 
  *  `0`: linting as you write. But this will check every keystroke. Use cautiously. Mostly for
      testing purpose.
  *  `1`: Default. Lint only when you save a buffer
+ *  `2`: **Strongly recommended**. Other options are there because I don't want to force you to install
+     `fprettify`.
  * `-1`: Disable Linting.
 
-For more, use dedicated linting packages like [ALE](https://github.com/w0rp/ale).
+For more, use dedicated linting packages like `fortls` or [ALE](https://github.com/w0rp/ale).
 
-## Menu
+#### Menu
 
 Menu is added for `gui`-help. it helps building project using 
 gnu-`autotool`. Every fortran file will open with `fortran90` element 
@@ -186,17 +200,46 @@ it currently has the option of compile(`make`, `make clean`, `build current
 file`), `automake`( a rudimentary configure.ac and makefile.am file 
 generator) and programing blocks (as given in [Subprograms](#vimf90-subs)).
 
-# Other Suggested Plugins
-1. [coc-nvim](https://github.com/neoclide/coc.nvim): (Highly Recommended) Autocompletion and
-   [language server protocol](https://github.com/hansec/fortran-language-server).
-2. [ALE](https://github.com/w0rp/ale): (Recommended) Dedicated plugin for Linting
-   and syntax checking.
 
-# Contact
+## Enable Language Server
+
+To enable language server, we need [coc-nvim](https://github.com/neoclide/coc.nvim) and [language
+server protocol aka fortls](https://github.com/hansec/fortran-language-server). coc-nvim is a vim plugin, use
+your favourite plugin manager to install it. For `fortls`, do
+```bash
+pip3 install --user fortran-language-server
+```
+An example `vimrc` for `fortls` using `coc-nvim` is shown here
+
+```vim
+let g:coc_start_at_startup = 0
+augroup coc
+  autocmd!
+  autocmd VimEnter * :silent CocStart
+augroup end
+let g:coc_user_config = {
+      \   'languageserver': {
+      \     'fortran': {
+      \       'command': '/home/rudra/.local/bin/fortls',
+      \       'args': ['--lowercase_intrinsics'],
+      \       'filetypes': ['fortran'],
+      \       'rootPatterns': ['.fortls', '.git/'],
+      \     }
+      }
+```
+
+## Options
+
+1. `VimF90Leader`: set your leader. default is "\`"
+2. `VimF90Linter`: indent (default is `1`. `2` is preferred). Option 2 will install `fprettify`
+   and `fortls`.
+3. `VimF90Completer` = Completing do, if etc. Default is `<F3>`
+4. `b:hl_vimf90_enable_on_vim_startup` = 1
+
+## Contact
 The preferred way of contacting me is via [github project page](https://github.com/rudrab/vimf90/issues).
 
-
-# My other apps
+## My other apps
 Other apps I have developed:
 
 - [MkBiB](http://rudrab.github.io/mkbib/): BibTeX maker.
