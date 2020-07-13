@@ -46,10 +46,10 @@ noremap     <leader>ca      :call CLArgs()<CR>
 " inoremap `fun               <Esc>:call Prog("fun")<cr><CR><Esc>gg=G<C-j>``
 " nnoremap `fun               :call Prog("fun")<cr><CR><Esc>gg=G<C-j>
 
-inoremap `prg prg<c-r>=UltiSnips#ExpandSnippet()<cr>
-inoremap `mod mod<c-r>=UltiSnips#ExpandSnippet()<cr>
-inoremap `sub sub<c-r>=UltiSnips#ExpandSnippet()<cr>
-inoremap `fun fun<c-r>=UltiSnips#ExpandSnippet()<cr>
+" inoremap `prg prg<c-r>=UltiSnips#ExpandSnippet()<cr>
+" inoremap `mod mod<c-r>=UltiSnips#ExpandSnippet()<cr>
+" inoremap `sub sub<c-r>=UltiSnips#ExpandSnippet()<cr>
+" inoremap `fun fun<c-r>=UltiSnips#ExpandSnippet()<cr>
 
 
 

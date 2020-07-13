@@ -56,12 +56,16 @@ endif
 "}}}
 
 " Declarations: {{{1
-:execute 'inoremap' b:VimF90Leader.'wr'      "pr<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' b:VimF90Leader.'rd'    "read<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' b:VimF90Leader.'re'    "real<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' b:VimF90Leader.'int'    "int<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' b:VimF90Leader.'char'  "char<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' b:VimF90Leader.'dim'    "dim<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' b:VimF90Leader.'par'    "par<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute 'inoremap' b:VimF90Leader.'sle'    "sle<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:VimF90Leader.'wr'    "pr<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:VimF90Leader.'rd'    "read<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:VimF90Leader.'re'    "real<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:VimF90Leader.'int'   "int<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:VimF90Leader.'char'  "char<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:VimF90Leader.'dim'   "dim<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:VimF90Leader.'par'   "par<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:VimF90Leader.'sle'   "sle<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:VimF90Leader.'prg'   "prg<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:VimF90Leader.'mod'   "mod<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:VimF90Leader.'sub'   "sub<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:VimF90Leader.'fun'   "fun<c-r>=UltiSnips#ExpandSnippet()<cr>"
 "}}}
