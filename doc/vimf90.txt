@@ -39,7 +39,9 @@ Readme in github or the project page for updated info.
   * Popup menu for standard and user defined modules and subroutines
   * Support for menu mode
   * Support for gnu-autotools (configure, make)
-  * IMPORTANT: All options are properly updated at the github's README. Please have a look.
+  * IMPORTANT: All options are properly updated at the webpage. Please have a look.
+  
+  * https://rudrab.github.io/vimf90/
 =====================================================================
 2. Install                                      *vimf90-Install*
 The easiest way of installation is to use a vim plugin manager.  
@@ -55,9 +57,12 @@ Using vim-plug:
 <
 
 2.1 Dependencies                                *vimf90-Dependencies*
-Not to reinventing the wheel, this pluging depends on other awesome plugins:
+Without reinventing the wheel, this plugin depends on other awesome plugins:
+   * Modern vim, tested and developed with `8+`. Vim should be build with python-3
    * Ultisnips: (Essential)
-   * coc-nvim:  (Optional) For Language server support
+   * coc-nvim:  (Highle Recommended) For Language server support
+   * fortls and fprettify: will be installed automatically if you choose proper option (Read
+     below.).
 
 =====================================================================
 
