@@ -39,8 +39,8 @@ Readme in github or the project page for updated info.
   * Popup menu for standard and user defined modules and subroutines
   * Support for menu mode
   * Support for gnu-autotools (configure, make)
-  * IMPORTANT: All options are properly updated at the webpage. Please have a look.
   
+  * IMPORTANT: All options are properly updated at the github's README. Please have a look.
   * https://rudrab.github.io/vimf90/
 =====================================================================
 2. Install                                      *vimf90-Install*

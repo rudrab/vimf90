@@ -16,11 +16,12 @@
 " Description:  completes some most used statements and declarations 
 " of fortran90+Formatting
 "
-let b:VimF90Leader = get(g:, "VimF90Leader", "\`")
-" b:VimF90Linter 0: Lint on the fly; 1: Lint on BufWrite; 2: use fprettify; -1: No Lint atall {{{
-let b:VimF90Linter = get(g:, "VimF90Linter", 1)   
+let b:fprettify_options = get(g:, "fprettify_options", "--silent")
+let b:fortran_leader = get(g:, "fortran_leader", "\`")
+" b:fortran_linter 0: Lint on the fly; 1: Lint on BufWrite; 2: use fprettify; -1: No Lint atall {{{
+let b:fortran_linter = get(g:, "fortran_linter", 1)   
 " Linting options {{{
-if  b:VimF90Linter == 0  " Check on the fly, not recommended {{{
+if  b:fortran_linter == 0  " Check on the fly, not recommended {{{
   inoremap <expr> = stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>= " : getline(".")[col(".")-2] =~ '\s' ? "= " : "="
   inoremap <expr> > stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>> " : getline(".")[col(".")-2] =~ '\s' ? "> " : ">"
   inoremap <expr> + getline(".")[col(".")-2] =~ '\s' ? "+ " : "+" 
@@ -29,7 +30,7 @@ if  b:VimF90Linter == 0  " Check on the fly, not recommended {{{
   inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
   "inoremap < expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
   "}}}
-elseif b:VimF90Linter == 1  " Check on save, default {{{
+elseif b:fortran_linter == 1  " Check on save, default {{{
   au BufWritePre <buffer> silent! :%s/\v(\w) ?(\+|\-|\/|\*|\*\*) ?(\w|-)/\1\2\3/g   " No space between arithmetics
   au BufWritePre <buffer> silent! :%s/\v(\w) ?(\>\=|\<\=|\/\=|\=|\=\=|\>|\<) ?(\w|-)/\1 \2 \3/g  " Space between equals
   au BufWritePre <buffer> silent! :%s/\v(\w) ?(\c\.eq\.|\c\.ne\.|\c\.gt\.|\c\.lt\.|\c\.ge\.|\c\.le\.) ?(\w|-)/\1 \2 \3/g
@@ -38,9 +39,9 @@ elseif b:VimF90Linter == 1  " Check on save, default {{{
   au BufWritePre <buffer> silent! :%s/\v(\w|\)) ?(\:\:) ?(\w|-)/\1\2 \3/g     " `::`
   au BufWritePre <buffer> silent! :%s/\v(\w|\)) ?(!) ?(\w|-)/\1  \2 \3/g       " inline comment
   "}}}
-elseif b:VimF90Linter == 2 " use fprettify{{{
+elseif b:fortran_linter == 2 " use fprettify{{{
   if executable('fprettify')
-    au BufWritePre <buffer> :silent %!fprettify --silent
+    au BufWritePre <buffer> :execute 'silent %!fprettify ' . g:fprettify_options
   else
     :let choice =confirm("fprettify doesn't exists! Install fprettify and fortls?", "&Yes\n&No(use fallback)")
     if choice == 1
@@ -48,7 +49,7 @@ elseif b:VimF90Linter == 2 " use fprettify{{{
       :execute ':!pip3 install fortran-language-server --user -q'
       au BufWritePre <buffer> :silent %!fprettify --silent
     elseif choice == 2
-      let b:VimF90Linter = 1
+      let b:fortran_linter = 1
     endif
   endif
   "}}}
@@ -56,6 +57,7 @@ endif
 "}}}
 
 " Declarations: {{{1
+<<<<<<< HEAD
 :execute  'inoremap'  b:VimF90Leader.'wr'    "pr<c-r>=UltiSnips#ExpandSnippet()<cr>"
 :execute  'inoremap'  b:VimF90Leader.'rd'    "read<c-r>=UltiSnips#ExpandSnippet()<cr>"
 :execute  'inoremap'  b:VimF90Leader.'re'    "real<c-r>=UltiSnips#ExpandSnippet()<cr>"
@@ -68,4 +70,18 @@ endif
 :execute  'inoremap'  b:VimF90Leader.'mod'   "mod<c-r>=UltiSnips#ExpandSnippet()<cr>"
 :execute  'inoremap'  b:VimF90Leader.'sub'   "sub<c-r>=UltiSnips#ExpandSnippet()<cr>"
 :execute  'inoremap'  b:VimF90Leader.'fun'   "fun<c-r>=UltiSnips#ExpandSnippet()<cr>"
+=======
+:execute  'inoremap'  b:fortran_leader.'wr'    "pr<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:fortran_leader.'rd'    "read<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:fortran_leader.'re'    "real<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:fortran_leader.'int'   "int<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:fortran_leader.'char'  "char<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:fortran_leader.'dim'   "dim<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:fortran_leader.'par'   "par<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:fortran_leader.'sle'   "sle<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:fortran_leader.'prg'   "prg<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:fortran_leader.'mod'   "mod<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:fortran_leader.'sub'   "sub<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:fortran_leader.'fun'   "fun<c-r>=UltiSnips#ExpandSnippet()<cr>"
+>>>>>>> devel
 "}}}

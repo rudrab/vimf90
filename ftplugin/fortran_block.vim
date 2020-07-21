@@ -110,7 +110,8 @@ def fortran_complete():
             vim.current.window.cursor = (line+2, 1)
 EOF
 
-let g:VimF90Completer = get(g:, "VimF90Completer", "<F3>")
+let b:fortran_completer = get(g:, "fortran_completer", "<F3>")
 
-:execute 'nmap' g:VimF90Completer ":python3 fortran_complete()<cr>A"
-:execute 'imap' g:VimF90Completer ":python3 fortran_complete()<cr>A"
+:execute 'nmap' b:fortran_completer ":python3 fortran_complete()<cr>A"
+:execute 'imap' b:fortran_completer ":python3 fortran_complete()<cr>A"
+packadd matchit

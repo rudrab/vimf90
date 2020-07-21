@@ -24,6 +24,8 @@ if has('gui_running') && has('menu')
   let s:menu_root = 'Fortran'
 
   if g:Fortran_menumode == 1
+    " This is how to set the variables
+    "exec 'an  Fortran&90.&Compile.&Compile<Tab>'.b:male     ':call Compile()<CR>'
     an  Fortran&90.&Compile.&Compile<Tab>\\cc                           :call Compile()<CR>
     an  Fortran&90.&Compile.&Create\ Executable<Tab>\\cl                :call Link()<CR>
     an  Fortran&90.&Compile.&Compile\ and\ Run<Tab>\\cr                 :call Run()<CR>
