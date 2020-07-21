@@ -14,17 +14,18 @@
 - [My other apps](#my-other-apps)
 
 ## Introduction
-This is a `fortran ide` for `vim`. It is intended to make the coding with `fortran` **easier** and
+ `fortran` `ide` for `vim`. It is intended to make the coding with `fortran` **easier** and
 **faster** in vim.
 
 ### Features 
-  * an ide like environment for fortran 90+
-  * increases development speed considerably.
-  * easy to add new subprograms
-  * auto completion of program blocks, like `if-endif` etc.
-  * popup menu for standard and user defined modules and subroutines
-  * support for menu mode
-  * support for gnu-autotools (configure, make)
+  * An ide like environment for fortran 90+
+  * Supports LSP
+  * Increases development speed considerably.
+  * Easy to add new subprograms
+  * Auto completion of program blocks, like `if-endif` etc.
+  * Popup menu for standard and user defined modules and subroutines
+  * Support for menu mode
+  * Support for gnu-autotools (configure, make)
 
 ### Major update (6th July, 2020)
 subroutines and modules completions are removed. It is unnecessary in the era of LSP. I have tried
