@@ -182,7 +182,9 @@ etc is inbuilt. You should define your ultisnips trigger in your vimrc(`<c-b>` h
 
 and so on. Please check `vimf90/Ultisnips/fortran.snippets` in your `.vim/` for complete list. 
 (Too lazy to type all.)
-**NB**: Kindly consider updating your `snippets` as pull request. 
+
+**NB**: Kindly consider submitting your `snippets` as pull request. This will help me enhance my
+snippets.
 
 
 <!-- ### Fortran subprogram complete -->
