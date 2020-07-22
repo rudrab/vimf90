@@ -14,17 +14,18 @@
 - [My other apps](#my-other-apps)
 
 ## Introduction
-This is a `fortran ide` for `vim`. It is intended to make the coding with `fortran` **easier** and
+ `fortran` `ide` for `vim`. It is intended to make the coding with `fortran` **easier** and
 **faster** in vim.
 
 ### Features 
-  * an ide like environment for fortran 90+
-  * increases development speed considerably.
-  * easy to add new subprograms
-  * auto completion of program blocks, like `if-endif` etc.
-  * popup menu for standard and user defined modules and subroutines
-  * support for menu mode
-  * support for gnu-autotools (configure, make)
+  * An ide like environment for fortran 90+
+  * Supports LSP
+  * Increases development speed considerably.
+  * Easy to add new subprograms
+  * Auto completion of program blocks, like `if-endif` etc.
+  * Popup menu for standard and user defined modules and subroutines
+  * Support for menu mode
+  * Support for gnu-autotools (configure, make)
 
 ### Major update (6th July, 2020)
 subroutines and modules completions are removed. It is unnecessary in the era of LSP. I have tried
@@ -57,7 +58,8 @@ The easiest way of installation is to use a vim plugin manager.
 2. [Ultisnips](https://github.com/SirVer/ultisnips): (Essential) Snippetes.
 4. [language server protocol aka fortls](https://github.com/hansec/fortran-language-server): Highly
    recommended.
-3. [coc-nvim](https://github.com/neoclide/coc.nvim): to use [fortls](https://github.com/hansec/fortran-language-server).
+3. [coc-nvim](https://github.com/neoclide/coc.nvim): Recommended to use
+   [fortls](https://github.com/hansec/fortran-language-server).
 5. [fprettify](https://github.com/pseewald/fprettify).
 
 `fortls` and `fprettify` will be installed automatically if you enable the feature (see below.)
@@ -65,11 +67,11 @@ The easiest way of installation is to use a vim plugin manager.
 ## Options
 There are several options to configure how `VimF90` will work. 
 
-1. `fortran_leader`: Set your leader. Default is "\`"
-2. `fortran_linter`: Indent (default is `1`. `2` is preferred). Option 2 will install `fprettify`
+1. `fortran_leader`: set your leader. default is "\`"
+2. `fortran_linter`: indent (default is `1`. `2` is preferred). Option 2 will install `fprettify`
    and `fortls`.
-3. `fortran_completer`: Completing do, if etc. Default is `<F3>`.
-4. `fprettify_options`: Check `fprettify --help` for available options. Default is `--silent`.
+3. `fortran_completer` = Completing do, if etc. Default is `<F3>`.
+4. `fprettify_options` = check `fprettify --help` for available options. Default is `--silent`.
 
 ## Features
 Default `leader` key used here is **\`**. You can change this by using:
@@ -81,7 +83,7 @@ in your `.vimrc`.
 There are two ways to do the completions. One is [Inbuilt Completions](#inbuilt) and
 [Completions using Ultisnips](#ultisnips)
 
-#### Inbuilt (completed using `fortran_completer`) 
+#### Inbuilt (completed using `fortran_leader`) 
 
 `if`,`do`,`select` etc statements, that are closed by a corresponding `end`
 is defined here. after typing the first line, pressing `<F7>` will
@@ -89,7 +91,7 @@ complete the construct. for example:
  you type:
 
 ```fortran
-trial: do i=1,10<f3>        
+trial: do i=1,10<f7>        
 ```
 
 you will get:
@@ -104,17 +106,17 @@ end do trial
 
 |type:                         |   get               |
 |------------------------------|---------------------|
-|`[name:]do[iterator]<f3>`       |  do construct |
-|`[name:]if(condition)then<f3>`  |  if construct |
-|`selectcase<f3>`                |  select construct |
-|`forall<f3>`                    |  forall construct|
-|`type::name<f3>`                |  type  construct|
+|`[name:]do[iterator]<f7>`       |  do construct |
+|`[name:]if(condition)then<f7>`  |  if construct |
+|`selectcase<f7>`                |  select construct |
+|`forall<f7>`                    |  forall construct|
+|`type::name<f7>`                |  type  construct|
 
 **NB**: this part is shamelessly copied from 
 [fortran-codecomplete](http://www.vim.org/scripts/script.php?script_id=2487)
 
 
-#### Statements and Subprograms (completed using `fortran_completor`)
+##### Statements
 
 Some statements is included here for less typing. these are mostly one-liner or part of the line:
 
@@ -139,14 +141,14 @@ The `<++>` is a nice option, a `<c-j>` will put your cursor in that position. Us
 in your `.vimrc` for this feature.
 
 
-##### Subprograms 
+##### Subprograms (completed using `fortran_completor`)
 These key-combinations makes program and subprograms header.  It supports program(**\`prg**),
 module(**\`mod**), subroutine(**\`sub**) and function(**\`fun**). The initiator \` can be changed using
 `fortran_leader` (See [Options](#options) for more). For example,
 ```bash
 `prg
 ```
-will yield:
+will yeild:
 
 ```fortran
 !this is file : <your file name>
@@ -171,12 +173,12 @@ end program  <filename>
 #### Ultisnips 
 Completions can also be achieved using Ultisnips (Few snippets are supplied with this code, as
 ultisnips does not provide fortran snippets. **More snippets are welcome!**). `if`, `do`, `do while`
-etc is inbuilt. You should define your ultisnips trigger in your vimrc(`<c-a>` here).
+etc is inbuilt. You should define your ultisnips trigger in your vimrc(`<c-b>` here).
 
 |Type|Get|
 |-----|-----|
-|`do<c-a>`|do construct|
-|`if<c-a>`|if construct|
+|`do<c-b>`|do construct|
+|`if<c-b>`|if construct|
 
 
 and so on. Please check `vimf90/Ultisnips/fortran.snippets` in your `.vim/` for complete list. 
