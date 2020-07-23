@@ -37,20 +37,4 @@ nnoremap    <leader>cl      :call Link()<CR>
 noremap     <leader>cr      :call Run()<CR>
 noremap     <leader>ca      :call CLArgs()<CR>
 
-" inoremap `prg               <Esc>:call Prog("prg")<cr><CR><Esc>gg=G<C-j>``
-" nnoremap `prg               :call Prog("prg")<cr><CR><Esc>gg=G<C-j>
-" inoremap `mod               <Esc>:call Prog("mod")<cr><CR><Esc>gg=G<c-j>``
-" nnoremap `mod               :call Prog("mod")<cr><CR><Esc>gg=G<C-j>
-" inoremap `sub               <Esc>:call Prog("sub")<cr><CR><Esc>gg=G<C-j>``
-" nnoremap `sub               :call Prog("sub")<cr><CR><Esc>gg=G<C-j>
-" inoremap `fun               <Esc>:call Prog("fun")<cr><CR><Esc>gg=G<C-j>``
-" nnoremap `fun               :call Prog("fun")<cr><CR><Esc>gg=G<C-j>
-
-
-
-
-"autocmd BufUnload *.f90 silent! exe "1," . 10 . "g/Last Modified :.*/s/Last Modified :.*/Last Modified : " .strftime("%c")
-"autocmd Bufwritepre,filewritepre *.f90 exe "1," . 10 . "g/Last Modified :.*/s/Last Modified :.*/Last Modified : " .strftime("%c")
-au BufWritePre <buffer> silent! :normal gg=G
-au BufWrite *.f90 let b:update_modified = 1
-au BufUnload *.f90 silent! if exists('b:update_modified') | exe "1," . 10 . "g/Last Modified :.*/s/Last Modified :.*/Last Modified : " .strftime("%c")| fi
+autocmd Bufwritepre,filewritepre *.f90 exe "%g/Last Modified:.*/s/Last Modified:.*/Last Modified: " .strftime("%c")
