@@ -57,7 +57,7 @@ endif
 "}}}
 
 " Declarations: {{{1
-:execute  'inoremap'  b:fortran_leader.'wr'    "pr<c-r>=UltiSnips#ExpandSnippet()<cr>"
+:execute  'inoremap'  b:fortran_leader.'wr'    "wr<c-r>=UltiSnips#ExpandSnippet()<cr>"
 :execute  'inoremap'  b:fortran_leader.'rd'    "read<c-r>=UltiSnips#ExpandSnippet()<cr>"
 :execute  'inoremap'  b:fortran_leader.'re'    "real<c-r>=UltiSnips#ExpandSnippet()<cr>"
 :execute  'inoremap'  b:fortran_leader.'int'   "int<c-r>=UltiSnips#ExpandSnippet()<cr>"

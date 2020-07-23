@@ -176,8 +176,7 @@ endfunction
 " %substitute#\[:EVAL:\]\(.\{-\}\)\[:END:\]#\=eval(submatch(1))#ge
 " endfunction
 " }}}
-autocmd QuitPre * silent! exe "1," . 10 . "g/Last Change:.*/s/Last Change:.*/Last Change: " .strftime("%c")
-autocmd QuitPre * silent! exe "1," . 10 . "s/Last Modified :.*/Last Modified : " .strftime("%c")
+autocmd QuitPre * silent! exe "1," . 10 . "s/Last Modified:.*/Last Modified: " .strftime("%c")
 autocmd CursorMovedI *.f90  :call FixName("Program")
 autocmd CursorMovedI *.f90  :call FixName("Module")
 autocmd CursorMovedI *.f90  :call FixName("function")
