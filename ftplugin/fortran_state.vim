@@ -16,22 +16,16 @@
 " Description:  completes some most used statements and declarations 
 " of fortran90+Formatting
 "
+
+:let choice =confirm("Some python dependencies doesn't exists! Install them?", "&Yes\n&No(use fallback)")
 if !executable('fprettify')
-    :let choice =confirm("Some python dependencies doesn't exists! Install them?", "&Yes\n&No(use fallback)")
-    if choice == 1
-      " :execute ':!pip3 install fprettify --user -q'
-      :call install_deps#install_fprettify() 
-      if !executable('fortls')
-        :call install_deps#install_fortls() 
-      endif
-      if !executable('unidecode')
-        :call install_deps#install_unidecode() 
-      endif
-      " :execute ':!pip3 install fortran-language-server --user -q'
-      au BufWritePre <buffer> :silent %!fprettify --silent
-    elseif choice == 2
-      let b:fortran_linter = 1
-    endif
+  :call install_deps#install_fprettify() 
+endif
+if !executable('fortls')
+  :call install_deps#install_fortls() 
+endif
+if !executable('unidecode')
+  :call install_deps#install_unidecode() 
 endif
 
 let b:fprettify_options = get(g:, "fprettify_options", "--silent")
@@ -58,7 +52,7 @@ elseif b:fortran_linter == 1  " Check on save, default {{{
   au BufWritePre <buffer> silent! :%s/\v(\w|\)) ?(!) ?(\w|-)/\1  \2 \3/g       " inline comment
   "}}}
 elseif b:fortran_linter == 2 " use fprettify{{{
-    au BufWritePre <buffer> :execute 'silent %!fprettify ' . g:fprettify_options
+  au BufWritePre <buffer> :execute 'silent %!fprettify ' . g:fprettify_options
   "}}}
 endif
 "}}}
