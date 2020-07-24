@@ -17,7 +17,7 @@
 "    GNU General Public License for more details.
 "
 " Description: 
-"    This maps the <F7> key to complete Fortran 90 constructs"
+"    This maps the <F3> key to complete Fortran 90 constructs"
 "    Trying to correct git
 "########################################################################
 
