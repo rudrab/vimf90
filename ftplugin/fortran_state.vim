@@ -47,7 +47,9 @@ elseif b:fortran_linter == 2 " use fprettify{{{
     if choice == 1
       " :execute ':!pip3 install fprettify --user -q'
       :call install_deps#install_fprettify() 
-      :execute ':!pip3 install fortran-language-server --user -q'
+      :call install_deps#install_fortls() 
+      :call install_deps#install_unidecode() 
+      " :execute ':!pip3 install fortran-language-server --user -q'
       au BufWritePre <buffer> :silent %!fprettify --silent
     elseif choice == 2
       let b:fortran_linter = 1
