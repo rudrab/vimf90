@@ -16,16 +16,17 @@
 " Description:  completes some most used statements and declarations 
 " of fortran90+Formatting
 "
-
-:let choice =confirm("Some python dependencies doesn't exists! Install them?", "&Yes\n&No(use fallback)")
-if !executable('fprettify')
-  :call install_deps#install_fprettify() 
-endif
-if !executable('fortls')
-  :call install_deps#install_fortls() 
-endif
-if !executable('unidecode')
-  :call install_deps#install_unidecode() 
+if !executable('fprettify') || !executable('fortls') || !executable('unidecode')
+  :let choice =confirm("Some python dependencies doesn't exists! Install them?", "&Yes\n&No(use fallback)")
+  if !executable('fprettify')
+    :call install_deps#install_fprettify() 
+  endif
+  if !executable('fortls')
+    :call install_deps#install_fortls() 
+  endif
+  if !executable('unidecode')
+    :call install_deps#install_unidecode() 
+  endif
 endif
 
 let b:fprettify_options = get(g:, "fprettify_options", "--silent")
