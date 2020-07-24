@@ -21,3 +21,11 @@ function! install_deps#install_fprettify()
   echom "Installing fprettify"
   :execute ':!pip3 install fprettify --user -q'
 endfunction
+function! install_deps#install_unidecode()
+  echom "Installing fprettify"
+  :execute ':!pip3 install unidecode --user -q'
+endfunction
+function! install_deps#install_fortls()
+  echom "Installing fprettify"
+  :execute ':!pip3 install fortran-language-server --user -q'
+endfunction
