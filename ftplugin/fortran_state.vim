@@ -16,6 +16,24 @@
 " Description:  completes some most used statements and declarations 
 " of fortran90+Formatting
 "
+if !executable('fprettify')
+    :let choice =confirm("Some python dependencies doesn't exists! Install them?", "&Yes\n&No(use fallback)")
+    if choice == 1
+      " :execute ':!pip3 install fprettify --user -q'
+      :call install_deps#install_fprettify() 
+      if !executable('fortls')
+        :call install_deps#install_fortls() 
+      endif
+      if !executable('unidecode')
+        :call install_deps#install_unidecode() 
+      endif
+      " :execute ':!pip3 install fortran-language-server --user -q'
+      au BufWritePre <buffer> :silent %!fprettify --silent
+    elseif choice == 2
+      let b:fortran_linter = 1
+    endif
+endif
+
 let b:fprettify_options = get(g:, "fprettify_options", "--silent")
 let b:fortran_leader = get(g:, "fortran_leader", "\`")
 " b:fortran_linter 0: Lint on the fly; 1: Lint on BufWrite; 2: use fprettify; -1: No Lint atall {{{
@@ -40,25 +58,7 @@ elseif b:fortran_linter == 1  " Check on save, default {{{
   au BufWritePre <buffer> silent! :%s/\v(\w|\)) ?(!) ?(\w|-)/\1  \2 \3/g       " inline comment
   "}}}
 elseif b:fortran_linter == 2 " use fprettify{{{
-  if executable('fprettify')
     au BufWritePre <buffer> :execute 'silent %!fprettify ' . g:fprettify_options
-  else
-    :let choice =confirm("Some python dependencies doesn't exists! Install them?", "&Yes\n&No(use fallback)")
-    if choice == 1
-      " :execute ':!pip3 install fprettify --user -q'
-      :call install_deps#install_fprettify() 
-      if !executable('fortls')
-        :call install_deps#install_fortls() 
-      endif
-      if !executable('unidecode')
-        :call install_deps#install_unidecode() 
-      endif
-      " :execute ':!pip3 install fortran-language-server --user -q'
-      au BufWritePre <buffer> :silent %!fprettify --silent
-    elseif choice == 2
-      let b:fortran_linter = 1
-    endif
-  endif
   "}}}
 endif
 "}}}
