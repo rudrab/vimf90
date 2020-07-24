@@ -43,12 +43,16 @@ elseif b:fortran_linter == 2 " use fprettify{{{
   if executable('fprettify')
     au BufWritePre <buffer> :execute 'silent %!fprettify ' . g:fprettify_options
   else
-    :let choice =confirm("fprettify doesn't exists! Install fprettify and fortls?", "&Yes\n&No(use fallback)")
+    :let choice =confirm("Some python dependencies doesn't exists! Install them?", "&Yes\n&No(use fallback)")
     if choice == 1
       " :execute ':!pip3 install fprettify --user -q'
       :call install_deps#install_fprettify() 
-      :call install_deps#install_fortls() 
-      :call install_deps#install_unidecode() 
+      if !executable('fortls')
+        :call install_deps#install_fortls() 
+      endif
+      if !executable('unidecode')
+        :call install_deps#install_unidecode() 
+      endif
       " :execute ':!pip3 install fortran-language-server --user -q'
       au BufWritePre <buffer> :silent %!fprettify --silent
     elseif choice == 2
