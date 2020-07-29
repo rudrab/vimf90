@@ -67,11 +67,11 @@ The easiest way of installation is to use a vim plugin manager.
 ## Options
 There are several options to configure how `VimF90` will work. 
 
-1. `fortran_leader`: set your leader. default is "\`"
-2. `fortran_linter`: indent (default is `1`. `2` is preferred). Option 2 will install `fprettify`
-   and `fortls`.
+1. `fortran_leader`: Set your leader. Default is "\`"
+2. `fortran_linter`: Rudimentary linting (unless you use `2`). Default is `1`. `2` is preferred). Option 2 will install `fprettify`
+   and `fortls`. For a better linting, you should use a dedicated package like `ALE` or `coc.nvim`.
 3. `fortran_completer` = Completing do, if etc. Default is `<F3>`.
-4. `fprettify_options` = check `fprettify --help` for available options. Default is `--silent`.
+4. `fprettify_options` = Works only with `fortran_linter=2`. Check `fprettify --help` for available options. Default is `--silent`.
 
 ## Features
 Default `leader` key used here is **\`**. You can change this by using:
@@ -207,7 +207,8 @@ where
      testing purpose.
  *  `1`: Default. Lint only when you save a buffer
  *  `2`: **Strongly recommended**. Other options are there because I don't want to force you to install
-     `fprettify`. This will automatically install `fortls` too.
+     `fprettify`. This will automatically install `fortls` too. Modify fprettify options with
+     `fprettify_optios`. 
  * `-1`: Disable Linting.
 
 For more, use dedicated linting packages like `fortls` or [ALE](https://github.com/w0rp/ale).
