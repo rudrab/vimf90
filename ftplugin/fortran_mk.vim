@@ -1,7 +1,5 @@
 "########################################################################
-" File: install_deps.vim
-" Author: Rudra Banerjee (bnrj DOT rudra at gmail.com) 
-" Version: 0.2
+" Filename:      fortran_make.vim
 " Copyright: Copyright (C) 2019 Rudra Banerjee
 " 
 "    This program is free software: you can redistribute it and/or modify
@@ -9,23 +7,31 @@
 "    the Free Software Foundation, either version 3 of the License, or
 "    (at your option) any later version.
 "
-"    This program is distributed in the hope that it will be useful, 
+"    This program is distributed in the hope that it will be useful,
 "    but WITHOUT ANY WARRANTY; without even the implied warranty of
 "    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 "    GNU General Public License for more details.
-"
-" Description: Install python dependencies 
+" Date:          03/07/2015
+" Description:   Make utility for fortran. 
+"                Largely adapted from c.vim
 "########################################################################
-"
-function! install_deps#install_fprettify()
-  echom "Installing fprettify"
-  :execute ':!pip3 install fprettify --user -q'
+let s:Compiler = get(g:, "fortran_compiler", "gfortran")
+let s:ObjExt    =   '.o'
+let s:ModExt    =   '.mod'
+let s:ExeExt    =   ''
+let s:VimComp   =   'gfortran'
+let s:FCFlags   =   '-Wall -g -O0 -c'
+let s:FLFlags   =   '-Wall -g -O0'
+let s:OutputGvim=   'vim'
+
+function! Compile()
+  :call makes#Fcompile()
 endfunction
-function! install_deps#install_unidecode()
-  echom "Installing unidecode"
-  :execute ':!pip3 install unidecode --user -q'
+
+function! Run()
+  :call makes#Frun()
 endfunction
-function! install_deps#install_fortls()
-  echom "Installing fortls"
-  :execute ':!pip3 install fortran-language-server --user -q'
+
+function! CLArgs()
+  :call makes#Cla()
 endfunction

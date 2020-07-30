@@ -16,6 +16,8 @@
 " Description:  completes some most used statements and declarations 
 " of fortran90+Formatting
 "
+
+" Check python modules and install{{{1
 if !executable('fprettify') || !executable('fortls') || !executable('unidecode')
   :let choice =confirm("Some python dependencies doesn't exists! Install them?", "&Yes\n&No(use fallback)")
   if !executable('fprettify')
@@ -28,13 +30,18 @@ if !executable('fprettify') || !executable('fortls') || !executable('unidecode')
     :call install_deps#install_unidecode() 
   endif
 endif
+"}}}
 
+" Options {{{2
 let b:fprettify_options = get(g:, "fprettify_options", "--silent")
 let b:fortran_leader = get(g:, "fortran_leader", "\`")
-" b:fortran_linter 0: Lint on the fly; 1: Lint on BufWrite; 2: use fprettify; -1: No Lint atall {{{
+" b:fortran_linter 0: Lint on the fly; 1: Lint on BufWrite; 2: use fprettify; -1: No Lint atall 
 let b:fortran_linter = get(g:, "fortran_linter", 1)   
-" Linting options {{{
-if  b:fortran_linter == 0  " Check on the fly, not recommended {{{
+"}}}
+
+
+" Linting options {{{3
+if  b:fortran_linter == 0  " Check on the fly, not recommended {{{4
   inoremap <expr> = stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>= " : getline(".")[col(".")-2] =~ '\s' ? "= " : "="
   inoremap <expr> > stridx('</=>',getline(".")[col(".")-3]) >= 0 ? "<bs>> " : getline(".")[col(".")-2] =~ '\s' ? "> " : ">"
   inoremap <expr> + getline(".")[col(".")-2] =~ '\s' ? "+ " : "+" 
@@ -43,7 +50,7 @@ if  b:fortran_linter == 0  " Check on the fly, not recommended {{{
   inoremap <expr> / getline(".")[col(".")-2] =~ '\s' ? "/ " : "/"
   "inoremap < expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
   "}}}
-elseif b:fortran_linter == 1  " Check on save, default {{{
+elseif b:fortran_linter == 1  " Check on save, default {{{5
   au BufWritePre <buffer> silent! :%s/\v(\w) ?(\+|\-|\/|\*|\*\*) ?(\w|-)/\1\2\3/g   " No space between arithmetics
   au BufWritePre <buffer> silent! :%s/\v(\w) ?(\>\=|\<\=|\/\=|\=|\=\=|\>|\<) ?(\w|-)/\1 \2 \3/g  " Space between equals
   au BufWritePre <buffer> silent! :%s/\v(\w) ?(\c\.eq\.|\c\.ne\.|\c\.gt\.|\c\.lt\.|\c\.ge\.|\c\.le\.) ?(\w|-)/\1 \2 \3/g
@@ -52,14 +59,14 @@ elseif b:fortran_linter == 1  " Check on save, default {{{
   au BufWritePre <buffer> silent! :%s/\v(\w|\)) ?(\:\:) ?(\w|-)/\1\2 \3/g     " `::`
   au BufWritePre <buffer> silent! :%s/\v(\w|\)) ?(!) ?(\w|-)/\1  \2 \3/g       " inline comment
   "}}}
-elseif b:fortran_linter == 2 " use fprettify{{{
+elseif b:fortran_linter == 2 " use fprettify{{{6
   au BufWritePre <buffer> :execute 'silent %!fprettify ' . g:fprettify_options
   "}}}
 endif
 "}}}
 
-" Declarations: {{{1
-:execute  'inoremap'  b:fortran_leader.'wr'    "wr<c-r>=UltiSnips#ExpandSnippet()<cr>"
+" Declarations: {{{7
+:execute  'inoremap'  b:fortran_leader.'wr'    "pr<c-r>=UltiSnips#ExpandSnippet()<cr>"
 :execute  'inoremap'  b:fortran_leader.'rd'    "read<c-r>=UltiSnips#ExpandSnippet()<cr>"
 :execute  'inoremap'  b:fortran_leader.'re'    "real<c-r>=UltiSnips#ExpandSnippet()<cr>"
 :execute  'inoremap'  b:fortran_leader.'int'   "int<c-r>=UltiSnips#ExpandSnippet()<cr>"

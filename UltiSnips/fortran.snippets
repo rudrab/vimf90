@@ -18,15 +18,13 @@ End Module  ${1/([^\n$]+).*/$1/} $0
 endsnippet
 
 snippet sub
-Subroutine  ${1:<++Subroutine++>}()
-Implicit None
+Subroutine  ${1:<++Subroutine++>}($2)
 ${2:<++Start Typing++>}
 End Subroutine ${1/([^\n$]+).*/$1/} $0
 endsnippet
 
 snippet fun
-Function  ${1:<++Function++>}()
-Implicit None
+Function  ${1:<++Function++>}($2)
 ${2:<++Start Typing++>}
 End Function ${1/([^\n$]+).*/$1/} $0
 endsnippet
@@ -69,7 +67,7 @@ ${3:<++condition++>}
 end do  ${1/://} $0
 endsnippet
 
-snippet wr
+snippet pr
 write(${1:fp},${2:*}) ${3:<++stetement++>}
 endsnippet
 

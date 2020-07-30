@@ -27,17 +27,17 @@ if has('gui_running') && has('menu')
     " This is how to set the variables
     "exec 'an  Fortran&90.&Compile.&Compile<Tab>'.b:male     ':call Compile()<CR>'
     an  Fortran&90.&Compile.&Compile<Tab>\\cc                           :call Compile()<CR>
-    an  Fortran&90.&Compile.&Create\ Executable<Tab>\\cl                :call Link()<CR>
+    " an  Fortran&90.&Compile.&Create\ Executable<Tab>\\cl                :call Link()<CR>
     an  Fortran&90.&Compile.&Compile\ and\ Run<Tab>\\cr                 :call Run()<CR>
     an  Fortran&90.&Compile.&Comand\ Line\ Arguments<Tab>\\ca           :call CLArgs()<CR>
     an  &Fortran90.&Compile.----                                        " 
-    an  Fortran&90.&Compile.&Create\ New\ Project<Tab>\\sys             :call FProject()<cr>
-    an  Fortran&90.&Compile.&Make<Tab>\\mk                              :call Make()<CR>
-    an  Fortran&90.&Compile.&Make\ Clean<Tab>\\mkc                      :call MakeClean()<CR>
-    an  &Fortran90.&Compile.--sep0--                                        " 
-    an  Fortran&90.&Compile.&Generate\ configure\.ac<Tab>autoscan       :call MakeConf()<CR>
-    an  Fortran&90.&Compile.&Generate\ Makefile\.am<Tab>Experimental    :call MakeMake()<CR>
-    "an  &Fortran90.--sep0--                                            <Nop>  
+    " an  Fortran&90.&Compile.&Create\ New\ Project<Tab>\\sys             :call FProject()<cr>
+    " an  Fortran&90.&Compile.&Make<Tab>\\mk                              :call Make()<CR>
+    " an  Fortran&90.&Compile.&Make\ Clean<Tab>\\mkc                      :call MakeClean()<CR>
+    " an  &Fortran90.&Compile.--sep0--                                        " 
+    " an  Fortran&90.&Compile.&Generate\ configure\.ac<Tab>autoscan       :call MakeConf()<CR>
+    " an  Fortran&90.&Compile.&Generate\ Makefile\.am<Tab>Experimental    :call MakeMake()<CR>
+    an  &Fortran90.--sep0--                                            <Nop>  
     an  &Fortran90.&Blocks.&Program<Tab>`prg                            :call Prog("prg")<cr><CR><Esc>gg=G<C-j>
     an  &Fortran90.&Blocks.&Module<Tab>`mod                             :call Prog("mod")<cr><CR><Esc>gg=G<C-j>
     "an  &Fortran90.&Blocks.&Subroutine<Tab>`sub                        `sub  
