@@ -25,7 +25,8 @@ if has('gui_running') && has('menu')
 
   if g:Fortran_menumode == 1
     " This is how to set the variables
-    "exec 'an  Fortran&90.&Compile.&Compile<Tab>'.b:male     ':call Compile()<CR>'
+    exec 'anoremenu  Fortran&90.&Compile.&Compile<Tab>'.b:fortran_compile     ':call Compile()<CR>'
+    exec 'inoremenu  Fortran&90.&Compile.&Compile<Tab>'.b:fortran_compile     ':call Compile()<CR>'
     exe 'anoremenu  Fortran&90.&Compile.&Compile<Tab>\\cc                           :call Compile()<CR>'
     exe 'inoremenu  Fortran&90.&Compile.&Compile<Tab>\\cc                      <C-C>:call Compile()<CR>'
     exe 'anoremenu  Fortran&90.&Compile.&Compile\ and\ Run<Tab>\\cr                 :call Run()<CR>'
