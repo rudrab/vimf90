@@ -102,8 +102,8 @@ function! makes#Cla()
   endif
 endfunction
 "}}}1
-"
-" Debugger : 
+
+" Debugger :  call debugger, currently supports gdb only {{{1
 function! makes#Dbg()
   let Exe = expand("%:p:r").s:ExeExt
   let sou = expand("%:p")
@@ -155,11 +155,10 @@ function! makes#Dbg()
   "
 	redraw!
 endfunction
+"}}}1
 
-
-
-function! makes#MakeRun ()
-
+" run Makefile {{{1
+function! makes#MakeRun (arg)
   let s:Makefile    = ''
   let s:CmdLineArgs = ''
   let s:Enabled=1
@@ -171,9 +170,9 @@ function! makes#MakeRun ()
 	cclose
 	"
 	" arguments
-	" if a:args == '' | let cmdlinearg = s:CmdLineArgs
-	" else            | let cmdlinearg = a:args
-	" endif
+  if a:args == '' | let cmdlinearg = s:CmdLineArgs
+  else            | let cmdlinearg = a:args
+  endif
 	" :TODO:18.08.2013 21:45:WM: 'cmdlinearg' is not correctly escaped for use under Windows
 	"
 	" run make
@@ -191,4 +190,4 @@ function! makes#MakeRun ()
 	"
 endfunction    
 " ----------  end of function s:MakesRun  ----------
-
+"}}}1
