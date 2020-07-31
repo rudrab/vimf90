@@ -40,6 +40,6 @@ function! Debug()
   :call makes#Dbg()
 endfunction
 
-function! Make(arg)
-  :call makes#MakeRun(a:arg)
+function! Make()
+  :call makes#MakeRun()
 endfunction

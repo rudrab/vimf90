@@ -158,7 +158,7 @@ endfunction
 "}}}1
 
 " run Makefile {{{1
-function! makes#MakeRun (arg)
+function! makes#MakeRun ()
   let s:Makefile    = ''
   let s:CmdLineArgs = ''
   let s:Enabled=1
@@ -170,9 +170,9 @@ function! makes#MakeRun (arg)
 	cclose
 	"
 	" arguments
-  if a:args == '' | let cmdlinearg = s:CmdLineArgs
-  else            | let cmdlinearg = a:args
-  endif
+	" if a:args == '' | let cmdlinearg = s:CmdLineArgs
+	" else            | let cmdlinearg = a:args
+	" endif
 	" :TODO:18.08.2013 21:45:WM: 'cmdlinearg' is not correctly escaped for use under Windows
 	"
 	" run make
