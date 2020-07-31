@@ -26,14 +26,20 @@ if has('gui_running') && has('menu')
   if g:Fortran_menumode == 1
     " This is how to set the variables
     "exec 'an  Fortran&90.&Compile.&Compile<Tab>'.b:male     ':call Compile()<CR>'
-    an  Fortran&90.&Compile.&Compile<Tab>\\cc                           :call Compile()<CR>
-    " an  Fortran&90.&Compile.&Create\ Executable<Tab>\\cl                :call Link()<CR>
-    an  Fortran&90.&Compile.&Compile\ and\ Run<Tab>\\cr                 :call Run()<CR>
-    an  Fortran&90.&Compile.&Comand\ Line\ Arguments<Tab>\\ca           :call CLArgs()<CR>
+    exe 'anoremenu  Fortran&90.&Compile.&Compile<Tab>\\cc                           :call Compile()<CR>'
+    exe 'inoremenu  Fortran&90.&Compile.&Compile<Tab>\\cc                      <C-C>:call Compile()<CR>'
+    exe 'anoremenu  Fortran&90.&Compile.&Compile\ and\ Run<Tab>\\cr                 :call Run()<CR>'
+    exe 'inoremenu  Fortran&90.&Compile.&Compile\ and\ Run<Tab>\\cr            <C-C>:call Run()<CR>'
+    exe 'anoremenu  Fortran&90.&Compile.&Comand\ Line\ Arguments<Tab>\\ca           :call CLArgs()<CR>'
+    exe 'inoremenu  Fortran&90.&Compile.&Comand\ Line\ Arguments<Tab>\\ca      <C-C>:call CLArgs()<CR>'
+    exe 'anoremenu  Fortran&90.&Compile.&Run\ &Debugger<Tab>\\cd                    :call Dbg()<CR>'
+    exe 'inoremenu  Fortran&90.&Compile.&Run\ &Debugger<Tab>\\cd               <C-C>:call Dbg()<CR>'
     an  &Fortran90.&Compile.----                                        " 
     " an  Fortran&90.&Compile.&Create\ New\ Project<Tab>\\sys             :call FProject()<cr>
-    " an  Fortran&90.&Compile.&Make<Tab>\\mk                              :call Make()<CR>
-    " an  Fortran&90.&Compile.&Make\ Clean<Tab>\\mkc                      :call MakeClean()<CR>
+    exe 'anoremenu  Fortran&90.&Make.&Make<Tab>\\mk                                  :call Make()<CR>'
+    exe 'inoremenu  Fortran&90.&Make.&Make<Tab>\\mk                             <C-C>:call Make()<CR>'
+    exe 'anoremenu  Fortran&90.&Make.Make\ &Clean<Tab>\\mkc                           :call MakeClean()<CR>'
+    exe 'inoremenu  Fortran&90.&Make.Make\ &Clean<Tab>\\mkc                      <C-C>:call MakeClean()<CR>'
     " an  &Fortran90.&Compile.--sep0--                                        " 
     " an  Fortran&90.&Compile.&Generate\ configure\.ac<Tab>autoscan       :call MakeConf()<CR>
     " an  Fortran&90.&Compile.&Generate\ Makefile\.am<Tab>Experimental    :call MakeMake()<CR>

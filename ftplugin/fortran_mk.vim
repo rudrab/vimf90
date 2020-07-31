@@ -35,3 +35,11 @@ endfunction
 function! CLArgs()
   :call makes#Cla()
 endfunction
+
+function! Debug()
+  :call makes#Dbg()
+endfunction
+
+function! Make()
+  :call makes#MakeRun()
+endfunction

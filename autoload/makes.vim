@@ -85,7 +85,7 @@ function! makes#Frun()
 endfunction
 "}}}1
 
-" CLArgs: Command Line Argument {{{1
+" CLArgs : Command Line Argument {{{1
 function! makes#Cla()
   let Exe = expand("%:p:t").s:ExeExt
   let sou = expand("%:p")
@@ -102,3 +102,93 @@ function! makes#Cla()
   endif
 endfunction
 "}}}1
+"
+" Debugger : 
+function! makes#Dbg()
+  let Exe = expand("%:p:r").s:ExeExt
+  let sou = expand("%:p")
+  let b:F_Debugger = get(g:, "F_Debugger", 'gdb')
+  echo "Running Debugger"
+	silent exe 'update'
+	" if !exists("Exe") 
+		" call makes#FRun()
+	" endif
+	let l:arguments = exists("b:ClArgs") ? " ".b:ClArgs : ""
+
+"   if  s:MSWIN
+"     let l:arguments = substitute( l:arguments, '^\s\+', ' ', '' )
+"     let l:arguments = substitute( l:arguments, '\s\+', "\" \"", 'g')
+"   endif
+  "
+  " debugger is 'gdb'
+  "
+  if b:F_Debugger == "gdb"
+    exe '!gdb ' . Exe.l:arguments
+  endif
+  "
+"   if v:windowid != 0
+"     "
+"     " grapical debugger is 'kdbg', uses a PerlTk interface
+"     "
+"     if g:C_Debugger == "kdbg"
+"       if  s:MSWIN
+"         exe '!kdbg "'.s:C_ExecutableToRun.l:arguments.'"'
+"       else
+"         silent exe '!kdbg  '.s:C_ExecutableToRun.l:arguments.' &'
+"       endif
+"     endif
+"     "
+"     " debugger is 'ddd'  (not available for MS Windows); graphical front-end for GDB
+"     "
+"     if g:C_Debugger == "ddd" && !s:MSWIN
+"       if !executable("ddd")
+"         echohl WarningMsg
+"         echo 'ddd does not exist or is not executable!'
+"         echohl None
+"         return
+"       else
+"         silent exe '!ddd '.s:C_ExecutableToRun.l:arguments.' &'
+"       endif
+"     endif
+"     "
+"   endif
+  "
+	redraw!
+endfunction
+
+
+
+function! makes#MakeRun ()
+
+  let s:Makefile    = ''
+  let s:CmdLineArgs = ''
+  let s:Enabled=1
+	if s:Enabled == 0
+		return s:ErrorMsg ( 'Make : "make" is not executable.' )
+	endif
+
+	silent exe 'update'   | " write source file if necessary
+	cclose
+	"
+	" arguments
+	" if a:args == '' | let cmdlinearg = s:CmdLineArgs
+	" else            | let cmdlinearg = a:args
+	" endif
+	" :TODO:18.08.2013 21:45:WM: 'cmdlinearg' is not correctly escaped for use under Windows
+	"
+	" run make
+	if s:Makefile == ''
+		exe 'make '
+	else
+		exe 'cd '.fnameescape( fnamemodify( s:Makefile, ':p:h' ) )
+
+		exe 'make -f '.shellescape( s:Makefile ).' '.cmdlinearg
+
+		cd -
+	endif
+	"
+	botright cwindow
+	"
+endfunction    
+" ----------  end of function s:MakesRun  ----------
+
