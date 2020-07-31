@@ -29,7 +29,7 @@
 
 let b:fortran_compile = get(g:,"fortran_complie", "\<leader\>cc")
 let b:fortran_run = get(g:,"fortran_run", "\<leader\>cr")
-let b:fortran_run = get(g:,"fortran_make", "\<leader\>mk")
+let b:fortran_make = get(g:,"fortran_make", "\<leader\>mk")
 
 exe 'nnoremap'    b:fortran_make     ':call MakeMake()<CR>'
 nnoremap    <leader>asc     :call MakeConf()<CR>
