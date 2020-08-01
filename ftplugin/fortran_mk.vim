@@ -43,3 +43,7 @@ endfunction
 function! Make()
   :call makes#MakeRun()
 endfunction
+
+function! MakeProperties()
+  :call makes#MakeCla()
+endfunction

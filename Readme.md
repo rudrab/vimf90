@@ -88,12 +88,12 @@ There are two ways to do the completions. One is [Inbuilt Completions](#inbuilt)
 #### Inbuilt (completed using `fortran_leader`) 
 
 `if`,`do`,`select` etc statements, that are closed by a corresponding `end`
-is defined here. after typing the first line, pressing `<F7>` will
+is defined here. after typing the first line, pressing `<F3>` will
 complete the construct. for example:
  you type:
 
 ```fortran
-trial: do i=1,10<f7>        
+trial: do i=1,10<F3>        
 ```
 
 you will get:

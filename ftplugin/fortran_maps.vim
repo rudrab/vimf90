@@ -29,16 +29,20 @@
 
 let b:fortran_compile = get(g:,"fortran_complie", "\<leader\>cc")
 let b:fortran_run = get(g:,"fortran_run", "\<leader\>cr")
+let b:fortran_cla = get(g:,"fortran_cla", "\<leader\>cl")
+let b:fortran_dbg = get(g:,"fortran_dbg", "\<leader\>cd")
 let b:fortran_make = get(g:,"fortran_make", "\<leader\>mk")
+let b:fortran_makeProp = get(g:,"fortran_makeProp", "\<leader\>mp")
 
 exe 'nnoremap'    b:fortran_make     ':call MakeMake()<CR>'
-nnoremap    <leader>asc     :call MakeConf()<CR>
-nnoremap    <leader>sys     :call GenSys()<CR>
-nnoremap    <leader>mk      :call Make()<CR>
+exe 'nnoremap'    b:fortran_makeProp     ':call MakeProp()<CR>'
+" nnoremap    <leader>asc     :call MakeConf()<CR>
+" nnoremap    <leader>sys     :call GenSys()<CR>
+" nnoremap    <leader>mk      :call Make()<CR>
 
 exe 'nnoremap'    b:fortran_compile      ':call Compile()<CR>'
-nnoremap    <leader>cl      :call Link()<CR>
 exe 'noremap'     b:fortran_run      ':call Run()<CR>'
-noremap     <leader>ca      :call CLArgs()<CR>
+exe 'noremap'     b:fortran_cla      ':call CLArgs()<CR>'
+" nnoremap    <leader>cl      :call Link()<CR>
 
 autocmd Bufwritepre,filewritepre *.f90 exe "%g/Last Modified:.*/s/Last Modified:.*/Last Modified: " .strftime("%c")

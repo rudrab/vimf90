@@ -160,7 +160,7 @@ endfunction
 " run Makefile {{{1
 function! makes#MakeRun ()
   let s:Makefile    = ''
-  let s:CmdLineArgs = ''
+  " let s:CmdLineArgs = ''
   let s:Enabled=1
 	if s:Enabled == 0
 		return s:ErrorMsg ( 'Make : "make" is not executable.' )
@@ -170,24 +170,26 @@ function! makes#MakeRun ()
 	cclose
 	"
 	" arguments
-	" if a:args == '' | let cmdlinearg = s:CmdLineArgs
-	" else            | let cmdlinearg = a:args
-	" endif
+  " if a:args == '' | let cmdlinearg = s:CmdLineArgs
+  " else            | let cmdlinearg = a:args
+  " endif
 	" :TODO:18.08.2013 21:45:WM: 'cmdlinearg' is not correctly escaped for use under Windows
 	"
 	" run make
-	if s:Makefile == ''
-		exe 'make '
-	else
-		exe 'cd '.fnameescape( fnamemodify( s:Makefile, ':p:h' ) )
-
-		exe 'make -f '.shellescape( s:Makefile ).' '.cmdlinearg
-
-		cd -
-	endif
-	"
+  let l:Margs = exists("b:MakeArgs") ? b:MakeArgs : "" 
+	exe 'make ' .l:Margs
 	botright cwindow
-	"
 endfunction    
 " ----------  end of function s:MakesRun  ----------
 "}}}1
+"
+
+" Make properties {{{1
+function! makes#MakeCla()
+  let prompt = 'Make property:'
+  if exists("b:MakeArgs")
+    let b:MakeArgs = input(prompt, b:MakeArgs, "file")
+  else
+    let b:MakeArgs = input(prompt,"","file")
+  endif
+endfunction
