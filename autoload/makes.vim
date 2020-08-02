@@ -182,7 +182,6 @@ function! makes#MakeRun ()
 endfunction    
 " ----------  end of function s:MakesRun  ----------
 "}}}1
-"
 
 " Make properties {{{1
 function! makes#MakeCla()
@@ -193,3 +192,15 @@ function! makes#MakeCla()
     let b:MakeArgs = input(prompt,"","file")
   endif
 endfunction
+
+" Make Project {{{1
+function! makes#MakeProject()
+  " Create a gnu style project structure 
+  let s:Prdir = input("Create new project: ", getcwd(), "file")
+  exe ":!mkdir -p ".s:Prdir
+  exe ":lchdir ".s:Prdir
+  exe ":!mkdir help src"
+  exe ":!touch ChangeLog README LICENSE"
+  exe ":lchdir -"
+endfunction
+" }}}1
