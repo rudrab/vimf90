@@ -47,3 +47,7 @@ endfunction
 function! MakeProperties()
   :call makes#MakeCla()
 endfunction
+
+function! MakeProject()
+  :call makes#MakeProject()
+endfunction
