@@ -192,6 +192,7 @@ function! makes#MakeCla()
     let b:MakeArgs = input(prompt,"","file")
   endif
 endfunction
+"}}}1
 
 " Make Project {{{1
 function! makes#MakeProject()
