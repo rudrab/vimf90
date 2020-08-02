@@ -34,6 +34,7 @@ let b:fortran_cla = get(g:,"fortran_cla", '\'.get(g:,'mapleader', '\')."cl")
 let b:fortran_dbg = get(g:,"fortran_dbg", '\'.get(g:,'mapleader', '\')."cd")
 let b:fortran_make = get(g:,"fortran_make", '\'.get(g:,'mapleader', '\')."mk")
 let b:fortran_makeProp = get(g:,"fortran_makeProp", '\'.get(g:,'mapleader', '\')."mp")
+let b:fortran_genProj = get(g:,"fortran_genProj", '\'.get(g:,'mapleader', '\')."gp")
 
 exe 'nnoremap'    b:fortran_make     ':call Make()<CR>'
 exe 'nnoremap'    b:fortran_makeProp     ':call MakeProp()<CR>'
@@ -41,6 +42,7 @@ exe 'nnoremap'    b:fortran_compile      ':call Compile()<CR>'
 exe 'noremap'     b:fortran_run      ':call Run()<CR>'
 exe 'noremap'     b:fortran_cla      ':call CLArgs()<CR>'
 exe 'noremap'     b:fortran_makeProp      ':call MakeProject()<CR>'
+exe 'noremap'     b:fortran_genProj      ':call MakeProject()<CR>'
 " nnoremap    <leader>cl      :call Link()<CR>
 
 autocmd Bufwritepre,filewritepre *.f90 exe "%g/Last Modified:.*/s/Last Modified:.*/Last Modified: " .strftime("%c")

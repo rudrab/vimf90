@@ -38,6 +38,9 @@ if has('gui_running') && has('menu')
     exe 'inoremenu  Fortran&90.&Make.&Make<Tab>'.b:fortran_make                         '<C-C>:call Make()<CR>'
     exe 'anoremenu  Fortran&90.&Make.Make\ &Properties<Tab>'.b:fortran_makeProp         ':call MakeProperties()<CR>'
     exe 'inoremenu  Fortran&90.&Make.Make\ &Properties<Tab>'.b:fortran_makeProp         '<C-C>:call MakeProperties()<CR>'
+    an  &Fortran90.&Compile.----                                        " 
+    exe 'anoremenu  Fortran&90.&Make.Generate\ &Project<Tab>'.b:fortran_genProj         ':call MakeProject()<CR>'
+    exe 'inoremenu  Fortran&90.&Make.Generate\ &Project<Tab>'.b:fortran_genProj         '<C-C>:call MakeProject()<CR>'
     " exe 'anoremenu  Fortran&90.&Make.Make\ &Clean<Tab>\\mkc                           :call MakeClean()<CR>'
     " exe 'inoremenu  Fortran&90.&Make.Make\ &Clean<Tab>\\mkc                      <C-C>:call MakeClean()<CR>'
     " an  &Fortran90.&Compile.--sep0--                                        " 
