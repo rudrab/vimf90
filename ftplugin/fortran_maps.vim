@@ -34,7 +34,7 @@ let b:fortran_dbg = get(g:,"fortran_dbg", "\<leader\>cd")
 let b:fortran_make = get(g:,"fortran_make", "\<leader\>mk")
 let b:fortran_makeProp = get(g:,"fortran_makeProp", "\<leader\>mp")
 
-exe 'nnoremap'    b:fortran_make     ':call MakeMake()<CR>'
+exe 'nnoremap'    b:fortran_make     ':call Make()<CR>'
 exe 'nnoremap'    b:fortran_makeProp     ':call MakeProp()<CR>'
 " nnoremap    <leader>asc     :call MakeConf()<CR>
 " nnoremap    <leader>sys     :call GenSys()<CR>
