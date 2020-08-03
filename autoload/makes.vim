@@ -199,9 +199,15 @@ function! makes#MakeProject()
   " Create a gnu style project structure 
   let s:Prdir = input("Create new project: ", getcwd(), "file")
   exe ":!mkdir -p ".s:Prdir
+  " exe ":lchdir ".s:Prdir
+  exe ":!mkdir " .s:Prdir."{/help,/src}"
+  exe ":!touch " .s:Prdir."{/ChangeLog,/README,/LICENSE}"
+  " exe ":lchdir -"
+  let cbf = expand('%:t')
+  exe ":!mv *.f90 "  .s:Prdir."/src"
+  exe ":wa"
   exe ":lchdir ".s:Prdir
-  exe ":!mkdir help src"
-  exe ":!touch ChangeLog README LICENSE"
-  exe ":lchdir -"
+  exe "bd|e "  ."/src/".cbf
+
 endfunction
 " }}}1
