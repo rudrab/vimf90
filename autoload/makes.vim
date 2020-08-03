@@ -207,7 +207,7 @@ function! makes#MakeProject()
   exe ":!mv *.f90 "  .s:Prdir."/src"
   exe ":wa"
   exe ":lchdir ".s:Prdir
-  exe "bd|e "  ."/src/".cbf
+  exe "bd|e "  ."src/".cbf
 
 endfunction
 " }}}1
