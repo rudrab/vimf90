@@ -1,6 +1,6 @@
 "########################################################################
 " Filename:      makes.vim
-" Copyright: Copyright (C) 2019 Rudra Banerjee
+" Copyright: Copyright (C) 2020 Rudra Banerjee
 " 
 "    This program is free software: you can redistribute it and/or modify
 "    it under the terms of the GNU General Public License as published by
@@ -13,7 +13,6 @@
 "    GNU General Public License for more details.
 " Date:          03/07/2015
 " Description:   Make utility for fortran. 
-"                Largely adapted from c.vim
 "########################################################################
 
 " Variables {{{1
@@ -195,7 +194,7 @@ endfunction
 "}}}1
 
 " Make Project {{{1
-function! makes#MakeProject()
+function! makes#MakeProj()
   " Create a gnu style project structure 
   let s:Prdir = input("Create new project: ", getcwd(), "file")
   exe ":!mkdir -p ".s:Prdir
