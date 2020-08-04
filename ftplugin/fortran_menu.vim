@@ -27,6 +27,8 @@ if has('gui_running') && has('menu')
     " This is how to set the variables
     exe 'anoremenu  Fortran&90.&Compile.&Compile<Tab>'.b:fortran_compile                ':call Compile()<CR>'
     exe 'inoremenu  Fortran&90.&Compile.&Compile<Tab>'.b:fortran_compile                '<C-C>:call Compile()<CR>'
+    exe 'anoremenu  Fortran&90.&Compile.&Generate\ Executable<Tab>'.b:fortran_exe          ':call Gexe()<CR>'
+    exe 'inoremenu  Fortran&90.&Compile.&Generate\ Executable<Tab>'.b:fortran_exe          '<C-C>:call Gexe()<CR>'
     exe 'anoremenu  Fortran&90.&Compile.&Compile\ and\ Run<Tab>'.b:fortran_run          ':call Run()<CR>'
     exe 'inoremenu  Fortran&90.&Compile.&Compile\ and\ Run<Tab>'.b:fortran_run          '<C-C>:call Run()<CR>'
     exe 'anoremenu  Fortran&90.&Compile.&Comand\ Line\ Arguments<Tab>'.b:fortran_cla    ':call CLArgs()<CR>'

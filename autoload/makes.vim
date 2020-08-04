@@ -61,28 +61,30 @@ endfunction
 "}}}1
 
 " Run executable {{{1
-function! makes#Frun()
+function! makes#Fexe()
   let sou = expand("%:p")
   let obj = expand("%:p:r").s:ObjExt
-  call makes#Fcompile()
-  let s:fortran_link_success =1
-  if s:fortran_comp_success==1
+  " call makes#Fcompile()
     let makeprg_saved = '"' . &makeprg . '"'
     execute "setlocal makeprg=" . s:Compiler
     let s:exe = expand("%:p:r")
-    exe "make " .s:FLFlags."  " .obj. " -o ".s:exe
+    exe "make " .s:FLFlags."  " .sou. " -o ".s:exe
+    let s:fortran_link_success = 1
     if v:shell_error !=0
       let &statusline = v:shell_error
       let s:fortran_link_success = 0
       return
     endif
-    if s:fortran_link_success==1
-      let l:args = exists("b:Clargs") ? b:Clargs : "" 
-      exe "!".s:exe. " " . l:args
-    endif
-  endif
 endfunction
 "}}}1
+
+function! makes#Frun()
+  call makes#Fexe()
+  if s:fortran_link_success==1
+    let l:args = exists("b:Clargs") ? b:Clargs : "" 
+    exe "!".s:exe. " " . l:args
+  endif
+endfunction
 
 " CLArgs : Command Line Argument {{{1
 function! makes#Cla()
@@ -103,23 +105,23 @@ endfunction
 "}}}1
 
 " Debugger :  call debugger, currently supports gdb only {{{1
-function! makes#Dbg()
+function! makes#Fdbg()
   let Exe = expand("%:p:r").s:ExeExt
   let sou = expand("%:p")
   let b:F_Debugger = get(g:, "F_Debugger", 'gdb')
   echo "Running Debugger"
-	silent exe 'update'
-	" if !exists("Exe") 
-		" call makes#FRun()
-	" endif
-  let b:FCFlags = "-Wall -g"
-  call makes#FRun() 
-	let l:arguments = exists("b:ClArgs") ? " ".b:ClArgs : ""
+  silent exe 'update'
+  " if !exists("Exe") 
+  " call makes#FRun()
+  " endif
+  let s:FLFlags = "-Wall -g"
+  call makes#Fexe() 
+  let l:arguments = exists("b:ClArgs") ? " ".b:ClArgs : ""
 
-"   if  s:MSWIN
-"     let l:arguments = substitute( l:arguments, '^\s\+', ' ', '' )
-"     let l:arguments = substitute( l:arguments, '\s\+', "\" \"", 'g')
-"   endif
+  "   if  s:MSWIN
+  "     let l:arguments = substitute( l:arguments, '^\s\+', ' ', '' )
+  "     let l:arguments = substitute( l:arguments, '\s\+', "\" \"", 'g')
+  "   endif
   "
   " debugger is 'gdb'
   "
@@ -127,34 +129,34 @@ function! makes#Dbg()
     exe '!gdb ' . Exe.l:arguments
   endif
   "
-"   if v:windowid != 0
-"     "
-"     " grapical debugger is 'kdbg', uses a PerlTk interface
-"     "
-"     if g:C_Debugger == "kdbg"
-"       if  s:MSWIN
-"         exe '!kdbg "'.s:C_ExecutableToRun.l:arguments.'"'
-"       else
-"         silent exe '!kdbg  '.s:C_ExecutableToRun.l:arguments.' &'
-"       endif
-"     endif
-"     "
-"     " debugger is 'ddd'  (not available for MS Windows); graphical front-end for GDB
-"     "
-"     if g:C_Debugger == "ddd" && !s:MSWIN
-"       if !executable("ddd")
-"         echohl WarningMsg
-"         echo 'ddd does not exist or is not executable!'
-"         echohl None
-"         return
-"       else
-"         silent exe '!ddd '.s:C_ExecutableToRun.l:arguments.' &'
-"       endif
-"     endif
-"     "
-"   endif
+  "   if v:windowid != 0
+  "     "
+  "     " grapical debugger is 'kdbg', uses a PerlTk interface
+  "     "
+  "     if g:C_Debugger == "kdbg"
+  "       if  s:MSWIN
+  "         exe '!kdbg "'.s:C_ExecutableToRun.l:arguments.'"'
+  "       else
+  "         silent exe '!kdbg  '.s:C_ExecutableToRun.l:arguments.' &'
+  "       endif
+  "     endif
+  "     "
+  "     " debugger is 'ddd'  (not available for MS Windows); graphical front-end for GDB
+  "     "
+  "     if g:C_Debugger == "ddd" && !s:MSWIN
+  "       if !executable("ddd")
+  "         echohl WarningMsg
+  "         echo 'ddd does not exist or is not executable!'
+  "         echohl None
+  "         return
+  "       else
+  "         silent exe '!ddd '.s:C_ExecutableToRun.l:arguments.' &'
+  "       endif
+  "     endif
+  "     "
+  "   endif
   "
-	redraw!
+  redraw!
 endfunction
 "}}}1
 
@@ -163,23 +165,23 @@ function! makes#MakeRun ()
   let s:Makefile    = ''
   " let s:CmdLineArgs = ''
   let s:Enabled=1
-	if s:Enabled == 0
-		return s:ErrorMsg ( 'Make : "make" is not executable.' )
-	endif
+  if s:Enabled == 0
+    return s:ErrorMsg ( 'Make : "make" is not executable.' )
+  endif
 
-	silent exe 'update'   | " write source file if necessary
-	cclose
-	"
-	" arguments
+  silent exe 'update'   | " write source file if necessary
+  cclose
+  "
+  " arguments
   " if a:args == '' | let cmdlinearg = s:CmdLineArgs
   " else            | let cmdlinearg = a:args
   " endif
-	" :TODO:18.08.2013 21:45:WM: 'cmdlinearg' is not correctly escaped for use under Windows
-	"
-	" run make
+  " :TODO:18.08.2013 21:45:WM: 'cmdlinearg' is not correctly escaped for use under Windows
+  "
+  " run make
   let l:Margs = exists("b:MakeArgs") ? b:MakeArgs : "" 
-	exe 'make ' .l:Margs
-	botright cwindow
+  exe 'make ' .l:Margs
+  botright cwindow
 endfunction    
 " ----------  end of function s:MakesRun  ----------
 "}}}1

@@ -28,6 +28,10 @@ function! Compile()
   :call makes#Fcompile()
 endfunction
 
+function! Gexe()
+  :call makes#Fexe()
+endfunction
+
 function! Run()
   :call makes#Frun()
 endfunction
@@ -37,7 +41,7 @@ function! CLArgs()
 endfunction
 
 function! Debug()
-  :call makes#Dbg()
+  :call makes#Fdbg()
 endfunction
 
 function! Make()
