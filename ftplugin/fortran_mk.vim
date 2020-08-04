@@ -15,14 +15,14 @@
 " Description:   Make utility for fortran. 
 "                Largely adapted from c.vim
 "########################################################################
-let s:Compiler = get(g:, "fortran_compiler", "gfortran")
-let s:ObjExt    =   '.o'
-let s:ModExt    =   '.mod'
-let s:ExeExt    =   ''
-let s:VimComp   =   'gfortran'
-let s:FCFlags   =   '-Wall -g -O0 -c'
-let s:FLFlags   =   '-Wall -g -O0'
-let s:OutputGvim=   'vim'
+let s:Compiler   = get(g:, "fortran_compiler", "gfortran")
+let s:ObjExt     = '.o'
+let s:ModExt     = '.mod'
+let s:ExeExt     = get(g:,'fortran_exeExe','')
+let s:VimComp    = 'gfortran'
+let s:FCFlags    = get(g:, 'fcflags','-Wall -O0 -c')
+let s:FLFlags    = get(g:,'flflags','-Wall -O0')
+let s:OutputGvim = 'vim'
 
 function! Compile()
   :call makes#Fcompile()

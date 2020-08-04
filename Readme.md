@@ -1,14 +1,15 @@
 - [Introduction](#introduction)
-   - [Features](#features)
+   * [Features](#features)
 - [Install](#install)
-   - [Dependencies](#dependencies)
+   * [Dependencies](#dependencies)
 - [Options](#options)
 - [Features](#features-1)
-   - [Completions](#completions)
-     - [Inbuilt](#inbuilt)
-     - [Ultisnips](#ultisnips)
-   - [Linting](#linting) 
-   - [Menu](#menu)
+   * [Completions](#completions)
+     + [Inbuilt](#inbuilt)
+     + [Ultisnips](#ultisnips)
+   * [Linting](#linting) 
+   * [Compile and Autotool support](#compile)
+   * [Menu](#menu)
 - [Enable Language Server](#lsp)
 - [Contact](#contact)
 - [My other apps](#my-other-apps)
@@ -86,7 +87,6 @@ There are two ways to do the completions. One is [Inbuilt Completions](#inbuilt)
 [Completions using Ultisnips](#ultisnips)
 
 #### Inbuilt (completed using `fortran_leader`) 
-
 `if`,`do`,`select` etc statements, that are closed by a corresponding `end`
 is defined here. after typing the first line, pressing `<F3>` will
 complete the construct. for example:
@@ -215,8 +215,25 @@ where
 
 For more, use dedicated linting packages like `fortls` or [ALE](https://github.com/w0rp/ale).
 
-#### Menu
+### Compile and Autotool Support
+Some build and [GNU autotool](https://www.gnu.org/software/automake/) features are added. 
+You can configure the options to your tastes.
+##### Available compilation options
+###### variables
+* `fortran_compiler`: Set fortran compiler. Default is `gfortran`
+* `fortran_exeExe`: Executable Extension. Default is ''.
+* `fcflags`: Compiler options. Default is `-Wall  -O0 -c`
+* `flflags`: Compiler options. Default is `-Wall  -O0 `
+###### Keyboard shortcuts (Your current options are visible in `menu`)
+* `fortran_compile`: Compile current buffer. Default is `<leader>cc`
+* `fortran_run`: Compile and run current buffer. Default is `<leader>cr`
+* `fortran_cla`: Command Line Arguments for compile and run current buffer. Default is `<leader>cl`
+* `fortran_dbg`: Debug current buffer. Default is `<leader>cd`
+* `fortran_make`: Make if makefile exists. Default is `<leader>mk`
+* `fortran_makeProp`: CLA to  make. Default is `<leader>mp`
+* `fortran_genProj`: Creates a gnu style project structure. Default is `<leader>gp`
 
+#### Menu
 Menu is added for `gui`-help. it helps building project using 
 gnu-`autotool`. Every fortran file will open with `fortran90` element 
 in the menubar.

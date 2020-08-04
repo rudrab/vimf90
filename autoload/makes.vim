@@ -112,6 +112,8 @@ function! makes#Dbg()
 	" if !exists("Exe") 
 		" call makes#FRun()
 	" endif
+  let b:FCFlags = "-Wall -g"
+  call makes#FRun() 
 	let l:arguments = exists("b:ClArgs") ? " ".b:ClArgs : ""
 
 "   if  s:MSWIN
