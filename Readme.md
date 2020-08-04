@@ -221,11 +221,12 @@ You can configure the options to your tastes.
 ##### Available compilation options
 ###### variables
 * `fortran_compiler`: Set fortran compiler. Default is `gfortran`
-* `fortran_exeExe`: Executable Extension. Default is ''.
-* `fcflags`: Compiler options. Default is `-Wall  -O0 -c`
-* `flflags`: Compiler options. Default is `-Wall  -O0 `
+* `fortran_exeExt`: Executable Extension. Default is `''`. So, the executable of `foo.f90` is `foo`
+* `fortran_fcflags`: Compiler options. Default is `-Wall  -O0 -c `
+* `fortran_flflags`: Compiler options. Default is `-Wall  -O0 `
 ###### Keyboard shortcuts (Your current options are visible in `menu`)
 * `fortran_compile`: Compile current buffer. Default is `<leader>cc`
+* `fortran_exe`: Create the executable, without running it. Default in `<leader>ce`
 * `fortran_run`: Compile and run current buffer. Default is `<leader>cr`
 * `fortran_cla`: Command Line Arguments for compile and run current buffer. Default is `<leader>cl`
 * `fortran_dbg`: Debug current buffer. Default is `<leader>cd`

@@ -16,22 +16,23 @@
 "########################################################################
 
 " Variables {{{1
-let s:Compiler = get(g:, "fortran_compiler", "gfortran")
-let s:ObjExt    =   '.o'
-let s:ModExt    =   '.mod'
-let s:ExeExt    =   ''
-let s:VimComp   =   'gfortran'
-let s:FCFlags   =  get(g:, "fortran_fcflags",   '-Wall  -O0 -c')
-let s:FLFlags   =   get(g:, "fortran_flflags",  '-Wall -O0')
-let s:OutputGvim=   'vim'
+let b:Compiler = get(g:, "fortran_compiler", "gfortran")
+let b:ObjExt    =   '.o'
+let b:ModExt    =   '.mod'
+let b:ExeExt    =   get(g:,'fortran_exeExt','')
+let b:VimComp   =   'gfortran'
+let b:FCFlags   =  get(g:, "fortran_fcflags",   '-Wall  -O0 -c')
+let b:FLFlags   =   get(g:, "fortran_flflags",  '-Wall -O0')
+let b:OutputGvim=   'vim'
 "}}}1
 
 " Compile current buffer {{{1
 function! makes#Fcompile()
   let sou = expand("%:p")
-  let obj = expand("%:p:r").s:ObjExt
+  let obj = expand("%:p:r").b:ObjExt
   let s:fortran_comp_success = 0
     "
+  echo "Creating object file"
   setlocal efm=%E%f:%l:%c:,%E%f:%l:,%C,%C%p%*[0123456789^],%ZError:\ %m,%C%.%#
   " Don't process any further if the compilation is up to date
   if filereadable(obj) && (getftime(obj)>getftime(sou))
@@ -41,9 +42,9 @@ function! makes#Fcompile()
   endif
 
   let makeprg_saved = '"' . &makeprg . '"'
-  execute "setlocal makeprg=" . s:Compiler
+  execute "setlocal makeprg=" . b:Compiler
   " let v:statusmsg = ''
-  execute "silent make " . s:FCFlags . " " . sou . " -o " . obj
+  execute "silent make " . b:FCFlags . " " . sou . " -o " . obj
 
   " Don'r process any further if the compilation was sucessful
   if empty(v:statusmsg)
@@ -63,12 +64,13 @@ endfunction
 " Run executable {{{1
 function! makes#Fexe()
   let sou = expand("%:p")
-  let obj = expand("%:p:r").s:ObjExt
+  let obj = expand("%:p:r").b:ObjExt
   " call makes#Fcompile()
+  echo "Creating the executable"
     let makeprg_saved = '"' . &makeprg . '"'
-    execute "setlocal makeprg=" . s:Compiler
+    execute "setlocal makeprg=" . b:Compiler
     let s:exe = expand("%:p:r")
-    exe "make " .s:FLFlags."  " .sou. " -o ".s:exe
+    exe "make " .b:FLFlags."  " .sou. " -o ".s:exe
     let s:fortran_link_success = 1
     if v:shell_error !=0
       let &statusline = v:shell_error
@@ -80,6 +82,7 @@ endfunction
 
 function! makes#Frun()
   call makes#Fexe()
+  echo "Running the code"
   if s:fortran_link_success==1
     let l:args = exists("b:Clargs") ? b:Clargs : "" 
     exe "!".s:exe. " " . l:args
@@ -88,7 +91,7 @@ endfunction
 
 " CLArgs : Command Line Argument {{{1
 function! makes#Cla()
-  let Exe = expand("%:p:t").s:ExeExt
+  let Exe = expand("%:p:t").b:ExeExt
   let sou = expand("%:p")
   if empty(Exe)
     redraw
@@ -106,16 +109,16 @@ endfunction
 
 " Debugger :  call debugger, currently supports gdb only {{{1
 function! makes#Fdbg()
-  let Exe = expand("%:p:r").s:ExeExt
+  let Exe = expand("%:p:r").b:ExeExt
   let sou = expand("%:p")
   let b:F_Debugger = get(g:, "F_Debugger", 'gdb')
-  echo "Running Debugger"
   silent exe 'update'
   " if !exists("Exe") 
   " call makes#FRun()
   " endif
   let s:FLFlags = "-Wall -g"
   call makes#Fexe() 
+  echo "Running Debugger"
   let l:arguments = exists("b:ClArgs") ? " ".b:ClArgs : ""
 
   "   if  s:MSWIN
