@@ -31,8 +31,8 @@ if has('gui_running') && has('menu')
     exe 'inoremenu  Fortran&90.&Compile.&Compile\ and\ Run<Tab>'.b:fortran_run          '<C-C>:call Run()<CR>'
     exe 'anoremenu  Fortran&90.&Compile.&Comand\ Line\ Arguments<Tab>'.b:fortran_cla    ':call CLArgs()<CR>'
     exe 'inoremenu  Fortran&90.&Compile.&Comand\ Line\ Arguments<Tab>'.b:fortran_cla    '<C-C>:call CLArgs()<CR>'
-    exe 'anoremenu  Fortran&90.&Compile.&Run\ &Debugger<Tab>'.b:fortran_dbg             ':call Dbg()<CR>'
-    exe 'inoremenu  Fortran&90.&Compile.&Run\ &Debugger<Tab>'.b:fortran_dbg             '<C-C>:call Dbg()<CR>'
+    exe 'anoremenu  Fortran&90.&Compile.&Run\ &Debugger<Tab>'.b:fortran_dbg             ':call Debug()<CR>'
+    exe 'inoremenu  Fortran&90.&Compile.&Run\ &Debugger<Tab>'.b:fortran_dbg             '<C-C>:call Debug()<CR>'
     an  &Fortran90.&Compile.----                                        " 
     exe 'anoremenu  Fortran&90.&Make.&Make<Tab>'.b:fortran_make                         ':call Make()<CR>'
     exe 'inoremenu  Fortran&90.&Make.&Make<Tab>'.b:fortran_make                         '<C-C>:call Make()<CR>'

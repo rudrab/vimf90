@@ -39,9 +39,9 @@ let b:fortran_genProj = get(g:,"fortran_genProj", '\'.get(g:,'mapleader', '\')."
 exe 'nnoremap'    b:fortran_make     ':call Make()<CR>'
 exe 'nnoremap'    b:fortran_makeProp     ':call MakeProp()<CR>'
 exe 'nnoremap'    b:fortran_compile      ':call Compile()<CR>'
+exe 'nnoremap'    b:fortran_dbg      ':call Debug()<CR>'
 exe 'noremap'     b:fortran_run      ':call Run()<CR>'
 exe 'noremap'     b:fortran_cla      ':call CLArgs()<CR>'
-exe 'noremap'     b:fortran_makeProp      ':call MakeProject()<CR>'
 exe 'noremap'     b:fortran_genProj      ':call MakeProject()<CR>'
 " nnoremap    <leader>cl      :call Link()<CR>
 
