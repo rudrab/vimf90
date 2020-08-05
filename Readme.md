@@ -1,22 +1,29 @@
-- [Introduction](#introduction)
-   - [Features](#features)
-- [Install](#install)
-   - [Dependencies](#dependencies)
-- [Options](#options)
-- [Features](#features-1)
-   - [Completions](#completions)
-     - [Inbuilt](#inbuilt)
-     - [Ultisnips](#ultisnips)
-   - [Linting](#linting) 
-   - [Menu](#menu)
-- [Enable Language Server](#lsp)
-- [Contact](#contact)
-- [My other apps](#my-other-apps)
+* [Introduction](#introduction)
+  * [Features](#features)
+* [Install](#install)
+  * [Dependencies](#dependencies)
+* [Options](#options)
+* [Features](#features-1)
+  * [Completions](#completions)
+    * [Inbuilt (completed using `fortran_leader`)](#inbuilt-completed-using-fortran_leader)
+      * [Constructs](#constructs)
+      * [Statements](#statements)
+      * [Subprograms (completed using `fortran_completor`)](#subprograms-completed-using-fortran_completor)
+    * [Ultisnips](#ultisnips)
+  * [Linting (Controlled by `fortran_linter`)](#linting-controlled-by-fortran_linter)
+  * [Compile and Autotool Support](#compile-and-autotool-support)
+      * [Available compilation options](#available-compilation-options)
+    * [Menu](#menu)
+  * [Language Server Protocol](#language-server-protocol)
+* [Contact](#contact)
+* [My other apps](#my-other-apps)
 
-## Introduction
+<!-- vim-markdown-toc -->
+
+<!-- Introduction {{{1 -->
+## Introduction    
  `fortran` `ide` for `vim`. It is intended to make the coding with `fortran` **easier** and
 **faster** in vim.
-
 ### Features 
   * An ide like environment for fortran 90+
   * Supports LSP
@@ -26,18 +33,10 @@
   * Popup menu for standard and user defined modules and subroutines
   * Support for menu mode
   * Support for gnu-autotools (configure, make)
+      
+<!-- }}} -->
 
-### Major update (6th July, 2020)
-subroutines and modules completions are removed. It is unnecessary in the era of LSP. I have tried
-and used it with [coc-nvim](https://github.com/neoclide/coc.nvim) and
-[fortls](https://github.com/hansec/fortran-language-server), which is working fine.
-
-### Important change for existing users (14th July, 2020)
-I have added few more options, and took the opportunity to change the option names.
-* `VimF90Leader` changed to `fortran_leader`
-* `VimF90Linter` changed to `fortran_linter`
-* `VimF90Completer` changed to `fortran_completer`
-
+<!-- Install {{{1 -->
 ## Install
 The easiest way of installation is to use a vim plugin manager. 
 
@@ -63,6 +62,7 @@ The easiest way of installation is to use a vim plugin manager.
 5. [fprettify](https://github.com/pseewald/fprettify).
 
 `fortls` and `fprettify` will be installed automatically if you enable the feature (see below.)
+}}}1
 
 ## Options
 There are several options to configure how `VimF90` will work. 
@@ -86,7 +86,6 @@ There are two ways to do the completions. One is [Inbuilt Completions](#inbuilt)
 [Completions using Ultisnips](#ultisnips)
 
 #### Inbuilt (completed using `fortran_leader`) 
-
 `if`,`do`,`select` etc statements, that are closed by a corresponding `end`
 is defined here. after typing the first line, pressing `<F3>` will
 complete the construct. for example:
@@ -104,7 +103,7 @@ trial: do i=1,10
 end do trial
 ```
 
-##### Constructs:
+##### Constructs
 
 |type:                         |   get               |
 |------------------------------|---------------------|
@@ -215,8 +214,26 @@ where
 
 For more, use dedicated linting packages like `fortls` or [ALE](https://github.com/w0rp/ale).
 
-#### Menu
+### Compile and Autotool Support
+Some build and [GNU autotool](https://www.gnu.org/software/automake/) features are added. 
+You can configure the options to your tastes.
+##### Available compilation options
+###### variables
+* `fortran_compiler`: Set fortran compiler. Default is `gfortran`
+* `fortran_exeExt`: Executable Extension. Default is `''`. So, the executable of `foo.f90` is `foo`
+* `fortran_fcflags`: Compiler options. Default is `-Wall  -O0 -c `
+* `fortran_flflags`: Compiler options. Default is `-Wall  -O0 `
+###### Keyboard shortcuts (Your current options are visible in `menu`)
+* `fortran_compile`: Compile current buffer. Default is `<leader>cc`
+* `fortran_exe`: Create the executable, without running it. Default in `<leader>ce`
+* `fortran_run`: Compile and run current buffer. Default is `<leader>cr`
+* `fortran_cla`: Command Line Arguments for compile and run current buffer. Default is `<leader>cl`
+* `fortran_dbg`: Debug current buffer. Default is `<leader>cd`
+* `fortran_make`: Make if makefile exists. Default is `<leader>mk`
+* `fortran_makeProp`: CLA to  make. Default is `<leader>mp`
+* `fortran_genProj`: Creates a gnu style project structure. Default is `<leader>gp`
 
+#### Menu
 Menu is added for `gui`-help. it helps building project using 
 gnu-`autotool`. Every fortran file will open with `fortran90` element 
 in the menubar.

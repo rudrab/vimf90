@@ -1,6 +1,6 @@
 "########################################################################
 " Filename:      makes.vim
-" Copyright: Copyright (C) 2019 Rudra Banerjee
+" Copyright: Copyright (C) 2020 Rudra Banerjee
 " 
 "    This program is free software: you can redistribute it and/or modify
 "    it under the terms of the GNU General Public License as published by
@@ -13,26 +13,26 @@
 "    GNU General Public License for more details.
 " Date:          03/07/2015
 " Description:   Make utility for fortran. 
-"                Largely adapted from c.vim
 "########################################################################
 
 " Variables {{{1
-let s:Compiler = get(g:, "fortran_compiler", "gfortran")
-let s:ObjExt    =   '.o'
-let s:ModExt    =   '.mod'
-let s:ExeExt    =   ''
-let s:VimComp   =   'gfortran'
-let s:FCFlags   =  get(g:, "fortran_fcflags",   '-Wall  -O0 -c')
-let s:FLFlags   =   get(g:, "fortran_flflags",  '-Wall -O0')
-let s:OutputGvim=   'vim'
+let b:Compiler = get(g:, "fortran_compiler", "gfortran")
+let b:ObjExt    =   '.o'
+let b:ModExt    =   '.mod'
+let b:ExeExt    =   get(g:,'fortran_exeExt','')
+let b:VimComp   =   'gfortran'
+let b:FCFlags   =  get(g:, "fortran_fcflags",   '-Wall  -O0 -c')
+let b:FLFlags   =   get(g:, "fortran_flflags",  '-Wall -O0')
+let b:OutputGvim=   'vim'
 "}}}1
 
 " Compile current buffer {{{1
 function! makes#Fcompile()
   let sou = expand("%:p")
-  let obj = expand("%:p:r").s:ObjExt
+  let obj = expand("%:p:r").b:ObjExt
   let s:fortran_comp_success = 0
     "
+  echo "Creating object file"
   setlocal efm=%E%f:%l:%c:,%E%f:%l:,%C,%C%p%*[0123456789^],%ZError:\ %m,%C%.%#
   " Don't process any further if the compilation is up to date
   if filereadable(obj) && (getftime(obj)>getftime(sou))
@@ -42,9 +42,9 @@ function! makes#Fcompile()
   endif
 
   let makeprg_saved = '"' . &makeprg . '"'
-  execute "setlocal makeprg=" . s:Compiler
+  execute "setlocal makeprg=" . b:Compiler
   " let v:statusmsg = ''
-  execute "silent make " . s:FCFlags . " " . sou . " -o " . obj
+  execute "silent make " . b:FCFlags . " " . sou . " -o " . obj
 
   " Don'r process any further if the compilation was sucessful
   if empty(v:statusmsg)
@@ -62,32 +62,36 @@ endfunction
 "}}}1
 
 " Run executable {{{1
-function! makes#Frun()
+function! makes#Fexe()
   let sou = expand("%:p")
-  let obj = expand("%:p:r").s:ObjExt
-  call makes#Fcompile()
-  let s:fortran_link_success =1
-  if s:fortran_comp_success==1
+  let obj = expand("%:p:r").b:ObjExt
+  " call makes#Fcompile()
+  echo "Creating the executable"
     let makeprg_saved = '"' . &makeprg . '"'
-    execute "setlocal makeprg=" . s:Compiler
+    execute "setlocal makeprg=" . b:Compiler
     let s:exe = expand("%:p:r")
-    exe "make " .s:FLFlags."  " .obj. " -o ".s:exe
+    exe "make " .b:FLFlags."  " .sou. " -o ".s:exe
+    let s:fortran_link_success = 1
     if v:shell_error !=0
       let &statusline = v:shell_error
       let s:fortran_link_success = 0
       return
     endif
-    if s:fortran_link_success==1
-      let l:args = exists("b:Clargs") ? b:Clargs : "" 
-      exe "!".s:exe. " " . l:args
-    endif
-  endif
 endfunction
 "}}}1
 
+function! makes#Frun()
+  call makes#Fexe()
+  echo "Running the code"
+  if s:fortran_link_success==1
+    let l:args = exists("b:Clargs") ? b:Clargs : "" 
+    exe "!".s:exe. " " . l:args
+  endif
+endfunction
+
 " CLArgs : Command Line Argument {{{1
 function! makes#Cla()
-  let Exe = expand("%:p:t").s:ExeExt
+  let Exe = expand("%:p:t").b:ExeExt
   let sou = expand("%:p")
   if empty(Exe)
     redraw
@@ -104,21 +108,23 @@ endfunction
 "}}}1
 
 " Debugger :  call debugger, currently supports gdb only {{{1
-function! makes#Dbg()
-  let Exe = expand("%:p:r").s:ExeExt
+function! makes#Fdbg()
+  let Exe = expand("%:p:r").b:ExeExt
   let sou = expand("%:p")
   let b:F_Debugger = get(g:, "F_Debugger", 'gdb')
+  silent exe 'update'
+  " if !exists("Exe") 
+  " call makes#FRun()
+  " endif
+  let s:FLFlags = "-Wall -g"
+  call makes#Fexe() 
   echo "Running Debugger"
-	silent exe 'update'
-	" if !exists("Exe") 
-		" call makes#FRun()
-	" endif
-	let l:arguments = exists("b:ClArgs") ? " ".b:ClArgs : ""
+  let l:arguments = exists("b:ClArgs") ? " ".b:ClArgs : ""
 
-"   if  s:MSWIN
-"     let l:arguments = substitute( l:arguments, '^\s\+', ' ', '' )
-"     let l:arguments = substitute( l:arguments, '\s\+', "\" \"", 'g')
-"   endif
+  "   if  s:MSWIN
+  "     let l:arguments = substitute( l:arguments, '^\s\+', ' ', '' )
+  "     let l:arguments = substitute( l:arguments, '\s\+', "\" \"", 'g')
+  "   endif
   "
   " debugger is 'gdb'
   "
@@ -126,34 +132,34 @@ function! makes#Dbg()
     exe '!gdb ' . Exe.l:arguments
   endif
   "
-"   if v:windowid != 0
-"     "
-"     " grapical debugger is 'kdbg', uses a PerlTk interface
-"     "
-"     if g:C_Debugger == "kdbg"
-"       if  s:MSWIN
-"         exe '!kdbg "'.s:C_ExecutableToRun.l:arguments.'"'
-"       else
-"         silent exe '!kdbg  '.s:C_ExecutableToRun.l:arguments.' &'
-"       endif
-"     endif
-"     "
-"     " debugger is 'ddd'  (not available for MS Windows); graphical front-end for GDB
-"     "
-"     if g:C_Debugger == "ddd" && !s:MSWIN
-"       if !executable("ddd")
-"         echohl WarningMsg
-"         echo 'ddd does not exist or is not executable!'
-"         echohl None
-"         return
-"       else
-"         silent exe '!ddd '.s:C_ExecutableToRun.l:arguments.' &'
-"       endif
-"     endif
-"     "
-"   endif
+  "   if v:windowid != 0
+  "     "
+  "     " grapical debugger is 'kdbg', uses a PerlTk interface
+  "     "
+  "     if g:C_Debugger == "kdbg"
+  "       if  s:MSWIN
+  "         exe '!kdbg "'.s:C_ExecutableToRun.l:arguments.'"'
+  "       else
+  "         silent exe '!kdbg  '.s:C_ExecutableToRun.l:arguments.' &'
+  "       endif
+  "     endif
+  "     "
+  "     " debugger is 'ddd'  (not available for MS Windows); graphical front-end for GDB
+  "     "
+  "     if g:C_Debugger == "ddd" && !s:MSWIN
+  "       if !executable("ddd")
+  "         echohl WarningMsg
+  "         echo 'ddd does not exist or is not executable!'
+  "         echohl None
+  "         return
+  "       else
+  "         silent exe '!ddd '.s:C_ExecutableToRun.l:arguments.' &'
+  "       endif
+  "     endif
+  "     "
+  "   endif
   "
-	redraw!
+  redraw!
 endfunction
 "}}}1
 
@@ -162,23 +168,23 @@ function! makes#MakeRun ()
   let s:Makefile    = ''
   " let s:CmdLineArgs = ''
   let s:Enabled=1
-	if s:Enabled == 0
-		return s:ErrorMsg ( 'Make : "make" is not executable.' )
-	endif
+  if s:Enabled == 0
+    return s:ErrorMsg ( 'Make : "make" is not executable.' )
+  endif
 
-	silent exe 'update'   | " write source file if necessary
-	cclose
-	"
-	" arguments
+  silent exe 'update'   | " write source file if necessary
+  cclose
+  "
+  " arguments
   " if a:args == '' | let cmdlinearg = s:CmdLineArgs
   " else            | let cmdlinearg = a:args
   " endif
-	" :TODO:18.08.2013 21:45:WM: 'cmdlinearg' is not correctly escaped for use under Windows
-	"
-	" run make
+  " :TODO:18.08.2013 21:45:WM: 'cmdlinearg' is not correctly escaped for use under Windows
+  "
+  " run make
   let l:Margs = exists("b:MakeArgs") ? b:MakeArgs : "" 
-	exe 'make ' .l:Margs
-	botright cwindow
+  exe 'make ' .l:Margs
+  botright cwindow
 endfunction    
 " ----------  end of function s:MakesRun  ----------
 "}}}1
@@ -192,15 +198,22 @@ function! makes#MakeCla()
     let b:MakeArgs = input(prompt,"","file")
   endif
 endfunction
+"}}}1
 
 " Make Project {{{1
-function! makes#MakeProject()
+function! makes#MakeProj()
   " Create a gnu style project structure 
   let s:Prdir = input("Create new project: ", getcwd(), "file")
   exe ":!mkdir -p ".s:Prdir
+  " exe ":lchdir ".s:Prdir
+  exe ":!mkdir " .s:Prdir."{/help,/src}"
+  exe ":!touch " .s:Prdir."{/ChangeLog,/README,/LICENSE}"
+  " exe ":lchdir -"
+  let cbf = expand('%:t')
+  exe ":!mv *.f90 "  .s:Prdir."/src"
+  exe ":wa"
   exe ":lchdir ".s:Prdir
-  exe ":!mkdir help src"
-  exe ":!touch ChangeLog README LICENSE"
-  exe ":lchdir -"
+  exe "bd|e "  ."src/".cbf
+
 endfunction
 " }}}1

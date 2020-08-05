@@ -25,28 +25,32 @@ if has('gui_running') && has('menu')
 
   if g:Fortran_menumode == 1
     " This is how to set the variables
-    exe 'anoremenu  Fortran&90.&Compile.&Compile<Tab>'.b:fortran_compile      ':call Compile()<CR>'
-    exe 'inoremenu  Fortran&90.&Compile.&Compile<Tab>'.b:fortran_compile      ':call Compile()<CR>'
-    exe 'anoremenu  Fortran&90.&Compile.&Compile\ and\ Run<Tab>'.b:fortran_run ':call Run()<CR>'
-    exe 'inoremenu  Fortran&90.&Compile.&Compile\ and\ Run<Tab>'.b:fortran_run '<C-C>:call Run()<CR>'
-    exe 'anoremenu  Fortran&90.&Compile.&Comand\ Line\ Arguments<Tab>'.b:fortran_cla           ':call CLArgs()<CR>'
-    exe 'inoremenu  Fortran&90.&Compile.&Comand\ Line\ Arguments<Tab>'.b:fortran_cla      '<C-C>:call CLArgs()<CR>'
-    exe 'anoremenu  Fortran&90.&Compile.&Run\ &Debugger<Tab>'.b:fortran_dbg                ':call Dbg()<CR>'
-    exe 'inoremenu  Fortran&90.&Compile.&Run\ &Debugger<Tab>'.b:fortran_dbg               '<C-C>:call Dbg()<CR>'
+    exe 'anoremenu  Fortran&90.&Compile.&Compile<Tab>'.b:fortran_compile                ':call Compile()<CR>'
+    exe 'inoremenu  Fortran&90.&Compile.&Compile<Tab>'.b:fortran_compile                '<C-C>:call Compile()<CR>'
+    exe 'anoremenu  Fortran&90.&Compile.&Generate\ Executable<Tab>'.b:fortran_exe          ':call Gexe()<CR>'
+    exe 'inoremenu  Fortran&90.&Compile.&Generate\ Executable<Tab>'.b:fortran_exe          '<C-C>:call Gexe()<CR>'
+    exe 'anoremenu  Fortran&90.&Compile.&Compile\ and\ Run<Tab>'.b:fortran_run          ':call Run()<CR>'
+    exe 'inoremenu  Fortran&90.&Compile.&Compile\ and\ Run<Tab>'.b:fortran_run          '<C-C>:call Run()<CR>'
+    exe 'anoremenu  Fortran&90.&Compile.&Comand\ Line\ Arguments<Tab>'.b:fortran_cla    ':call CLArgs()<CR>'
+    exe 'inoremenu  Fortran&90.&Compile.&Comand\ Line\ Arguments<Tab>'.b:fortran_cla    '<C-C>:call CLArgs()<CR>'
+    exe 'anoremenu  Fortran&90.&Compile.&Run\ &Debugger<Tab>'.b:fortran_dbg             ':call Debug()<CR>'
+    exe 'inoremenu  Fortran&90.&Compile.&Run\ &Debugger<Tab>'.b:fortran_dbg             '<C-C>:call Debug()<CR>'
     an  &Fortran90.&Compile.----                                        " 
-    " an  Fortran&90.&Compile.&Create\ New\ Project<Tab>\\sys             :call FProject()<cr>
-    exe 'anoremenu  Fortran&90.&Make.&Make<Tab>'.b:fortran_make                ':call Make()<CR>'
-    exe 'inoremenu  Fortran&90.&Make.&Make<Tab>'.b:fortran_make                '<C-C>:call Make()<CR>'
-    exe 'anoremenu  Fortran&90.&Make.Make\ &Properties<Tab>'.b:fortran_makeProp      ':call MakeProperties()<CR>'
-    exe 'inoremenu  Fortran&90.&Make.Make\ &Properties<Tab>'.b:fortran_makeProp '<C-C>:call MakeProperties()<CR>'
+    exe 'anoremenu  Fortran&90.&Make.&Make<Tab>'.b:fortran_make                         ':call Make()<CR>'
+    exe 'inoremenu  Fortran&90.&Make.&Make<Tab>'.b:fortran_make                         '<C-C>:call Make()<CR>'
+    exe 'anoremenu  Fortran&90.&Make.Make\ &Properties<Tab>'.b:fortran_makeProp         ':call MakeProperties()<CR>'
+    exe 'inoremenu  Fortran&90.&Make.Make\ &Properties<Tab>'.b:fortran_makeProp         '<C-C>:call MakeProperties()<CR>'
+    an  &Fortran90.&Compile.----                                        " 
+    exe 'anoremenu  Fortran&90.&Make.Generate\ &Project<Tab>'.b:fortran_genProj         ':call MakeProject()<CR>'
+    exe 'inoremenu  Fortran&90.&Make.Generate\ &Project<Tab>'.b:fortran_genProj         '<C-C>:call MakeProject()<CR>'
     " exe 'anoremenu  Fortran&90.&Make.Make\ &Clean<Tab>\\mkc                           :call MakeClean()<CR>'
     " exe 'inoremenu  Fortran&90.&Make.Make\ &Clean<Tab>\\mkc                      <C-C>:call MakeClean()<CR>'
     " an  &Fortran90.&Compile.--sep0--                                        " 
     " an  Fortran&90.&Compile.&Generate\ configure\.ac<Tab>autoscan       :call MakeConf()<CR>
     " an  Fortran&90.&Compile.&Generate\ Makefile\.am<Tab>Experimental    :call MakeMake()<CR>
-    an  &Fortran90.--sep0--                                            <Nop>  
-    an  &Fortran90.&Blocks.&Program<Tab>`prg                            :call Prog("prg")<cr><CR><Esc>gg=G<C-j>
-    an  &Fortran90.&Blocks.&Module<Tab>`mod                             :call Prog("mod")<cr><CR><Esc>gg=G<C-j>
+    " an  &Fortran90.--sep0--                                            <Nop>  
+    " an  &Fortran90.&Blocks.&Program<Tab>`prg                            :call Prog("prg")<cr><CR><Esc>gg=G<C-j>
+    " an  &Fortran90.&Blocks.&Module<Tab>`mod                             :call Prog("mod")<cr><CR><Esc>gg=G<C-j>
     "an  &Fortran90.&Blocks.&Subroutine<Tab>`sub                        `sub  
     "an  &Fortran90.&Blocks.&Function<Tab>`fun                          `fun  
     an  &Fortran90.--sep1--                                             <Nop> 
