@@ -270,7 +270,7 @@ let g:coc_user_config = {
 
 
 ## Contact
-The preferred way of contacting me is via [github project page](https://github.com/rudrab/vimf90/issues).
+The preferred way to contact me is through [github issues](https://github.com/rudrab/vimf90/issues).
 
 ## My other apps
 Other apps I have developed:
