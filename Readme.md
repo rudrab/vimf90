@@ -5,12 +5,12 @@
 * [Options](#options)
 * [Features](#features-1)
   * [Completions](#completions)
-    * [Inbuilt (completed using `fortran_leader`)](#inbuilt-completed-using-fortran_leader)
+    * [Inbuilt](#inbuilt)
       * [Constructs](#constructs)
       * [Statements](#statements)
-      * [Subprograms (completed using `fortran_completor`)](#subprograms-completed-using-fortran_completor)
+      * [Subprograms](#subprograms)
     * [Ultisnips](#ultisnips)
-  * [Linting (Controlled by `fortran_linter`)](#linting-controlled-by-fortran_linter)
+  * [Linting](#linting)
   * [Compile and Autotool Support](#compile-and-autotool-support)
       * [Available compilation options](#available-compilation-options)
     * [Menu](#menu)
@@ -85,7 +85,8 @@ in your `.vimrc`.
 There are two ways to do the completions. One is [Inbuilt Completions](#inbuilt) and
 [Completions using Ultisnips](#ultisnips)
 
-#### Inbuilt (completed using `fortran_leader`) 
+#### Inbuilt 
+**completed using `fortran_leader`**
 `if`,`do`,`select` etc statements, that are closed by a corresponding `end`
 is defined here. after typing the first line, pressing `<F3>` will
 complete the construct. for example:
@@ -99,7 +100,7 @@ you will get:
 
 ```fortran
 trial: do i=1,10
-  &#9014;
+  <cursor here>
 end do trial
 ```
 
@@ -107,11 +108,11 @@ end do trial
 
 |type:                         |   get               |
 |------------------------------|---------------------|
-|`[name:]do[iterator]<f7>`       |  do construct |
-|`[name:]if(condition)then<f7>`  |  if construct |
-|`selectcase<f7>`                |  select construct |
-|`forall<f7>`                    |  forall construct|
-|`type::name<f7>`                |  type  construct|
+|`[name:]do[iterator]<f3>`       |  do construct |
+|`[name:]if(condition)then<f3>`  |  if construct |
+|`selectcase<F3>`                |  select construct |
+|`forall<F3>`                    |  forall construct|
+|`type::name<F3>`                |  type  construct|
 
 **NB**: this part is shamelessly copied from 
 [fortran-codecomplete](http://www.vim.org/scripts/script.php?script_id=2487)
@@ -142,7 +143,10 @@ The `<++>` is a nice option, a `<c-j>` will put your cursor in that position. Us
 in your `.vimrc` for this feature.
 
 
-##### Subprograms (completed using `fortran_completor`)
+##### Subprograms 
+
+**completed using `fortran_completor`**
+
 These key-combinations makes program and subprograms header.  It supports program(**\`prg**),
 module(**\`mod**), subroutine(**\`sub**) and function(**\`fun**). The initiator \` can be changed using
 `fortran_leader` (See [Options](#options) for more). For example,
@@ -195,7 +199,10 @@ snippets.
 <!-- **Update:** Moving completions completely to `coc-nvim` and LSP implemented there. See -->
 <!-- \[dependencies](#vimf90-deps) section. -->
 
-### Linting (Controlled by `fortran_linter`)
+### Linting 
+
+**This is controlled by `fortran_linter`**
+
 Basic linting is enabled. So, when a operator is typed preceded by a space, e.g. `A =B`&#9014;, a space is
 automatically inserted, yielding `A = B`&#9014;. 
 This basically enables python's `pep8-like` whitespace rule in fortran.
