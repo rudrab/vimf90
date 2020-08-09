@@ -68,6 +68,9 @@ There are several options to configure how `VimF90` will work.
 4. `fprettify_options`: Works only with `fortran_linter=2`. Check `fprettify --help` for available
    options. Default is `--silent`.
 
+**N.B** `fortran_leader` is different from `<Leader>`. `<Leader>` is a universal key for vim.
+   Check your `leader` using `:echo mapleader` and `:h Leader`. By default, it's  `\`.
+
 ## Features
 Default `leader` key used here is **\`**. You can change this by using:
 ```vim
