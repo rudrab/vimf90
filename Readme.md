@@ -18,9 +18,6 @@
 * [Contact](#contact)
 * [My other apps](#my-other-apps)
 
-<!-- vim-markdown-toc -->
-
-<!-- Introduction {{{1 -->
 ## Introduction    
  `fortran` `ide` for `vim`. It is intended to make the coding with `fortran` **easier** and
 **faster** in vim.
@@ -33,10 +30,7 @@
   * Popup menu for standard and user defined modules and subroutines
   * Support for menu mode
   * Support for gnu-autotools (configure, make)
-      
-<!-- }}} -->
 
-<!-- Install {{{1 -->
 ## Install
 The easiest way of installation is to use a vim plugin manager. 
 
@@ -62,7 +56,6 @@ The easiest way of installation is to use a vim plugin manager.
 5. [fprettify](https://github.com/pseewald/fprettify).
 
 `fortls` and `fprettify` will be installed automatically if you enable the feature (see below.)
-}}}1
 
 ## Options
 There are several options to configure how `VimF90` will work. 
@@ -188,12 +181,6 @@ and so on. Please check `vimf90/Ultisnips/fortran.snippets` in your `.vim/` for 
 **NB**: Kindly consider submitting your `snippets` as pull request. This will help me enhance my
 snippets.
 
-
-<!-- ### Fortran subprogram complete -->
-<!-- vimf90 now supports subprogram completions.  `<leader>use` and `<leader>call` will popup a list of -->
-<!-- modules and subroutine inside present working dirs and fortran's standard module and subroutines. -->
-<!-- **Update:** Moving completions completely to `coc-nvim` and LSP implemented there. See -->
-<!-- \[dependencies](#vimf90-deps) section. -->
 
 ### Linting (Controlled by `fortran_linter`)
 Basic linting is enabled. So, when a operator is typed preceded by a space, e.g. `A =B`&#9014;, a space is
