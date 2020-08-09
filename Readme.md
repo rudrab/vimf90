@@ -92,7 +92,7 @@ you will get:
 
 ```fortran
 trial: do i=1,10
-  &#9014;
+  <cursor here>
 end do trial
 ```
 
