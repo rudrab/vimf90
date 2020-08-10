@@ -6,17 +6,16 @@
 * [Features](#features-1)
   * [Completions](#completions)
     * [Inbuilt (completed using `fortran_leader`)](#inbuilt-completed-using-fortran_leader)
-      * [Constructs](#constructs)
-      * [Statements](#statements)
-      * [Subprograms (completed using `fortran_completor`)](#subprograms-completed-using-fortran_completor)
     * [Ultisnips](#ultisnips)
   * [Linting (Controlled by `fortran_linter`)](#linting-controlled-by-fortran_linter)
   * [Compile and Autotool Support](#compile-and-autotool-support)
       * [Available compilation options](#available-compilation-options)
     * [Menu](#menu)
   * [Language Server Protocol](#language-server-protocol)
+* [ToDo](#todo)
 * [Contact](#contact)
 * [My other apps](#my-other-apps)
+
 
 ## Introduction    
  `fortran` `ide` for `vim`. It is intended to make the coding with `fortran` **easier** and
@@ -257,6 +256,10 @@ let g:coc_user_config = {
       \     }
       }
 ```
+
+## ToDo
+1. Port it to [nvim](https://neovim.io/). This should not be tough, as vim and nvim ins mostly
+   compatible. But, I don't use nvim. Help required.
 
 
 ## Contact
