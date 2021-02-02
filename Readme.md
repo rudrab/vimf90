@@ -6,6 +6,9 @@
 * [Features](#features-1)
   * [Completions](#completions)
     * [Inbuilt (completed using `fortran_leader`)](#inbuilt-completed-using-fortran_leader)
+      * [Constructs](#constructs)
+      * [Statements](#statements)
+      * [Subprograms (completed using `fortran_completor`)](#subprograms-completed-using-fortran_completor)
     * [Ultisnips](#ultisnips)
   * [Linting (Controlled by `fortran_linter`)](#linting-controlled-by-fortran_linter)
   * [Compile and Autotool Support](#compile-and-autotool-support)
@@ -15,8 +18,12 @@
 * [ToDo](#todo)
 * [Contact](#contact)
 * [My other apps](#my-other-apps)
+* [Contact](#contact)
+* [My other apps](#my-other-apps)
 
+<!-- vim-markdown-toc -->
 
+<!-- Introduction {{{1 -->
 ## Introduction    
  `fortran` `ide` for `vim`. It is intended to make the coding with `fortran` **easier** and
 **faster** in vim.
@@ -29,7 +36,10 @@
   * Popup menu for standard and user defined modules and subroutines
   * Support for menu mode
   * Support for gnu-autotools (configure, make)
+      
+<!-- }}} -->
 
+<!-- Install {{{1 -->
 ## Install
 The easiest way of installation is to use a vim plugin manager. 
 
@@ -55,6 +65,7 @@ The easiest way of installation is to use a vim plugin manager.
 5. [fprettify](https://github.com/pseewald/fprettify).
 
 `fortls` and `fprettify` will be installed automatically if you enable the feature (see below.)
+}}}1
 
 ## Options
 There are several options to configure how `VimF90` will work. 
