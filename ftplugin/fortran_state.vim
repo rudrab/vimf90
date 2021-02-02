@@ -18,16 +18,18 @@
 "
 
 " Check python modules and install{{{1
-if !executable('fprettify') || !executable('fortls') || !executable('unidecode')
-  :let choice =confirm("Some python dependencies doesn't exists! Install them?", "&Yes\n&No(use fallback)")
-  if !executable('fprettify')
-    :call install_deps#install_fprettify() 
-  endif
-  if !executable('fortls')
-    :call install_deps#install_fortls() 
-  endif
-  if !executable('unidecode')
-    :call install_deps#install_unidecode() 
+if !executable('fprettify') || !executable('fortls') || !executable('unidecode') || b:fortran_dep_install ==0
+  :let choice = confirm("Some python dependencies doesn't exists! Install them?", "&Yes\n&No(use fallback)")
+  if choice = 2
+    if !executable('fprettify')
+      :call install_deps#install_fprettify() 
+    endif
+    if !executable('fortls')
+      :call install_deps#install_fortls() 
+    endif
+    if !executable('unidecode')
+      :call install_deps#install_unidecode() 
+    endif
   endif
 endif
 "}}}
