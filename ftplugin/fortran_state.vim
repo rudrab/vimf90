@@ -66,16 +66,16 @@ endif
 "}}}
 
 " Declarations: {{{7
-:execute  'inoremap'  b:fortran_leader.'wr'    "pr<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute  'inoremap'  b:fortran_leader.'rd'    "read<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute  'inoremap'  b:fortran_leader.'re'    "real<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute  'inoremap'  b:fortran_leader.'int'   "int<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute  'inoremap'  b:fortran_leader.'char'  "char<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute  'inoremap'  b:fortran_leader.'dim'   "dim<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute  'inoremap'  b:fortran_leader.'par'   "par<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute  'inoremap'  b:fortran_leader.'sle'   "sle<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute  'inoremap'  b:fortran_leader.'prg'   "prg<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute  'inoremap'  b:fortran_leader.'mod'   "mod<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute  'inoremap'  b:fortran_leader.'sub'   "sub<c-r>=UltiSnips#ExpandSnippet()<cr>"
-:execute  'inoremap'  b:fortran_leader.'fun'   "fun<c-r>=UltiSnips#ExpandSnippet()<cr>"
+" :execute  'inoremap'  b:fortran_leader.'wr'    "pr<c-r>=UltiSnips#ExpandSnippet()<cr>"
+" :execute  'inoremap'  b:fortran_leader.'rd'    "read<c-r>=UltiSnips#ExpandSnippet()<cr>"
+" :execute  'inoremap'  b:fortran_leader.'re'    "real<c-r>=UltiSnips#ExpandSnippet()<cr>"
+" :execute  'inoremap'  b:fortran_leader.'int'   "int<c-r>=UltiSnips#ExpandSnippet()<cr>"
+" :execute  'inoremap'  b:fortran_leader.'char'  "char<c-r>=UltiSnips#ExpandSnippet()<cr>"
+" :execute  'inoremap'  b:fortran_leader.'dim'   "dim<c-r>=UltiSnips#ExpandSnippet()<cr>"
+" :execute  'inoremap'  b:fortran_leader.'par'   "par<c-r>=UltiSnips#ExpandSnippet()<cr>"
+" :execute  'inoremap'  b:fortran_leader.'sle'   "sle<c-r>=UltiSnips#ExpandSnippet()<cr>"
+" :execute  'inoremap'  b:fortran_leader.'prg'   "prg<c-r>=UltiSnips#ExpandSnippet()<cr>"
+" :execute  'inoremap'  b:fortran_leader.'mod'   "mod<c-r>=UltiSnips#ExpandSnippet()<cr>"
+" :execute  'inoremap'  b:fortran_leader.'sub'   "sub<c-r>=UltiSnips#ExpandSnippet()<cr>"
+" :execute  'inoremap'  b:fortran_leader.'fun'   "fun<c-r>=UltiSnips#ExpandSnippet()<cr>"
 "}}}
