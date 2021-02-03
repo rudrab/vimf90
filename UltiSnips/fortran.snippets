@@ -2,7 +2,7 @@ snippet prg "ProgramName" b
 !	This is file : `!v expand('%:t:r')`
 ! Author= `!v expand($USER)`
 ! Started at: `date +%d.%m.%Y`
-! Last Modified: Tue 02 Feb 2021 12:10:26 IST
+! Last Modified: Tue 02 Feb 2021 20:23:03 IST
 !
 Program  ${1:`!v expand('%:t:r')`}
 Implicit None
@@ -77,15 +77,16 @@ read(${1:<++fp++>}, ${2:*}) ${3:<++statment++>}
 endsnippet
 
 snippet write  "write" b
-write(unit = ${1:<++fp++>}, file = ${2:<++filename++>}, iostat = ${3:<++ierr++>}) ${4:<++statment++>}
+	write(unit = ${1:fp}, file = ${2:filename}, iostat = ${3:ierr}) ${0}
 endsnippet
 
 snippet open  "Open file" b
-open(unit = ${1:<++fp++>}, file = ${2:<++filename++>}, status = ${3:<++unknown++>}, iostat = ${4:<++ierr++>}) 
+	open(unit = ${1:fp}, file = ${2:filename}, status = ${3:unknown}, iostat = ${4:ierr}) ${0}
+endsnippet
 endsnippet
 
 snippet close  "close file" b
-close(unit = ${1:<++fp++>}) 
+close(unit = ${1:unit}) 
 endsnippet
 
 snippet `int "integer" Ab
