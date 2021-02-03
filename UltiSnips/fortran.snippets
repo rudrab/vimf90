@@ -77,16 +77,15 @@ read(${1:<++fp++>}, ${2:*}) ${3:<++statment++>}
 endsnippet
 
 snippet write  "write" b
-	write(unit = ${1:fp}, file = ${2:filename}, iostat = ${3:ierr}) ${0}
+write(unit = ${1:<++fp++>}, file = ${2:<++filename++>}, iostat = ${3:<++ierr++>}) ${4:<++statment++>}
 endsnippet
 
 snippet open  "Open file" b
-	open(unit = ${1:fp}, file = ${2:filename}, status = ${3:unknown}, iostat = ${4:ierr}) ${0}
-endsnippet
+open(unit = ${1:<++fp++>}, file = ${2:<++filename++>}, status = ${3:<++unknown++>}, iostat = ${4:<++ierr++>}) 
 endsnippet
 
 snippet close  "close file" b
-close(unit = ${1:unit}) 
+close(unit = ${1:<++fp++>}) 
 endsnippet
 
 snippet `int "integer" Ab
