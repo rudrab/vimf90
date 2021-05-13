@@ -18,18 +18,24 @@
 "
 
 " Check python modules and install{{{1
-if !executable('fprettify') || !executable('fortls') || !executable('unidecode')
-  :let choice =confirm("Some python dependencies doesn't exists! Install them?", "&Yes\n&No(use fallback)")
-  if !executable('fprettify')
-    :call install_deps#install_fprettify() 
-  endif
-  if !executable('fortls')
-    :call install_deps#install_fortls() 
-  endif
-  if !executable('unidecode')
-    :call install_deps#install_unidecode() 
+let b:fortran_dep_install = get(g:, "fortran_dep_install", 1)
+if b:fortran_dep_install != 3
+  if !executable('fprettify') || !executable('fortls') || !executable('unidecode') 
+    :let choice = confirm("Some python dependencies doesn't exists! Install them?\nIf you don't want to be asked again, in vimrc, put \n'let fortran_dep_install=3'", "&Yes\n&No\nDon't ask me again")
+    if choice == 1
+      if !executable('fprettify')
+        :call install_deps#install_fprettify() 
+      endif
+      if !executable('fortls')
+        :call install_deps#install_fortls() 
+      endif
+      if !executable('unidecode')
+        :call install_deps#install_unidecode() 
+      endif
+    endif
   endif
 endif
+
 "}}}
 
 " Options {{{2
