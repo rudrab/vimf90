@@ -57,16 +57,18 @@ if  b:fortran_linter == 0  " Check on the fly, not recommended {{{4
   "inoremap < expr> / getline(".")[col(".")-2] =~ '[[:blank:])]' ? "/ " : "/"
   "}}}
 elseif b:fortran_linter == 1  " Check on save, default {{{5
-  au BufWritePre <buffer> silent! :%s/\v(\w) ?(\+|\-|\/|\*|\*\*) ?(\w|-)/\1\2\3/g   " No space between arithmetics
-  au BufWritePre <buffer> silent! :%s/\v(\w) ?(\>\=|\<\=|\/\=|\=|\=\=|\>|\<) ?(\w|-)/\1 \2 \3/g  " Space between equals
-  au BufWritePre <buffer> silent! :%s/\v(\w) ?(\c\.eq\.|\c\.ne\.|\c\.gt\.|\c\.lt\.|\c\.ge\.|\c\.le\.) ?(\w|-)/\1 \2 \3/g
-  au BufWritePre <buffer> silent! :%s/\v(\w) ?(\c\.and\.|\c\.not\.|\c\.or\.|\c\.eqv\.|\c\.neqv\.) ?(\w|-)/\1 \2 \3/g
-  au BufWritePre <buffer> silent! :%s/\v(\w|\)) ?(\,|\;) ?/\1\2 \3/g           " comma and semicolon
-  au BufWritePre <buffer> silent! :%s/\v(\w|\)) ?(\:\:) ?(\w|-)/\1\2 \3/g      " `::`
-  au BufWritePre <buffer> silent! :%s/\v(\w|\)) ?(!) ?(\w|-)/\1  \2 \3/g       " inline comment
+  " Use curpos to save and restore the cursor position before and after linting.
+  au BufWritePre <buffer> :let curpos = getpos('.') | silent! %s/\v(\w) ?(\+|\-|\/|\*|\*\*) ?(\w|-)/\1\2\3/g | call setpos('.', curpos)   " No space between arithmetics
+  au BufWritePre <buffer> :let curpos = getpos('.') | silent! %s/\v(\w) ?(\>\=|\<\=|\/\=|\=|\=\=|\>|\<) ?(\w|-)/\1 \2 \3/g | call setpos('.', curpos)  " Space between equals
+  au BufWritePre <buffer> :let curpos = getpos('.') | silent! %s/\v(\w) ?(\c\.eq\.|\c\.ne\.|\c\.gt\.|\c\.lt\.|\c\.ge\.|\c\.le\.) ?(\w|-)/\1 \2 \3/g | call setpos('.', curpos)
+  au BufWritePre <buffer> :let curpos = getpos('.') | silent! %s/\v(\w) ?(\c\.and\.|\c\.not\.|\c\.or\.|\c\.eqv\.|\c\.neqv\.) ?(\w|-)/\1 \2 \3/g | call setpos('.', curpos)
+  au BufWritePre <buffer> :let curpos = getpos('.') | silent! %s/\v(\w|\)) ?(\,|\;) ?/\1\2 \3/g | call setpos('.', curpos)           " comma and semicolon
+  au BufWritePre <buffer> :let curpos = getpos('.') | silent! %s/\v(\w|\)) ?(\:\:) ?(\w|-)/\1\2 \3/g | call setpos('.', curpos)     " `::`
+  au BufWritePre <buffer> :let curpos = getpos('.') | silent! %s/\v(\w|\)) ?(!) ?(\w|-)/\1  \2 \3/g | call setpos('.', curpos)       " inline comment
   "}}}
 elseif b:fortran_linter == 2 " use fprettify{{{6
-  au BufWritePre <buffer> :execute 'silent %!fprettify ' . g:fprettify_options
+  " Use curpos to save and restore the cursor position before and after linting.
+  au BufWritePre <buffer> :let curpos = getpos('.') | execute 'silent %!fprettify ' . g:fprettify_options | call setpos('.', curpos)
   "}}}
 endif
 "}}}
