@@ -47,4 +47,4 @@ exe 'noremap'  b:fortran_cla      ': call CLArgs()<CR>'
 exe 'noremap'  b:fortran_genProj  ': call MakeProject()<CR>'
 " nnoremap    <leader>cl      :call Link()<CR>
 
-autocmd Bufwritepre,filewritepre *.f90 silent! execute "%g/Last Modified:.*/s/Last Modified:.*/Last Modified: " .strftime("%c")
+autocmd Bufwritepre,filewritepre *.f90 let curpos = getpos('.') | silent! execute "%g/Last Modified:.*/s/Last Modified:.*/Last Modified: " .strftime("%c") | call setpos('.', curpos)
