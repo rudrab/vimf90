@@ -1,9 +1,9 @@
 "########################################################################
 " File: fortran_maps.vim
-" Author: Rudra Banerjee (bnrj DOT rudra at gmail.com) 
+" Author: Rudra Banerjee (bnrj DOT rudra at gmail.com)
 " Version: 0.2
 " Copyright: Copyright (C) 2019 Rudra Banerjee
-" 
+"
 "    This program is free software: you can redistribute it and/or modify
 "    it under the terms of the GNU General Public License as published by
 "    the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,7 @@
 "    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 "    GNU General Public License for more details.
 "
-" Description: Mappings! This file do not contain any new program. 
+" Description: Mappings! This file do not contain any new program.
 " It just calls functions defined in other fils.
 "########################################################################
 
@@ -47,4 +47,4 @@ exe 'noremap'  b:fortran_cla      ': call CLArgs()<CR>'
 exe 'noremap'  b:fortran_genProj  ': call MakeProject()<CR>'
 " nnoremap    <leader>cl      :call Link()<CR>
 
-autocmd Bufwritepre,filewritepre *.f90 exe "%g/Last Modified:.*/s/Last Modified:.*/Last Modified: " .strftime("%c")
+autocmd Bufwritepre,filewritepre *.f90 let curpos = getpos('.') | silent! execute "%g/Last Modified:.*/s/Last Modified:.*/Last Modified: " .strftime("%c") | call setpos('.', curpos)
