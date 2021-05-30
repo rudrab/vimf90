@@ -1,8 +1,8 @@
-snippet prg "Program Name" b 
+snippet prg "Program Name" b
 !	This is file : `!v expand('%:t:r')`
 ! Author= `!v expand($USER)`
 ! Started at: `date +%d.%m.%Y`
-! Last Modified: Fri 28 May 2021 08:22:19 IST
+! Last Modified: Mon 24 May 2021 01:10:42 IST
 !
 Program  ${1:`!v expand('%:t:r')`}
 Implicit None
@@ -10,7 +10,7 @@ ${2:${VISUAL}}
 End Program  ${1/([^\n$]+).*/$1/} $0
 endsnippet
 
-snippet mod "Module Name" b 
+snippet mod "Module Name" b
 Module  ${1:`!v expand('%:t:r')`}  !
 Implicit None
 ${2:${VISUAL}}
@@ -25,17 +25,17 @@ endsnippet
 
 snippet fun "Function name" b
 Function  ${1:${VISUAL:FunctionName}}($2)
-${2:${VISUAL}}
+${3:${VISUAL}}
 End Function ${1/([^\n$]+).*/$1/} $0
 endsnippet
 
-snippet proc 
+snippet proc
 procedure ${1:${VISUAL:ProcedureName}}
 ${2:${VISUAL}}
 end procedure $1
 endsnippet
 
-snippet iface 
+snippet iface
 interface ${1:${VISUAL:InterfaceName}}
 ${2:${VISUAL}}
 end interface $1
@@ -77,15 +77,15 @@ read(${1:<++fp++>}, ${2:*}) ${3:<++statment++>}
 endsnippet
 
 snippet write  "write" b
-write(unit = ${1:<++fp++>}, file = ${2:<++filename++>}, iostat = ${3:<++ierr++>}) ${4:<++statment++>}
+write(unit = ${1:<++fp++>}${2:, file = ${3:<++filename++>}${4:, iostat=${5:<++ierr++>}}})${6:<++statment++>}
 endsnippet
 
 snippet open  "Open file" b
-open(unit = ${1:<++fp++>}, file = ${2:<++filename++>}, status = ${3:<++unknown++>}, iostat = ${4:<++ierr++>}) 
+open(unit = ${1:<++fp++>}${2:, file = ${3:<++filename++>}${4:, status = ${5:<++unknown++>}${6:, iostat= ${7:<++ierr++>}}}})
 endsnippet
 
 snippet close  "close file" b
-close(unit = ${1:<++fp++>}) 
+close(unit = ${1:<++fp++>})
 endsnippet
 
 snippet `int "integer" Ab
