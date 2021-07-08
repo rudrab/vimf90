@@ -1,7 +1,7 @@
 "########################################################################
 " Filename:      makes.vim
 " Copyright: Copyright (C) 2020 Rudra Banerjee
-" 
+"
 "    This program is free software: you can redistribute it and/or modify
 "    it under the terms of the GNU General Public License as published by
 "    the Free Software Foundation, either version 3 of the License, or
@@ -12,7 +12,7 @@
 "    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 "    GNU General Public License for more details.
 " Date:          03/07/2015
-" Description:   Make utility for fortran. 
+" Description:   Make utility for fortran.
 "########################################################################
 
 " Variables {{{1
@@ -84,7 +84,7 @@ function! makes#Frun()
   call makes#Fexe()
   echo "Running the code"
   if s:fortran_link_success==1
-    let l:args = exists("b:Clargs") ? b:Clargs : "" 
+    let l:args = exists("b:Clargs") ? b:Clargs : ""
     exe "!".s:exe. " " . l:args
   endif
 endfunction
@@ -113,11 +113,11 @@ function! makes#Fdbg()
   let sou = expand("%:p")
   let b:F_Debugger = get(g:, "F_Debugger", 'gdb')
   silent exe 'update'
-  " if !exists("Exe") 
+  " if !exists("Exe")
   " call makes#FRun()
   " endif
   let s:FLFlags = "-Wall -g"
-  call makes#Fexe() 
+  call makes#Fexe()
   echo "Running Debugger"
   let l:arguments = exists("b:ClArgs") ? " ".b:ClArgs : ""
 
@@ -182,10 +182,10 @@ function! makes#MakeRun ()
   " :TODO:18.08.2013 21:45:WM: 'cmdlinearg' is not correctly escaped for use under Windows
   "
   " run make
-  let l:Margs = exists("b:MakeArgs") ? b:MakeArgs : "" 
+  let l:Margs = exists("b:MakeArgs") ? b:MakeArgs : ""
   exe 'make ' .l:Margs
   botright cwindow
-endfunction    
+endfunction
 " ----------  end of function s:MakesRun  ----------
 "}}}1
 
@@ -202,7 +202,7 @@ endfunction
 
 " Make Project {{{1
 function! makes#MakeProj()
-  " Create a gnu style project structure 
+  " Create a gnu style project structure
   let s:Prdir = input("Create new project: ", getcwd(), "file")
   exe ":!mkdir -p ".s:Prdir
   " exe ":lchdir ".s:Prdir

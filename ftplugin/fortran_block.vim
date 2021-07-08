@@ -1,11 +1,11 @@
 "########################################################################
 " File: fortran_block.vim
-" Author: Rudra Banerjee (bnrj DOT rudra at gmail.com) 
+" Author: Rudra Banerjee (bnrj DOT rudra at gmail.com)
 " Version: 0.2
 " Copyright: Copyright (C) 2019 Rudra Banerjee
 " THIS FILE IS AN UPDATE OF fortran_codecomplete.vim
 " (http://www.vim.org/scripts/script.php?script_id=2487) BY Michael Goerz
-" 
+"
 "    This program is free software: you can redistribute it and/or modify
 "    it under the terms of the GNU General Public License as published by
 "    the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
 "    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 "    GNU General Public License for more details.
 "
-" Description: 
+" Description:
 "    This maps the <F3> key to complete Fortran 90 constructs"
 "    Trying to correct git
 "########################################################################
@@ -31,7 +31,7 @@ class SyntaxElement:
     def __init__(self, openningline, closingline):
         self.openningline = openningline
         self.closingline = closingline
-    def match(self, line): 
+    def match(self, line):
         """ Return (indent, closingline) or (None, None)"""
         match = self.openningline.search(line)
         if match:
@@ -68,8 +68,8 @@ class SyntaxElement:
             return (None, None)
         closingline = closingline.rstrip()
         return (indent, closingline)
-            
-        
+
+
 def fortran_complete():
 
     syntax_elements = [
@@ -90,7 +90,7 @@ def fortran_complete():
          SyntaxElement(re.compile(r'^\s*forall\s*', re.IGNORECASE),
                        'EndForall' ),
          SyntaxElement(re.compile(r'\s*open\((?:unit\s*=\s*?)((?P<name>([0-9]+))),.*\)', re.IGNORECASE),
-                       'close(${name})' ),                           
+                       'close(${name})' ),
          SyntaxElement(re.compile(r'^\s*?\s*type\s*(::?)\s*((?P<name>([a-zA-Z0-9_]+))\s*)', re.IGNORECASE),
                        'end type ${name}' )
     ]
@@ -106,7 +106,7 @@ def fortran_complete():
             vim.command('nohls') # insert two lines
             shiftwidth = int(vim.eval("&shiftwidth"))
             cb[line+1] = indent + (" " * shiftwidth)
-            cb[line+2] = indent + closingline 
+            cb[line+2] = indent + closingline
             vim.current.window.cursor = (line+2, 1)
 EOF
 

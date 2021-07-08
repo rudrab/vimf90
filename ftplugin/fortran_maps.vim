@@ -28,14 +28,14 @@
 " inoremap <leader>use  use <C-o>:set completefunc=GetModule<CR><C-x><C-u>
 
 
-let b:fortran_compile  = get(g:,"fortran_compile", '\'.get(g:,'mapleader', '\')."cc")
-let b:fortran_exe      = get(g:,"fortran_run", '\'.get(g:,'mapleader', '\')."ce")
-let b:fortran_run      = get(g:,"fortran_run", '\'.get(g:,'mapleader', '\')."cr")
-let b:fortran_cla      = get(g:,"fortran_cla", '\'.get(g:,'mapleader', '\')."cl")
-let b:fortran_dbg      = get(g:,"fortran_dbg", '\'.get(g:,'mapleader', '\')."cd")
-let b:fortran_make     = get(g:,"fortran_make", '\'.get(g:,'mapleader', '\')."mk")
-let b:fortran_makeProp = get(g:,"fortran_makeProp", '\'.get(g:,'mapleader', '\')."mp")
-let b:fortran_genProj  = get(g:,"fortran_genProj", '\'.get(g:,'mapleader', '\')."gp")
+let b:fortran_compile  = get(g:,"fortran_compile", get(g:,'mapleader', '\')."cc")
+let b:fortran_exe      = get(g:,"fortran_run", get(g:,'mapleader', '\')."ce")
+let b:fortran_run      = get(g:,"fortran_run", get(g:,'mapleader', '\')."cr")
+let b:fortran_cla      = get(g:,"fortran_cla", get(g:,'mapleader', '\')."cl")
+let b:fortran_dbg      = get(g:,"fortran_dbg", get(g:,'mapleader', '\')."cd")
+let b:fortran_make     = get(g:,"fortran_make", get(g:,'mapleader', '\')."mk")
+let b:fortran_makeProp = get(g:,"fortran_makeProp", get(g:,'mapleader', '\')."mp")
+let b:fortran_genProj  = get(g:,"fortran_genProj", get(g:,'mapleader', '\')."gp")
 
 exe 'nnoremap' b:fortran_make     ': call Make()<CR>'
 exe 'nnoremap' b:fortran_makeProp ': call MakeProp()<CR>'
