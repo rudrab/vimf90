@@ -9,34 +9,45 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 " Discover all directories containing Fortran source files under a base dir {{{1
-function! s:find_source_subdirs(root, rel_base) abort
-  let l:abs_base = a:root . '/' . a:rel_base
-  if !isdirectory(l:abs_base)
-    return []
+let s:fortran_file_pattern = '\.\%(f\|for\|f77\|f90\|f95\|f03\|f08\)$'
+
+" Walk with readdir() rather than glob(): the base path is data, not a pattern,
+" so a project directory containing [ ] * ? or { } cannot be misread as a glob.
+" Paths are assembled by concatenation and made relative with strpart(), which
+" keeps regular-expression metacharacters out of the picture entirely.
+function! s:collect_source_dirs(root, rel, acc, depth) abort
+  if a:depth > 20
+    return
   endif
 
-  let l:fortran_exts = ['f90', 'f95', 'f03', 'f08', 'F90', 'F95', 'f', 'F', 'for', 'FOR', 'f77', 'F77']
-  let l:patterns = map(copy(l:fortran_exts), 'l:abs_base . "/**/*." . v:val') + map(copy(l:fortran_exts), 'l:abs_base . "/*." . v:val')
+  let l:abs = empty(a:rel) ? a:root : a:root . '/' . a:rel
+  if !isdirectory(l:abs)
+    return
+  endif
 
-  let l:files = []
-  for l:pat in l:patterns
-    let l:files += glob(l:pat, 0, 1)
-  endfor
-
-  let l:dirs = {}
-  " Also include the base directory itself if it exists
-  let l:dirs[a:rel_base] = 1
-
-  for l:f in l:files
-    let l:dir = fnamemodify(l:f, ':p:h')
-    " Make relative to project root
-    let l:rel = fnamemodify(l:dir, ':s?' . escape(a:root . '/', ' \') . '??')
-    if !empty(l:rel) && l:rel !=# a:root
-      let l:dirs[l:rel] = 1
+  let l:has_source = 0
+  for l:entry in readdir(l:abs)
+    let l:child = l:abs . '/' . l:entry
+    if isdirectory(l:child)
+      call s:collect_source_dirs(a:root, empty(a:rel) ? l:entry : a:rel . '/' . l:entry,
+            \ a:acc, a:depth + 1)
+    elseif l:entry =~? s:fortran_file_pattern
+      let l:has_source = 1
     endif
   endfor
 
-  return keys(l:dirs)
+  " The base of a source root is always listed so that fortls sees it even
+  " before any sources exist; nested directories only earn a place if they
+  " actually hold Fortran files.
+  if l:has_source || a:depth == 0
+    let a:acc[a:rel] = 1
+  endif
+endfunction
+
+function! s:find_source_subdirs(root, rel_base) abort
+  let l:acc = {}
+  call s:collect_source_dirs(a:root, a:rel_base, l:acc, 0)
+  return keys(l:acc)
 endfunction
 "}}}1
 
@@ -101,24 +112,14 @@ function! fortls#generate(...) abort
 
   let l:sorted_source_dirs = sort(keys(l:all_source_dirs))
 
-  " Construct .fortls JSON payload
-  let l:config = {
-        \ '_generated_by': 'vimf90',
-        \ 'source_dirs': l:sorted_source_dirs,
-        \ 'excl_paths': ['build', '.git']
-        \ }
-
-  let l:new_json_str = json_encode(l:config)
-
-  " Check if on-disk file is already up to date
-  if filereadable(l:target_file)
-    let l:cur_raw = join(readfile(l:target_file), '')
-    if l:cur_raw ==# l:new_json_str
-      return 1
-    endif
-  endif
-
-  " Format JSON nicely (indent with 2 spaces)
+  " Construct the .fortls payload. It is written out by hand rather than with
+  " json_encode() so that the file stays readable and diffable for whoever has
+  " to look at it later.
+  "
+  " excl_paths is inert while source_dirs is non-empty, because fortls only
+  " walks the tree when no source directory is configured. It is kept for
+  " exactly that case: a project whose source roots do not exist yet falls back
+  " to the walk, and build/ must not be dragged in when it does.
   let l:lines = [
         \ '{',
         \ '  "_generated_by": "vimf90",',
@@ -137,6 +138,13 @@ function! fortls#generate(...) abort
         \ '  ]',
         \ '}'
         \ ]
+
+  " Rewrite only on a real change, so that a rebuild does not touch the file's
+  " mtime for nothing. The comparison is against the formatted lines that are
+  " about to be written, not a compact encoding of them.
+  if filereadable(l:target_file) && readfile(l:target_file) ==# l:lines
+    return 1
+  endif
 
   call writefile(l:lines, l:target_file)
   return 1

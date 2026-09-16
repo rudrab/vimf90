@@ -11,23 +11,24 @@ set cpo&vim
 
 " Find project root directory {{{1
 function! project#find_root(...) abort
-  " Allow explicit buffer or global root override from external project managers
-  if exists('b:fortran_project_root') && !empty(b:fortran_project_root)
-    return expand(b:fortran_project_root)
-  elseif exists('g:fortran_project_root') && !empty(g:fortran_project_root)
-    return expand(g:fortran_project_root)
-  endif
+  " Allow the root to be supplied by an external project manager, but only when
+  " the caller has not named a directory to search from: an explicit argument is
+  " a question about that directory, not about the current project.
+  if a:0 == 0 || empty(a:1)
+    if exists('b:fortran_project_root') && !empty(b:fortran_project_root)
+      return expand(b:fortran_project_root)
+    elseif exists('g:fortran_project_root') && !empty(g:fortran_project_root)
+      return expand(g:fortran_project_root)
+    endif
 
-  if exists('g:Fortran_root_provider')
-    let l:provided = call(g:Fortran_root_provider, [])
-    if !empty(l:provided)
-      return expand(l:provided)
-    endif
-  elseif exists('g:fortran_root_provider')
-    let l:provided = call(g:fortran_root_provider, [])
-    if !empty(l:provided)
-      return expand(l:provided)
-    endif
+    for l:provider in ['g:Fortran_root_provider', 'g:fortran_root_provider']
+      if exists(l:provider)
+        let l:provided = call(eval(l:provider), [])
+        if !empty(l:provided)
+          return expand(l:provided)
+        endif
+      endif
+    endfor
   endif
 
   let l:start_dir = a:0 > 0 && !empty(a:1) ? a:1 : expand('%:p:h')
@@ -143,14 +144,13 @@ endfunction
 function! project#get_include_dirs(...) abort
   let l:root = a:0 > 0 ? a:1 : project#find_root()
 
-  " 1. Authoritative include/module dirs from active build/compile_commands.json
-  let l:cc_dirs = s:get_compile_commands_dirs(l:root)
-  if !empty(l:cc_dirs)
-    return l:cc_dirs
-  endif
+  " compile_commands.json names the module directory of the last build, so it
+  " goes first. It is not a complete picture though: it records only the
+  " targets of the last fpm command and carries no include/ or inc/ paths, so
+  " the heuristic candidates are appended rather than replaced. They also serve
+  " as the fallback module dirs when the manifest lags behind a profile switch.
+  let l:dirs = s:get_compile_commands_dirs(l:root)
 
-  " 2. Fallback heuristic for non-fpm or pre-build states
-  let l:dirs = []
   let l:candidate_dirs = [
         \ l:root,
         \ l:root . '/src',
@@ -161,14 +161,23 @@ function! project#get_include_dirs(...) abort
         \ l:root . '/build/modules',
         \ ]
 
-  " Check fpm build output directories
-  let l:fpm_build_dirs = globpath(l:root . '/build', 'gfortran_*', 0, 1) + globpath(l:root . '/build', 'ifx_*', 0, 1)
-  for l:fdir in l:fpm_build_dirs
-    call add(l:candidate_dirs, l:fdir)
+  " fpm build output directories, named <compiler>_<hash>. Matched by shape so
+  " that nvfortran, flang, ifort and friends are covered too, and so that
+  " build/dependencies is not mistaken for one.
+  for l:bdir in globpath(l:root . '/build', '*', 0, 1)
+    if fnamemodify(l:bdir, ':t') =~# '^\w\+_[0-9A-Fa-f]\{8,\}$'
+      call add(l:candidate_dirs, l:bdir)
+    endif
+  endfor
+
+  let l:seen = {}
+  for l:dir in l:dirs
+    let l:seen[l:dir] = 1
   endfor
 
   for l:dir in l:candidate_dirs
-    if isdirectory(l:dir)
+    if isdirectory(l:dir) && !has_key(l:seen, l:dir)
+      let l:seen[l:dir] = 1
       call add(l:dirs, l:dir)
     endif
   endfor
@@ -189,17 +198,14 @@ function! project#build(...) abort
   let l:args = a:0 > 0 ? a:1 : ''
 
   " Allow delegation to external build providers (e.g. vim-dispatch, asyncrun)
-  if exists('g:Fortran_build_provider')
-    let l:handled = call(g:Fortran_build_provider, [{'root': l:root, 'type': l:type, 'args': l:args}])
-    if l:handled
-      return 1
+  for l:provider in ['g:Fortran_build_provider', 'g:fortran_build_provider']
+    if exists(l:provider)
+      let l:handled = call(eval(l:provider), [{'root': l:root, 'type': l:type, 'args': l:args}])
+      if l:handled
+        return 1
+      endif
     endif
-  elseif exists('g:fortran_build_provider')
-    let l:handled = call(g:fortran_build_provider, [{'root': l:root, 'type': l:type, 'args': l:args}])
-    if l:handled
-      return 1
-    endif
-  endif
+  endfor
 
   if l:type ==# 'fpm'
     return fpm#build(l:args)
