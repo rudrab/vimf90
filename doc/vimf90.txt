@@ -174,6 +174,22 @@ All commands are buffer-local and available in Fortran buffers:
 *:FortranFindModule* [name]
     Searches the project for the file defining `module <name>` and opens it.
 
+*:FortranDoc* [ford|doxygen]
+    Generates a FORD or Doxygen documentation block above the current subprogram,
+    automatically inspecting dummy argument types, intents, and return values.
+
+*:FortranProfile* [debug|release|fast|sanitize]
+    Sets the active compilation profile (compiler flags).
+
+*:FortranCompiler* [gfortran|ifx|ifort|nvfortran|flang]
+    Sets the active compiler backend.
+
+*:FortranOpenMP* [on|off|toggle]
+    Toggles OpenMP multithreading compilation flags (`-fopenmp` / `-qopenmp`).
+
+*:FortranMPI* [on|off|toggle]
+    Toggles MPI compiler wrapper (`mpifort`, `mpiifx`, `mpiifort`, `mpif90`).
+
 ==============================================================================
 5. KEY MAPPINGS & <PLUG> TARGETS                            *vimf90-mappings*
 
@@ -194,8 +210,25 @@ Default shortcuts (using `<Leader>` or `g:fortran_leader`):
   `<leader>ft`     <Plug>(vimf90-fpm-test)           fpm test project
   `<leader>tg`     <Plug>(vimf90-tags)               Generate project Ctags
   `<leader>fm`     <Plug>(vimf90-find-module)        Find & jump to module
+  `<leader>dc`     <Plug>(vimf90-doc)                Generate FORD/Doxygen docstring
+  `<leader>pp`     <Plug>(vimf90-profile)            Switch/show build profile
+  `<leader>po`     <Plug>(vimf90-openmp)             Toggle OpenMP
+  `<leader>pm`     <Plug>(vimf90-mpi)                Toggle MPI
   `<F3>`           <Plug>(vimf90-construct-complete) Smart construct complete
                    <Plug>(vimf90-format)             Format current buffer
+
+  Text Objects (Visual / Operator-Pending):
+  ----------------------------------------------------------------------------
+  `af` / `if`      <Plug>(vimf90-textobj-func-a/i)   Around / inside function or subroutine
+  `am` / `im`      <Plug>(vimf90-textobj-mod-a/i)    Around / inside module or program
+  `at` / `it`      <Plug>(vimf90-textobj-type-a/i)   Around / inside derived type
+  `ad` / `id`      <Plug>(vimf90-textobj-do-a/i)     Around / inside do loop
+  `ab` / `ib`      <Plug>(vimf90-textobj-block-a/i)  Around / inside block or interface
+
+  Motions (Normal / Visual / Operator-Pending):
+  ----------------------------------------------------------------------------
+  `]m` / `[m`      <Plug>(vimf90-motion-next/prev-start)  Jump to next/prev subprogram start
+  `]M` / `[M`      <Plug>(vimf90-motion-next/prev-end)    Jump to next/prev subprogram end
 
 ==============================================================================
 6. FORTRAN PACKAGE MANAGER (FPM)                                *vimf90-fpm*
@@ -203,7 +236,7 @@ Default shortcuts (using `<Leader>` or `g:fortran_leader`):
 |vimf90| provides first-class support for modern `fpm` (https://fpm.fortran-lang.org/).
 
 When working inside an `fpm` repository (any folder containing `fpm.toml`),
-|vimf90| automatically detects the project root.
+|vimf90| automatically detects the project root and synchronizes active profiles.
 
   * `<leader>fb` or `:FortranFpmBuild`: Compiles the whole project asynchronously.
   * `<leader>fr` or `:FortranFpmRun`: Runs the project's executable application.
@@ -228,7 +261,54 @@ with inter-module dependencies.
      jump to the file defining a module.
 
 ==============================================================================
-8. CONSTRUCT COMPLETION                                  *vimf90-constructs*
+8. TEXT OBJECTS & MOTIONS                                   *vimf90-textobj*
+
+|vimf90| includes native Fortran text objects and motions:
+
+  * `vaf`: Select entire subprogram (subroutine or function).
+  * `vif`: Select body inside subprogram (excluding header and `end`).
+  * `vam` / `vim`: Select around / inside module or program.
+  * `vat` / `vit`: Select around / inside derived type definition.
+  * `vad` / `vid`: Select around / inside `do` loop.
+  * `]m` / `[m`: Jump to next / previous subprogram header.
+  * `]M` / `[M`: Jump to next / previous `end subroutine` / `end function`.
+
+==============================================================================
+9. FORD & DOXYGEN DOCSTRING GENERATOR                           *vimf90-doc*
+
+Running `<leader>dc` or `:FortranDoc` above or inside any subroutine or function
+automatically parses the parameter list, inspects declared types, `intent(in/out/inout)`,
+and `optional` attributes, and generates a formatted documentation header:
+
+  FORD Style (default): >
+    !> @brief <Brief description of compute_energy>
+    !>
+    !> @param[in]  pos real(8) description.
+    !> @param[in]  mass real(8) description.
+    !> @return     Return value (energy).
+<
+  To use Doxygen style by default: >
+    let g:fortran_doc_style = 'doxygen'
+<
+
+==============================================================================
+10. BUILD PROFILES, OPENMP & MPI PRESETS                   *vimf90-profiles*
+
+Quickly toggle optimization profiles and scientific computing toolchains:
+
+  * `:FortranProfile debug`   -> `-g -O0 -Wall -Wextra -fcheck=all -fbacktrace`
+  * `:FortranProfile release` -> `-O3 -march=native -funroll-loops`
+  * `:FortranProfile fast`    -> `-O3 -ffast-math -march=native`
+  * `:FortranProfile sanitize`-> `-g -O1 -fsanitize=address,undefined`
+  * `:FortranOpenMP`          -> Toggles OpenMP flags (`-fopenmp` / `-qopenmp`)
+  * `:FortranMPI`             -> Toggles MPI wrapper (`mpifort` / `mpiifx`)
+
+Statusline helper:
+Add `profiles#status()` to your statusline or lualine to display:
+`[gfortran:Debug:OMP:MPI]`.
+
+==============================================================================
+11. CONSTRUCT COMPLETION                                 *vimf90-constructs*
 
 Pressing `<F3>` (or `g:fortran_completer`) at the end of a construct opening line
 automatically generates the matching `end` statement and positions the cursor inside:
@@ -248,7 +328,7 @@ automatically generates the matching `end` statement and positions the cursor in
                                        end type Particle
 
 ==============================================================================
-9. FORMATTING & LINTING                                  *vimf90-formatting*
+12. FORMATTING & LINTING                                 *vimf90-formatting*
 
 Set `let g:fortran_linter = 2` in `.vimrc` to enable automatic `fprettify`
 formatting whenever you save a Fortran file.
@@ -256,7 +336,14 @@ formatting whenever you save a Fortran file.
 You can also run `:FortranFormat` at any time on demand.
 
 ==============================================================================
-10. ASYNCHRONOUS BUILD ENGINE                                 *vimf90-async*
+13. TAGBAR & SYMBOL OUTLINE INTEGRATION                       *vimf90-tagbar*
+
+|vimf90| automatically registers `g:tagbar_type_fortran` for `majutsushi/tagbar`
+and `aerial.nvim`, providing a complete symbol hierarchy:
+`Program` -> `Module` -> `Derived Type` -> `Interface` -> `Subroutine` / `Function`.
+
+==============================================================================
+14. ASYNCHRONOUS BUILD ENGINE                                 *vimf90-async*
 
 When `g:fortran_async = 1` (default), running `:FortranCompile`, `:FortranExe`, or
 `:FortranFpmBuild` spawns background jobs using Vim 8+ `job_start` or Neovim
@@ -264,7 +351,7 @@ When `g:fortran_async = 1` (default), running `:FortranCompile`, `:FortranExe`, 
 without freezing the editor.
 
 ==============================================================================
-11. LANGUAGE SERVER PROTOCOL (LSP)                              *vimf90-lsp*
+15. LANGUAGE SERVER PROTOCOL (LSP)                              *vimf90-lsp*
 
 For coc.nvim, add the following configuration in your `coc-settings.json` or `.vimrc`: >
     let g:coc_user_config = {
@@ -280,11 +367,12 @@ For coc.nvim, add the following configuration in your `coc-settings.json` or `.v
 <
 
 ==============================================================================
-12. GUI MENU                                                    *vimf90-menu*
+16. GUI MENU                                                    *vimf90-menu*
 
 When running in GUI mode (gVim) with menu support enabled:
   * A top-level 'Fortran' menu appears automatically on Fortran buffers.
   * Dynamically shows exact expanded shortcuts (e.g. `\cc`, `,cc`, `<Space>cc`).
+  * Submenus for Compilation, fpm, Build Profiles, Documentation, and Projects.
   * To enable dynamic standard/dialect naming (e.g. 'Fortran 2008', 'Fortran 2018'): >
       let g:fortran_menu_dynamic_dialect = 1
 <
@@ -293,9 +381,14 @@ When running in GUI mode (gVim) with menu support enabled:
 <
 
 ==============================================================================
-13. CHANGE LOG                                           *vimf90-changelog*
+17. CHANGE LOG                                           *vimf90-changelog*
 
-v0.5.0:
+v0.6.0:
+  * Fortran Text Objects (`af`/`if`, `am`/`im`, `at`/`it`, `ad`/`id`, `ab`/`ib`).
+  * Structural Motions (`]m`, `[m`, `]M`, `[M`).
+  * Automatic FORD and Doxygen Docstring Generator (`:FortranDoc`, `<leader>dc`).
+  * Build Profiles (Debug, Release, Fast, Sanitize), OpenMP, and MPI Presets.
+  * Tagbar and Symbol Outline Hierarchy (`g:tagbar_type_fortran`).
   * First-class Fortran Package Manager (`fpm`) integration (`build`, `run`, `test`, `new`).
   * Intelligent multi-file project management (root detection, include path resolution).
   * Project-wide Universal Ctags generation and module search (`:FortranFindModule`).
