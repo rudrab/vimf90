@@ -60,22 +60,25 @@ if has('gui_running') && has('menu') && g:Fortran_menumode == 1
   silent! execute 'aunmenu &Fortran90'
 
   " Shortcut resolutions
-  let s:c_comp       = s:format_shortcut(get(b:, 'fortran_compile',   '\cc'))
-  let s:c_exe        = s:format_shortcut(get(b:, 'fortran_exe',       '\ce'))
-  let s:c_run        = s:format_shortcut(get(b:, 'fortran_run',       '\cr'))
-  let s:c_cla        = s:format_shortcut(get(b:, 'fortran_cla',       '\cl'))
-  let s:c_dbg        = s:format_shortcut(get(b:, 'fortran_dbg',       '\cd'))
-  let s:c_fpm_build  = s:format_shortcut(get(b:, 'fortran_fpm_build', '\fb'))
-  let s:c_fpm_run    = s:format_shortcut(get(b:, 'fortran_fpm_run',   '\fr'))
-  let s:c_fpm_test   = s:format_shortcut(get(b:, 'fortran_fpm_test',  '\ft'))
-  let s:c_tags       = s:format_shortcut(get(b:, 'fortran_tags',      '\tg'))
-  let s:c_find_mod   = s:format_shortcut(get(b:, 'fortran_find_mod',  '\fm'))
-  let s:c_doc        = s:format_shortcut(get(b:, 'fortran_doc',       '\dc'))
-  let s:c_prof       = s:format_shortcut(get(b:, 'fortran_profile',   '\pp'))
-  let s:c_omp        = s:format_shortcut(get(b:, 'fortran_openmp',    '\po'))
-  let s:c_mpi        = s:format_shortcut(get(b:, 'fortran_mpi',       '\pm'))
-  let s:c_make       = s:format_shortcut(get(b:, 'fortran_make',      '\mk'))
-  let s:c_prop       = s:format_shortcut(get(b:, 'fortran_makeProp',  '\mp'))
+  let s:c_comp       = s:format_shortcut(get(b:, 'fortran_compile',       '\cc'))
+  let s:c_exe        = s:format_shortcut(get(b:, 'fortran_exe',           '\ce'))
+  let s:c_run        = s:format_shortcut(get(b:, 'fortran_run',           '\cr'))
+  let s:c_cla        = s:format_shortcut(get(b:, 'fortran_cla',           '\cl'))
+  let s:c_dbg        = s:format_shortcut(get(b:, 'fortran_dbg',           '\cd'))
+  let s:c_fpm_build  = s:format_shortcut(get(b:, 'fortran_fpm_build',     '\fb'))
+  let s:c_fpm_run    = s:format_shortcut(get(b:, 'fortran_fpm_run',       '\fr'))
+  let s:c_fpm_test   = s:format_shortcut(get(b:, 'fortran_fpm_test',      '\ft'))
+  let s:c_fpm_tcur   = s:format_shortcut(get(b:, 'fortran_fpm_test_cur',  '\tc'))
+  let s:c_tags       = s:format_shortcut(get(b:, 'fortran_tags',          '\tg'))
+  let s:c_find_mod   = s:format_shortcut(get(b:, 'fortran_find_mod',      '\fm'))
+  let s:c_doc        = s:format_shortcut(get(b:, 'fortran_doc',           '\dc'))
+  let s:c_ford_bld   = s:format_shortcut(get(b:, 'fortran_ford_build_map', '\db'))
+  let s:c_ford_prv   = s:format_shortcut(get(b:, 'fortran_ford_prev_map',  '\dp'))
+  let s:c_prof       = s:format_shortcut(get(b:, 'fortran_profile',       '\pp'))
+  let s:c_omp        = s:format_shortcut(get(b:, 'fortran_openmp',        '\po'))
+  let s:c_mpi        = s:format_shortcut(get(b:, 'fortran_mpi',           '\pm'))
+  let s:c_make       = s:format_shortcut(get(b:, 'fortran_make',          '\mk'))
+  let s:c_prop       = s:format_shortcut(get(b:, 'fortran_makeProp',      '\mp'))
 
   " Helper for adding menu item
   function! s:add_menu_item(path, shortcut, cmd) abort
@@ -95,8 +98,11 @@ if has('gui_running') && has('menu') && g:Fortran_menumode == 1
   " Fortran Package Manager (fpm) Submenu
   call s:add_menu_item('&FPM.fpm\ &Build', s:c_fpm_build, ':FortranFpmBuild<CR>')
   call s:add_menu_item('&FPM.fpm\ &Run', s:c_fpm_run, ':FortranFpmRun<CR>')
-  call s:add_menu_item('&FPM.fpm\ &Test', s:c_fpm_test, ':FortranFpmTest<CR>')
+  call s:add_menu_item('&FPM.fpm\ &Test\ All', s:c_fpm_test, ':FortranFpmTest<CR>')
+  call s:add_menu_item('&FPM.fpm\ Test\ &Current\ File', s:c_fpm_tcur, ':FortranFpmTestCurrent<CR>')
+  call s:add_menu_item('&FPM.sep_fpm', '', '<Nop>')
   call s:add_menu_item('&FPM.fpm\ &New\ Project', '', ':FortranFpmNew<CR>')
+  call s:add_menu_item('&FPM.fpm\ &Add\ Dependency...', '', ':FortranFpmAdd ')
 
   " Build Profiles & Presets Submenu
   call s:add_menu_item('&Profiles.Profile:\ &Debug', s:c_prof, ':FortranProfile debug<CR>')
@@ -107,9 +113,12 @@ if has('gui_running') && has('menu') && g:Fortran_menumode == 1
   call s:add_menu_item('&Profiles.Toggle\ &OpenMP', s:c_omp, ':FortranOpenMP<CR>')
   call s:add_menu_item('&Profiles.Toggle\ &MPI', s:c_mpi, ':FortranMPI<CR>')
 
-  " Documentation Submenu
+  " Documentation & FORD Submenu
   call s:add_menu_item('&Documentation.Generate\ &FORD\ Docstring', s:c_doc, ':FortranDoc ford<CR>')
   call s:add_menu_item('&Documentation.Generate\ &Doxygen\ Docstring', '', ':FortranDoc doxygen<CR>')
+  call s:add_menu_item('&Documentation.sep_doc', '', '<Nop>')
+  call s:add_menu_item('&Documentation.&Build\ Project\ FORD\ Docs', s:c_ford_bld, ':FordBuild<CR>')
+  call s:add_menu_item('&Documentation.&Preview\ FORD\ Docs\ in\ Browser', s:c_ford_prv, ':FordPreview<CR>')
 
   " Project & Tools Submenu
   call s:add_menu_item('&Project.&Build\ Project', '', ':FortranProjectBuild<CR>')
