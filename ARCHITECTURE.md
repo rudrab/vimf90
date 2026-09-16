@@ -1,11 +1,11 @@
-# 🏛️ VimF90 Architecture & Design Philosophy
+# VimF90 Architecture & Design Philosophy
 
-## 🎯 Vision
+## Vision
 `vimf90` is designed to be the **indispensable, modern Vim/Neovim development environment for scientific Fortran**.
 
 ---
 
-## 📌 Non-Negotiable Core Directives
+## Non-Negotiable Core Directives
 
 All future development, AI assistants, and contributors MUST adhere to the following principles:
 
