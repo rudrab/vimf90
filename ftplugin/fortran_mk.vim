@@ -41,10 +41,8 @@ nnoremap <buffer> <silent> <Plug>(vimf90-ford-preview)   :call doc#ford_preview(
 nnoremap <buffer> <silent> <Plug>(vimf90-profile)        :call profiles#set_profile('')<CR>
 nnoremap <buffer> <silent> <Plug>(vimf90-openmp)         :call profiles#toggle_openmp()<CR>
 nnoremap <buffer> <silent> <Plug>(vimf90-mpi)            :call profiles#toggle_mpi()<CR>
-nnoremap <buffer> <silent> <Plug>(vimf90-caf-toggle)     :call hpc#toggle_caf('')<CR>
 nnoremap <buffer> <silent> <Plug>(vimf90-gpu-toggle)     :call hpc#toggle_gpu('')<CR>
 nnoremap <buffer> <silent> <Plug>(vimf90-mpi-run)        :call hpc#mpi_run()<CR>
-nnoremap <buffer> <silent> <Plug>(vimf90-caf-run)        :call hpc#caf_run()<CR>
 
 " Plug mappings - Scientific Debugging & Array Inspector
 nnoremap <buffer> <silent> <Plug>(vimf90-inspect-array)     :call dap#inspect_array()<CR>
@@ -122,10 +120,8 @@ command! -buffer -bar -nargs=? -complete=customlist,profiles#complete_profile  F
 command! -buffer -bar -nargs=? -complete=customlist,profiles#complete_compiler FortranCompiler call profiles#set_compiler(<q-args>)
 command! -buffer -bar -nargs=? -complete=customlist,profiles#complete_toggle   FortranOpenMP   call profiles#toggle_openmp(<q-args>)
 command! -buffer -bar -nargs=? -complete=customlist,profiles#complete_toggle   FortranMPI      call profiles#toggle_mpi(<q-args>)
-command! -buffer -bar -nargs=? -complete=customlist,hpc#complete_caf           FortranCAF      call hpc#toggle_caf(<q-args>)
 command! -buffer -bar -nargs=? -complete=customlist,hpc#complete_gpu           FortranGPU      call hpc#toggle_gpu(<q-args>)
 command! -buffer -bar -nargs=*                                                 FortranMPIRun   call hpc#mpi_run(<f-args>)
-command! -buffer -bar -nargs=*                                                 FortranCAFRun   call hpc#caf_run(<f-args>)
 
 " User commands - Scientific Debugging & DAP
 command! -buffer -bar -nargs=* FortranInspectArray    call dap#inspect_array(<f-args>)
@@ -193,7 +189,7 @@ let s:cmds = [
       \ 'FortranMake', 'FortranMakeArgs',
       \ 'FortranDoc', 'FordBuild', 'FordPreview',
       \ 'FortranProfile', 'FortranCompiler', 'FortranOpenMP', 'FortranMPI',
-      \ 'FortranCAF', 'FortranGPU', 'FortranMPIRun', 'FortranCAFRun',
+      \ 'FortranGPU', 'FortranMPIRun',
       \ 'FortranInspectArray', 'FortranBreakpointToggle', 'FortranTermdebug', 'FortranDapStart',
       \ 'FortranFpm', 'FortranFpmBuild', 'FortranFpmRun', 'FortranFpmTest',
       \ 'FortranFpmTestCurrent', 'FortranFpmNew', 'FortranFpmAdd',
@@ -213,7 +209,7 @@ let s:plugs = [
       \ '<Plug>(vimf90-project-build)', '<Plug>(vimf90-tags)', '<Plug>(vimf90-find-module)',
       \ '<Plug>(vimf90-doc)', '<Plug>(vimf90-ford-build)', '<Plug>(vimf90-ford-preview)',
       \ '<Plug>(vimf90-profile)', '<Plug>(vimf90-openmp)', '<Plug>(vimf90-mpi)',
-      \ '<Plug>(vimf90-caf-toggle)', '<Plug>(vimf90-gpu-toggle)', '<Plug>(vimf90-mpi-run)', '<Plug>(vimf90-caf-run)',
+      \ '<Plug>(vimf90-gpu-toggle)', '<Plug>(vimf90-mpi-run)',
       \ '<Plug>(vimf90-inspect-array)', '<Plug>(vimf90-breakpoint-toggle)',
       \ '<Plug>(vimf90-repl-toggle)', '<Plug>(vimf90-repl-open)', '<Plug>(vimf90-repl-send-line)',
       \ '<Plug>(vimf90-repl-send-visual)', '<Plug>(vimf90-repl-send-subprog)',

@@ -12,10 +12,10 @@ set cpo&vim
 " Presets per compiler
 let s:presets = {
       \ 'gfortran': {
-      \   'debug':    '-g -O0 -Wall -Wextra -Wno-unused-parameter -fcheck=all -fbacktrace',
-      \   'release':  '-O3 -march=native -funroll-loops',
-      \   'fast':     '-O3 -ffast-math -march=native',
-      \   'sanitize': '-g -O1 -fsanitize=address -fsanitize=undefined -fbacktrace',
+      \   'debug':    '-g -O0 -Wall -Wextra -Wno-unused-parameter -fcheck=all -fbacktrace -fcoarray=single',
+      \   'release':  '-O3 -march=native -funroll-loops -fcoarray=single',
+      \   'fast':     '-O3 -ffast-math -march=native -fcoarray=single',
+      \   'sanitize': '-g -O1 -fsanitize=address -fsanitize=undefined -fbacktrace -fcoarray=single',
       \   'openmp':   '-fopenmp',
       \   'mpi_bin':  'mpifort'
       \ },
@@ -94,14 +94,6 @@ function! profiles#get_flags() abort
     let l:flags .= ' ' . l:omp_flag
   endif
 
-  " Coarray Fortran (CAF) flags
-  if exists('*hpc#get_caf_flags')
-    let l:caf_flag = hpc#get_caf_flags()
-    if !empty(l:caf_flag)
-      let l:flags .= ' ' . l:caf_flag
-    endif
-  endif
-
   " GPU Offloading flags (OpenACC / OpenMP Target)
   if exists('*hpc#get_gpu_flags')
     let l:gpu_flag = hpc#get_gpu_flags()
@@ -178,9 +170,6 @@ function! profiles#status() abort
   endif
   if profiles#is_mpi()
     call add(l:parts, 'MPI')
-  endif
-  if exists('*hpc#is_caf') && hpc#is_caf()
-    call add(l:parts, 'CAF')
   endif
   if exists('*hpc#get_gpu_mode') && hpc#get_gpu_mode() !=# 'off'
     call add(l:parts, toupper(hpc#get_gpu_mode()))
