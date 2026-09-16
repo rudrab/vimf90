@@ -44,6 +44,12 @@ if get(g:, 'fortran_format_on_save', get(g:, 'fortran_linter', 0) == 2 ? 1 : 0)
   augroup END
 endif
 
+" Automatically synchronize .fortls configuration when fpm.toml is saved
+augroup vimf90_fpm_manifest
+  autocmd!
+  autocmd BufWritePost fpm.toml call fortls#generate(expand('<afile>:p:h'))
+augroup END
+
 " Commands and Plug mappings
 command! -buffer -bar FortranFormat call s:format_buffer()
 nnoremap <buffer> <silent> <Plug>(vimf90-format) :call <SID>format_buffer()<CR>

@@ -11,6 +11,25 @@ set cpo&vim
 
 " Find project root directory {{{1
 function! project#find_root(...) abort
+  " Allow explicit buffer or global root override from external project managers
+  if exists('b:fortran_project_root') && !empty(b:fortran_project_root)
+    return expand(b:fortran_project_root)
+  elseif exists('g:fortran_project_root') && !empty(g:fortran_project_root)
+    return expand(g:fortran_project_root)
+  endif
+
+  if exists('g:Fortran_root_provider')
+    let l:provided = call(g:Fortran_root_provider, [])
+    if !empty(l:provided)
+      return expand(l:provided)
+    endif
+  elseif exists('g:fortran_root_provider')
+    let l:provided = call(g:fortran_root_provider, [])
+    if !empty(l:provided)
+      return expand(l:provided)
+    endif
+  endif
+
   let l:start_dir = a:0 > 0 && !empty(a:1) ? a:1 : expand('%:p:h')
   if empty(l:start_dir)
     let l:start_dir = getcwd()
@@ -56,11 +75,82 @@ function! project#detect_type(...) abort
 endfunction
 "}}}1
 
+" Extract include and module directories from build/compile_commands.json {{{1
+function! s:get_compile_commands_dirs(root) abort
+  let l:cc_file = a:root . '/build/compile_commands.json'
+  if !filereadable(l:cc_file)
+    return []
+  endif
+
+  let l:dirs = {}
+  try
+    let l:content = join(readfile(l:cc_file), '')
+    if empty(l:content)
+      return []
+    endif
+    let l:entries = json_decode(l:content)
+    if type(l:entries) != v:t_list
+      return []
+    endif
+
+    for l:entry in l:entries
+      let l:cmd_tokens = []
+      if has_key(l:entry, 'arguments') && type(l:entry.arguments) == v:t_list
+        let l:cmd_tokens = l:entry.arguments
+      elseif has_key(l:entry, 'command')
+        let l:cmd_tokens = split(l:entry.command)
+      endif
+
+      let l:i = 0
+      while l:i < len(l:cmd_tokens)
+        let l:tok = l:cmd_tokens[l:i]
+        let l:target_dir = ''
+        if l:tok =~# '^-I.\+'
+          let l:target_dir = l:tok[2:]
+        elseif l:tok ==# '-I' && l:i + 1 < len(l:cmd_tokens)
+          let l:i += 1
+          let l:target_dir = l:cmd_tokens[l:i]
+        elseif l:tok =~# '^-J.\+'
+          let l:target_dir = l:tok[2:]
+        elseif l:tok ==# '-J' && l:i + 1 < len(l:cmd_tokens)
+          let l:i += 1
+          let l:target_dir = l:cmd_tokens[l:i]
+        elseif (l:tok ==# '-module' || l:tok ==# '-module-dir') && l:i + 1 < len(l:cmd_tokens)
+          let l:i += 1
+          let l:target_dir = l:cmd_tokens[l:i]
+        endif
+
+        if !empty(l:target_dir)
+          let l:target_dir = substitute(l:target_dir, '^["'']\(.*\)["'']$', '\1', '')
+          let l:full_dir = (l:target_dir =~# '^/' || l:target_dir =~# '^[A-Za-z]:[/\\]') ? l:target_dir : (a:root . '/' . l:target_dir)
+          let l:full_dir = simplify(l:full_dir)
+          if isdirectory(l:full_dir)
+            let l:dirs[l:full_dir] = 1
+          endif
+        endif
+        let l:i += 1
+      endwhile
+    endfor
+  catch
+    return []
+  endtry
+
+  return keys(l:dirs)
+endfunction
+"}}}1
+
 " Discover module (.mod) and include directories in the project {{{1
 function! project#get_include_dirs(...) abort
   let l:root = a:0 > 0 ? a:1 : project#find_root()
-  let l:dirs = []
 
+  " 1. Authoritative include/module dirs from active build/compile_commands.json
+  let l:cc_dirs = s:get_compile_commands_dirs(l:root)
+  if !empty(l:cc_dirs)
+    return l:cc_dirs
+  endif
+
+  " 2. Fallback heuristic for non-fpm or pre-build states
+  let l:dirs = []
   let l:candidate_dirs = [
         \ l:root,
         \ l:root . '/src',
@@ -97,6 +187,19 @@ function! project#build(...) abort
   let l:root = project#find_root()
   let l:type = project#detect_type(l:root)
   let l:args = a:0 > 0 ? a:1 : ''
+
+  " Allow delegation to external build providers (e.g. vim-dispatch, asyncrun)
+  if exists('g:Fortran_build_provider')
+    let l:handled = call(g:Fortran_build_provider, [{'root': l:root, 'type': l:type, 'args': l:args}])
+    if l:handled
+      return 1
+    endif
+  elseif exists('g:fortran_build_provider')
+    let l:handled = call(g:fortran_build_provider, [{'root': l:root, 'type': l:type, 'args': l:args}])
+    if l:handled
+      return 1
+    endif
+  endif
 
   if l:type ==# 'fpm'
     return fpm#build(l:args)
