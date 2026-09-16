@@ -77,12 +77,18 @@ if has('gui_running') && has('menu') && g:Fortran_menumode == 1
   let s:c_prof       = s:format_shortcut(get(b:, 'fortran_profile',       '\pp'))
   let s:c_omp        = s:format_shortcut(get(b:, 'fortran_openmp',        '\po'))
   let s:c_mpi        = s:format_shortcut(get(b:, 'fortran_mpi',           '\pm'))
+  let s:c_caf        = s:format_shortcut(get(b:, 'fortran_caf',           '\pc'))
+  let s:c_gpu        = s:format_shortcut(get(b:, 'fortran_gpu',           '\pg'))
+  let s:c_mpirun     = s:format_shortcut(get(b:, 'fortran_mpirun',        '\pr'))
+  let s:c_cafrun     = s:format_shortcut(get(b:, 'fortran_cafrun',        '\pn'))
   let s:c_repl_tog   = s:format_shortcut(get(b:, 'fortran_repl_toggle',    '\rt'))
   let s:c_repl_snd   = s:format_shortcut(get(b:, 'fortran_repl_send',      '\rs'))
   let s:c_repl_sub   = s:format_shortcut(get(b:, 'fortran_repl_subprog',   '\rm'))
   let s:c_repl_buf   = s:format_shortcut(get(b:, 'fortran_repl_buffer',    '\rb'))
   let s:c_scrat_op   = s:format_shortcut(get(b:, 'fortran_scratch',        '\so'))
   let s:c_scrat_rn   = s:format_shortcut(get(b:, 'fortran_scratch_run',    '\sr'))
+  let s:c_insp_arr   = s:format_shortcut(get(b:, 'fortran_inspect_array',  '\da'))
+  let s:c_brk_tog    = s:format_shortcut(get(b:, 'fortran_break_toggle',   '\dt'))
   let s:c_make       = s:format_shortcut(get(b:, 'fortran_make',          '\mk'))
   let s:c_prop       = s:format_shortcut(get(b:, 'fortran_makeProp',      '\mp'))
 
@@ -94,12 +100,15 @@ if has('gui_running') && has('menu') && g:Fortran_menumode == 1
     execute 'inoremenu <script> ' . l:mpath . ' <C-C>' . a:cmd
   endfunction
 
-  " Compile Submenu
+  " Compile & Debug Submenu
   call s:add_menu_item('&Compile.&Compile', s:c_comp, ':FortranCompile<CR>')
   call s:add_menu_item('&Compile.Generate\ &Executable', s:c_exe, ':FortranExe<CR>')
   call s:add_menu_item('&Compile.Compile\ &and\ Run', s:c_run, ':FortranRun<CR>')
   call s:add_menu_item('&Compile.Command\ Line\ &Arguments', s:c_cla, ':FortranArgs<CR>')
-  call s:add_menu_item('&Compile.Run\ &Debugger', s:c_dbg, ':FortranDebug<CR>')
+  call s:add_menu_item('&Compile.sep_dbg', '', '<Nop>')
+  call s:add_menu_item('&Compile.Start\ &Debugger\ (GDB/DAP)', s:c_dbg, ':FortranDebug<CR>')
+  call s:add_menu_item('&Compile.Toggle\ &Breakpoint', s:c_brk_tog, ':FortranBreakpointToggle<CR>')
+  call s:add_menu_item('&Compile.&Inspect\ Matrix\ Array...', s:c_insp_arr, ':FortranInspectArray<CR>')
 
   " Fortran Package Manager (fpm) Submenu
   call s:add_menu_item('&FPM.fpm\ &Build', s:c_fpm_build, ':FortranFpmBuild<CR>')
@@ -120,14 +129,19 @@ if has('gui_running') && has('menu') && g:Fortran_menumode == 1
   call s:add_menu_item('&Interactive.Open\ Scientific\ &Scratchpad', s:c_scrat_op, ':FortranScratch<CR>')
   call s:add_menu_item('&Interactive.&Run\ Scratchpad', s:c_scrat_rn, ':FortranScratchRun<CR>')
 
-  " Build Profiles & Presets Submenu
-  call s:add_menu_item('&Profiles.Profile:\ &Debug', s:c_prof, ':FortranProfile debug<CR>')
-  call s:add_menu_item('&Profiles.Profile:\ &Release', '', ':FortranProfile release<CR>')
-  call s:add_menu_item('&Profiles.Profile:\ &Fast\ Math', '', ':FortranProfile fast<CR>')
-  call s:add_menu_item('&Profiles.Profile:\ &Sanitize', '', ':FortranProfile sanitize<CR>')
-  call s:add_menu_item('&Profiles.sep_prof', '', '<Nop>')
-  call s:add_menu_item('&Profiles.Toggle\ &OpenMP', s:c_omp, ':FortranOpenMP<CR>')
-  call s:add_menu_item('&Profiles.Toggle\ &MPI', s:c_mpi, ':FortranMPI<CR>')
+  " HPC & Supercomputing Presets Submenu
+  call s:add_menu_item('&HPC.Profile:\ &Debug', s:c_prof, ':FortranProfile debug<CR>')
+  call s:add_menu_item('&HPC.Profile:\ &Release', '', ':FortranProfile release<CR>')
+  call s:add_menu_item('&HPC.Profile:\ &Fast\ Math', '', ':FortranProfile fast<CR>')
+  call s:add_menu_item('&HPC.Profile:\ &Sanitize', '', ':FortranProfile sanitize<CR>')
+  call s:add_menu_item('&HPC.sep_hpc1', '', '<Nop>')
+  call s:add_menu_item('&HPC.Toggle\ &OpenMP', s:c_omp, ':FortranOpenMP<CR>')
+  call s:add_menu_item('&HPC.Toggle\ &MPI\ Wrapper', s:c_mpi, ':FortranMPI<CR>')
+  call s:add_menu_item('&HPC.Toggle\ &Coarray\ Fortran\ (CAF)', s:c_caf, ':FortranCAF<CR>')
+  call s:add_menu_item('&HPC.Toggle\ &GPU\ Offloading', s:c_gpu, ':FortranGPU<CR>')
+  call s:add_menu_item('&HPC.sep_hpc2', '', '<Nop>')
+  call s:add_menu_item('&HPC.Run\ &MPI\ Cluster\ Job', s:c_mpirun, ':FortranMPIRun<CR>')
+  call s:add_menu_item('&HPC.Run\ &Coarray\ Job\ (cafrun)', s:c_cafrun, ':FortranCAFRun<CR>')
 
   " Documentation & FORD Submenu
   call s:add_menu_item('&Documentation.Generate\ &FORD\ Docstring', s:c_doc, ':FortranDoc ford<CR>')

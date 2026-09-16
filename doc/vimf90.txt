@@ -18,13 +18,14 @@ CONTENTS                                                     *vimf90-contents*
 8. Large Multi-File Projects ................. |vimf90-projects|
 9. Text Objects & Motions .................... |vimf90-textobj|
 10. FORD & Doxygen Docstring Generator ....... |vimf90-doc|
-11. Build Profiles, OpenMP & MPI Presets ..... |vimf90-profiles|
-12. Formatting & Linting ..................... |vimf90-formatting|
-13. Tagbar & Symbol Outline .................. |vimf90-tagbar|
-14. Asynchronous Build Engine ................ |vimf90-async|
-15. Language Server Protocol (LSP) ........... |vimf90-lsp|
-16. GUI Menu ................................. |vimf90-menu|
-17. Change Log ............................... |vimf90-changelog|
+11. Supercomputing, Coarrays (CAF) & HPC ..... |vimf90-hpc|
+12. Scientific Debugging & Matrix Inspector .. |vimf90-dap|
+13. Formatting & Linting ..................... |vimf90-formatting|
+14. Tagbar & Symbol Outline .................. |vimf90-tagbar|
+15. Asynchronous Build Engine ................ |vimf90-async|
+16. Language Server Protocol (LSP) ........... |vimf90-lsp|
+17. GUI Menu ................................. |vimf90-menu|
+18. Change Log ............................... |vimf90-changelog|
 
 ==============================================================================
 1. INTRODUCTION                                                *vimf90-intro*
@@ -325,41 +326,63 @@ with inter-module dependencies.
   * `]M` / `[M`: Jump to next / previous `end subroutine` / `end function`.
 
 ==============================================================================
-9. FORD & DOXYGEN DOCSTRING GENERATOR                           *vimf90-doc*
+10. FORD & DOXYGEN DOCSTRING GENERATOR                           *vimf90-doc*
 
-Running `<leader>dc` or `:FortranDoc` above or inside any subroutine or function
-automatically parses the parameter list, inspects declared types, `intent(in/out/inout)`,
-and `optional` attributes, and generates a formatted documentation header:
+Running `<leader>dc` or `:FortranDoc` above or inside any subroutine, function,
+module, derived type, or interface automatically parses the parameter list,
+inspects declared types, `intent(in/out/inout)`, and `optional` attributes,
+and generates a formatted documentation header.
 
-  FORD Style (default): >
-    !> @brief <Brief description of compute_energy>
-    !>
-    !> @param[in]  pos real(8) description.
-    !> @param[in]  mass real(8) description.
-    !> @return     Return value (energy).
-<
-  To use Doxygen style by default: >
-    let g:fortran_doc_style = 'doxygen'
-<
+Run `:FordBuild` (`<leader>db`) to build project-wide FORD documentation
+asynchronously, or `:FordPreview` (`<leader>dp`) to open it in your browser.
 
 ==============================================================================
-10. BUILD PROFILES, OPENMP & MPI PRESETS                   *vimf90-profiles*
+11. SUPERCOMPUTING, COARRAY FORTRAN (CAF) & HPC               *vimf90-hpc*
 
-Quickly toggle optimization profiles and scientific computing toolchains:
+|vimf90| provides first-class support for modern parallel standards and supercomputing:
 
-  * `:FortranProfile debug`   -> `-g -O0 -Wall -Wextra -fcheck=all -fbacktrace`
-  * `:FortranProfile release` -> `-O3 -march=native -funroll-loops`
-  * `:FortranProfile fast`    -> `-O3 -ffast-math -march=native`
-  * `:FortranProfile sanitize`-> `-g -O1 -fsanitize=address,undefined`
-  * `:FortranOpenMP`          -> Toggles OpenMP flags (`-fopenmp` / `-qopenmp`)
-  * `:FortranMPI`             -> Toggles MPI wrapper (`mpifort` / `mpiifx`)
+1. Build Profiles:
+   * `:FortranProfile debug`   -> `-g -O0 -Wall -Wextra -fcheck=all -fbacktrace`
+   * `:FortranProfile release` -> `-O3 -march=native -funroll-loops`
+   * `:FortranProfile fast`    -> `-O3 -ffast-math -march=native`
+   * `:FortranProfile sanitize`-> `-g -O1 -fsanitize=address,undefined`
+
+2. OpenMP & MPI:
+   * `:FortranOpenMP` (`<leader>po`): Toggles OpenMP multithreading flags.
+   * `:FortranMPI` (`<leader>pm`): Toggles MPI compiler wrapper (`mpifort` / `mpiifx`).
+   * `:FortranMPIRun [ranks]` (`<leader>pr`): Launches multi-rank MPI cluster job (`mpirun -n <ranks>`).
+
+3. Coarray Fortran (CAF) (ISO Fortran 2008/2018):
+   * `:FortranCAF [single|lib|shared|distributed]` (`<leader>pc`): Toggles Coarray compiler flags.
+   * `:FortranCAFRun [images]` (`<leader>pn`): Launches multi-image Coarray execution (`cafrun -n <images>`).
+
+4. GPU Offloading (OpenACC & OpenMP Target Offload):
+   * `:FortranGPU [openmp|openacc|off]` (`<leader>pg`): Toggles GPU acceleration flags
+     for NVIDIA (`-acc`/`-mp=gpu`), GCC (`-fopenacc`/`-fopenmp -foffload`), and Intel (`-fopenmp-targets=spir64`).
 
 Statusline helper:
 Add `profiles#status()` to your statusline or lualine to display:
-`[gfortran:Debug:OMP:MPI]`.
+`[gfortran:Debug:OMP:MPI:CAF:GPU]`.
 
 ==============================================================================
-11. FORMATTING & LINTING                                 *vimf90-formatting*
+12. SCIENTIFIC DEBUGGING & MATRIX INSPECTOR                    *vimf90-dap*
+
+Scientific debugging in computational physics often requires inspecting large
+multi-dimensional arrays and matrix states:
+
+1. Multi-Dimensional Array Inspector:
+   * Run `<leader>da` or `:FortranInspectArray <var> [rows] [cols]` to open the
+     dedicated Fortran Matrix Inspector window.
+   * Displays formatted 2D grids with column-major ordering, row/column indices,
+     and values queried live from GDB / DAP / Termdebug.
+
+2. Breakpoints & DAP Integration:
+   * Run `<leader>dt` or `:FortranBreakpointToggle` to set/clear breakpoints on the current line.
+   * Run `:FortranDebug` (`<leader>cd`) or `:FortranTermdebug` to start interactive debugging.
+   * Automatically configures `nvim-dap` for Neovim users with `gdb` and `codelldb` adapters.
+
+==============================================================================
+13. FORMATTING & LINTING                                 *vimf90-formatting*
 
 Set `let g:fortran_format_on_save = 1` in `.vimrc` to enable automatic `fprettify`
 formatting whenever you save a Fortran file.
@@ -367,14 +390,14 @@ formatting whenever you save a Fortran file.
 You can also run `:FortranFormat` at any time on demand.
 
 ==============================================================================
-12. TAGBAR & SYMBOL OUTLINE INTEGRATION                       *vimf90-tagbar*
+14. TAGBAR & SYMBOL OUTLINE INTEGRATION                       *vimf90-tagbar*
 
 |vimf90| automatically registers `g:tagbar_type_fortran` for `majutsushi/tagbar`
 and `aerial.nvim`, providing a complete symbol hierarchy:
 `Program` -> `Module` -> `Derived Type` -> `Interface` -> `Subroutine` / `Function`.
 
 ==============================================================================
-13. ASYNCHRONOUS BUILD ENGINE                                 *vimf90-async*
+15. ASYNCHRONOUS BUILD ENGINE                                 *vimf90-async*
 
 When `g:fortran_async = 1` (default), running `:FortranCompile`, `:FortranExe`, or
 `:FortranFpmBuild` spawns background jobs using Vim 8+ `job_start` or Neovim
@@ -382,7 +405,7 @@ When `g:fortran_async = 1` (default), running `:FortranCompile`, `:FortranExe`, 
 without freezing the editor.
 
 ==============================================================================
-14. LANGUAGE SERVER PROTOCOL (LSP)                              *vimf90-lsp*
+16. LANGUAGE SERVER PROTOCOL (LSP)                              *vimf90-lsp*
 
 For coc.nvim, add the following configuration in your `coc-settings.json` or `.vimrc`: >
     let g:coc_user_config = {
@@ -398,13 +421,13 @@ For coc.nvim, add the following configuration in your `coc-settings.json` or `.v
 <
 
 ==============================================================================
-16. GUI MENU                                                    *vimf90-menu*
+17. GUI MENU                                                    *vimf90-menu*
 
 When running in GUI mode (gVim) with menu support enabled:
   * A top-level 'Fortran' menu appears automatically on Fortran buffers.
   * Dynamically shows exact expanded shortcuts (e.g. `\cc`, `,cc`, `<Space>cc`).
-  * Submenus for Compilation, fpm, Interactive (REPL & Scratchpad), Build Profiles,
-    Documentation, and Projects.
+  * Submenus for Compilation & Debugging, fpm, Interactive (REPL & Scratchpad),
+    HPC & Supercomputing, Documentation, and Projects.
   * To enable dynamic standard/dialect naming (e.g. 'Fortran 2008', 'Fortran 2018'): >
       let g:fortran_menu_dynamic_dialect = 1
 <
@@ -413,9 +436,13 @@ When running in GUI mode (gVim) with menu support enabled:
 <
 
 ==============================================================================
-17. CHANGE LOG                                           *vimf90-changelog*
+18. CHANGE LOG                                           *vimf90-changelog*
 
-v0.7.0:
+v0.8.0:
+  * Supercomputing & Modern Standards: Coarray Fortran (`:FortranCAF`, `:FortranCAFRun`),
+    GPU offloading presets (OpenACC, OpenMP Target), and MPI cluster runners (`:FortranMPIRun`).
+  * Scientific Debugging: Multi-Dimensional Array/Matrix Inspector (`:FortranInspectArray`, `<leader>da`),
+    breakpoint toggle (`:FortranBreakpointToggle`), Termdebug and `nvim-dap` configurations.
   * Interactive LFortran REPL Runner (`:FortranReplToggle`, `:FortranReplSend`,
     `:FortranReplSendSubprogram`, `:FortranReplSendBuffer`, `:FortranReplRestart`).
   * Instant Ephemeral Scientific Scratchpad (`:FortranScratch`, `:FortranScratchRun`).

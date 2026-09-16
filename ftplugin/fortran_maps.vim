@@ -36,12 +36,18 @@ let b:fortran_ford_preview  = get(g:, 'fortran_ford_prev_map',  s:leader . 'dp')
 let b:fortran_profile       = get(g:, 'fortran_prof_map',       s:leader . 'pp')
 let b:fortran_openmp        = get(g:, 'fortran_omp_map',        s:leader . 'po')
 let b:fortran_mpi           = get(g:, 'fortran_mpi_map',        s:leader . 'pm')
+let b:fortran_caf           = get(g:, 'fortran_caf_map',        s:leader . 'pc')
+let b:fortran_gpu           = get(g:, 'fortran_gpu_map',        s:leader . 'pg')
+let b:fortran_mpirun        = get(g:, 'fortran_mpirun_map',     s:leader . 'pr')
+let b:fortran_cafrun        = get(g:, 'fortran_cafrun_map',     s:leader . 'pn')
 let b:fortran_repl_toggle   = get(g:, 'fortran_repl_toggle',    s:leader . 'rt')
 let b:fortran_repl_send     = get(g:, 'fortran_repl_send',      s:leader . 'rs')
 let b:fortran_repl_subprog  = get(g:, 'fortran_repl_subprog',   s:leader . 'rm')
 let b:fortran_repl_buffer   = get(g:, 'fortran_repl_buffer',    s:leader . 'rb')
 let b:fortran_scratch       = get(g:, 'fortran_scratch_map',    s:leader . 'so')
 let b:fortran_scratch_run   = get(g:, 'fortran_scratch_run_map',s:leader . 'sr')
+let b:fortran_inspect_array = get(g:, 'fortran_inspect_arr_map',s:leader . 'da')
+let b:fortran_break_toggle  = get(g:, 'fortran_break_toggle_map', s:leader . 'dt')
 
 let s:undo_maps = []
 
@@ -72,6 +78,12 @@ call s:map_buf('n', b:fortran_ford_preview,  '<Plug>(vimf90-ford-preview)')
 call s:map_buf('n', b:fortran_profile,       '<Plug>(vimf90-profile)')
 call s:map_buf('n', b:fortran_openmp,        '<Plug>(vimf90-openmp)')
 call s:map_buf('n', b:fortran_mpi,           '<Plug>(vimf90-mpi)')
+call s:map_buf('n', b:fortran_caf,           '<Plug>(vimf90-caf-toggle)')
+call s:map_buf('n', b:fortran_gpu,           '<Plug>(vimf90-gpu-toggle)')
+call s:map_buf('n', b:fortran_mpirun,        '<Plug>(vimf90-mpi-run)')
+call s:map_buf('n', b:fortran_cafrun,        '<Plug>(vimf90-caf-run)')
+call s:map_buf('n', b:fortran_inspect_array, '<Plug>(vimf90-inspect-array)')
+call s:map_buf('n', b:fortran_break_toggle,  '<Plug>(vimf90-breakpoint-toggle)')
 
 " Interactive REPL & Scratchpad mappings
 call s:map_buf('n', b:fortran_repl_toggle,   '<Plug>(vimf90-repl-toggle)')
@@ -129,7 +141,7 @@ endif
 "}}}1
 
 " Undo ftplugin
-let s:undo_vars = 'unlet! b:fortran_compile b:fortran_exe b:fortran_run b:fortran_cla b:fortran_dbg b:fortran_make b:fortran_makeProp b:fortran_fpm_build b:fortran_fpm_run b:fortran_fpm_test b:fortran_fpm_test_cur b:fortran_tags b:fortran_find_mod b:fortran_doc b:fortran_ford_build b:fortran_ford_preview b:fortran_profile b:fortran_openmp b:fortran_mpi b:fortran_repl_toggle b:fortran_repl_send b:fortran_repl_subprog b:fortran_repl_buffer b:fortran_scratch b:fortran_scratch_run'
+let s:undo_vars = 'unlet! b:fortran_compile b:fortran_exe b:fortran_run b:fortran_cla b:fortran_dbg b:fortran_make b:fortran_makeProp b:fortran_fpm_build b:fortran_fpm_run b:fortran_fpm_test b:fortran_fpm_test_cur b:fortran_tags b:fortran_find_mod b:fortran_doc b:fortran_ford_build b:fortran_ford_preview b:fortran_profile b:fortran_openmp b:fortran_mpi b:fortran_caf b:fortran_gpu b:fortran_mpirun b:fortran_cafrun b:fortran_repl_toggle b:fortran_repl_send b:fortran_repl_subprog b:fortran_repl_buffer b:fortran_scratch b:fortran_scratch_run b:fortran_inspect_array b:fortran_break_toggle'
 let s:undo = s:undo_vars . ' | silent! augroup vimf90_timestamp | silent! autocmd! * <buffer> | silent! augroup END'
 if !empty(s:undo_maps)
   let s:undo .= ' | ' . join(s:undo_maps, ' | ')
