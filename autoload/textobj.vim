@@ -9,16 +9,29 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-" Regex patterns for Fortran constructs
-let s:re_prefix = '\v^\s*(pure\s+|elemental\s+|recursive\s+|impure\s+|module\s+)*'
+" Regex patterns for Fortran constructs (very magic, case-insensitive)
+
+" A function statement may be prefixed by a declaration type spec as well as by
+" the pure/elemental/recursive/impure/module modifiers, in any order:
+"   real function square(x)
+"   integer(kind=8) pure function count_it()
+"   character(len=*) function label()
+"   type(solver) function make_solver()
+" The parenthesised part is matched greedily and backtracks, so nested
+" parentheses such as real(kind(1.0d0)) are handled.
+let s:re_typespec = '%(%(type|class)\s*\(.*\)\s*'
+      \ . '|%(integer|real|complex|logical|character)%(\s*\(.*\)\s*|\s*\*\s*\d+\s*|\s+)'
+      \ . '|double\s+%(precision|complex)\s+)'
+let s:re_modifier = '%(pure|elemental|impure|recursive|non_recursive|module)\s+'
+let s:re_prefix   = '%(' . s:re_modifier . '|' . s:re_typespec . ')*'
 
 let s:patterns = {
       \ 'func': {
-      \   'start': '\v\c^\s*(pure\s+|elemental\s+|recursive\s+|impure\s+|module\s+)*%(subroutine|function)\s+\w+',
+      \   'start': '\v\c^\s*' . s:re_prefix . '%(subroutine|function)\s+\w+',
       \   'end':   '\v\c^\s*end\s*%(subroutine|function)>'
       \ },
       \ 'module': {
-      \   'start': '\v\c^\s*%(module\s+(procedure|subroutine|function|nature)@!\w+|submodule\s*\(|program\s+\w+)',
+      \   'start': '\v\c^\s*%(module\s+%(%(procedure|subroutine|function|nature)>)@!\w+|submodule\s*\(|program\s+\w+)',
       \   'end':   '\v\c^\s*end\s*%(module|submodule|program)>'
       \ },
       \ 'type': {
@@ -143,7 +156,7 @@ function! textobj#jump(pat_type, forward, to_end) abort
     if a:to_end
       let l:pat = '\v\c^\s*end\s*%(subroutine|function|program|module|submodule)>'
     else
-      let l:pat = '\v\c^\s*(pure\s+|elemental\s+|recursive\s+|impure\s+|module\s+)*%(subroutine|function|program|module\s+(procedure|subroutine|function|nature)@!\w+|submodule\s*\()'
+      let l:pat = '\v\c^\s*' . s:re_prefix . '%(subroutine|function|program|module\s+%(%(procedure|subroutine|function|nature)>)@!\w+|submodule\s*\()'
     endif
   endif
 

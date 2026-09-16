@@ -16,10 +16,14 @@ function! project#find_root(...) abort
     let l:start_dir = getcwd()
   endif
 
+  " findfile()/finddir() take a path list, in which a space separates entries,
+  " so directories containing spaces have to be escaped.
+  let l:search_path = escape(l:start_dir, ' ,') . ';'
+
   for l:indicator in ['fpm.toml', 'CMakeLists.txt', 'meson.build', 'Makefile', 'makefile', '.fortls', '.git']
-    let l:found = findfile(l:indicator, l:start_dir . ';')
+    let l:found = findfile(l:indicator, l:search_path)
     if empty(l:found)
-      let l:found = finddir(l:indicator, l:start_dir . ';')
+      let l:found = finddir(l:indicator, l:search_path)
     endif
     if !empty(l:found)
       let l:full_path = fnamemodify(l:found, ':p')
@@ -157,20 +161,35 @@ function! project#find_module(name) abort
   let l:root = project#find_root()
   let l:pattern = '\c^\s*module\s\+' . l:mod_name . '\>'
 
-  " Search for files in project
-  let l:files = globpath(l:root, '**/*.{f90,f95,f03,f08,F90,F95,f,F}', 0, 1)
-  for l:file in l:files
-    for l:line in readfile(l:file)
-      if l:line =~? l:pattern
-        execute 'edit ' . fnameescape(l:file)
-        call search(l:pattern, 'w')
-        echomsg 'Found module ' . l:mod_name . ' in ' . fnamemodify(l:file, ':.')
-        return
-      endif
-    endfor
-  endfor
+  " Let :vimgrep scan the project rather than reading every source file into a
+  " Vim list. 'j' keeps the cursor here until we know where to jump, and the
+  " quickfix list is restored afterwards so build results survive the search.
+  let l:saved_qf = getqflist({'items': 1, 'title': 1})
+  let l:matches = []
+  try
+    execute 'noautocmd vimgrep /' . escape(l:pattern, '/') . '/j '
+          \ . fnameescape(l:root) . '/**/*.{f90,f95,f03,f08,F90,F95,f,F}'
+    let l:matches = getqflist()
+  catch /^Vim\%((\a\+)\)\=:E\%(479\|480\|683\)/
+    " No matching line, or no source files to search
+  finally
+    " Restore by content, not by list id: vimgrep pushed a new list onto the
+    " stack, and the saved id would update that older entry instead of this one.
+    call setqflist([], 'r', {
+          \ 'items': get(l:saved_qf, 'items', []),
+          \ 'title': get(l:saved_qf, 'title', ''),
+          \ })
+  endtry
 
-  echohl WarningMsg | echo 'Module "' . l:mod_name . '" not found in project.' | echohl None
+  if empty(l:matches)
+    echohl WarningMsg | echo 'Module "' . l:mod_name . '" not found in project.' | echohl None
+    return
+  endif
+
+  let l:file = fnamemodify(bufname(l:matches[0].bufnr), ':p')
+  execute 'edit ' . fnameescape(l:file)
+  call cursor(l:matches[0].lnum, 1)
+  echomsg 'Found module ' . l:mod_name . ' in ' . fnamemodify(l:file, ':.')
 endfunction
 "}}}1
 
