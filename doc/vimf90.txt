@@ -1,4 +1,4 @@
-*vimf90.txt*   A modern Fortran 90/95/2003/2008/2018 plugin for Vim & Neovim
+*vimf90.txt*   A modern Fortran 90/95/2003/2008/2018/2023 plugin for Vim & Neovim
        _            __ ___   ___        ~
 __   _(_)_ __ ___  / _/ _ \ / _ \   _   ~
 \ \ / / | '_ ` _ \| || (_) | | | |_| |_ ~
@@ -9,40 +9,43 @@ __   _(_)_ __ ___  / _/ _ \ / _ \   _   ~
 CONTENTS                                                     *vimf90-contents*
 
 1. Introduction .............................. |vimf90-intro|
-2. Installation .............................. |vimf90-install|
+2. Installation & Recommended Plugins ........ |vimf90-install|
 3. Configuration Options ..................... |vimf90-options|
 4. Commands .................................. |vimf90-commands|
 5. Key Mappings & <Plug> Targets ............. |vimf90-mappings|
 6. Fortran Package Manager (fpm) ............. |vimf90-fpm|
 7. Large Multi-File Projects ................. |vimf90-projects|
-8. Construct Completion ...................... |vimf90-constructs|
-9. Formatting & Linting ...................... |vimf90-formatting|
-10. Asynchronous Build Engine ................ |vimf90-async|
-11. Language Server (LSP) .................... |vimf90-lsp|
-12. Change Log ............................... |vimf90-changelog|
+8. Text Objects & Motions .................... |vimf90-textobj|
+9. FORD & Doxygen Docstring Generator ........ |vimf90-doc|
+10. Build Profiles, OpenMP & MPI Presets ..... |vimf90-profiles|
+11. Formatting & Linting ..................... |vimf90-formatting|
+12. Tagbar & Symbol Outline .................. |vimf90-tagbar|
+13. Asynchronous Build Engine ................ |vimf90-async|
+14. Language Server Protocol (LSP) ........... |vimf90-lsp|
+15. GUI Menu ................................. |vimf90-menu|
+16. Change Log ............................... |vimf90-changelog|
 
 ==============================================================================
 1. INTRODUCTION                                                *vimf90-intro*
 
-|vimf90| turns Vim / Neovim into a modern, responsive IDE for Fortran 90+.
+|vimf90| turns Vim / Neovim into a modern, responsive IDE for Fortran.
 
 Key Features:
   * First-class Fortran Package Manager (|fpm|) integration (`build`, `run`, `test`, `new`).
-  * Intelligent multi-file project management: root detection (`fpm`, `CMake`, `Meson`, `Make`),
-    automatic module search path (`-I`, `-J`) resolution, and project-wide Universal Ctags.
-  * Smart Fortran construct completion (`program`, `module`, `subroutine`,
-    `function`, `if-then`, `do`, `block`, `type`, `select case`, `interface`, etc.).
+  * Intelligent multi-file project management: root detection (`fpm`, `CMake`, `Makefile`),
+    automatic module search path (`-I`) resolution, and project-wide Universal Ctags.
+  * Native Fortran text objects (`af`/`if`, `am`/`im`, `at`/`it`, `ad`/`id`, `ab`/`ib`)
+    and structural subprogram motions (`]m`, `[m`, `]M`, `[M`).
+  * Automatic FORD & Doxygen docstring generator (`:FortranDoc`, `<leader>dc`)
+    with argument type and intent deduction.
+  * Scientific HPC presets: Debug, Release, Fast, and Sanitize profiles, with
+    OpenMP multithreading and MPI wrapper toggles.
   * Non-blocking asynchronous compilation and linking using Vim 8/9 jobs and
-    Neovim async jobs.
-  * Direct QuickFix integration with compiler errorformat support for
-    GNU Fortran (`gfortran`), Intel (`ifort`, `ifx`), NVIDIA (`nvfortran`),
-    and LLVM (`flang`).
-  * Automated formatting via `fprettify` or built-in whitespace rules.
-  * Strict buffer isolation: all mappings and settings are buffer-local (`<buffer>`)
-    with full |b:undo_ftplugin| support.
+    Neovim async jobs with multi-compiler QuickFix parsing (`gfortran`, `ifx`, `ifort`, `nvfortran`, `flang`).
+  * Buffer-local isolation with complete |b:undo_ftplugin| support.
 
 ==============================================================================
-2. INSTALLATION                                              *vimf90-install*
+2. INSTALLATION & RECOMMENDED PLUGINS                        *vimf90-install*
 
 Using vim-plug: >
     Plug 'rudrab/vimf90'
@@ -50,67 +53,44 @@ Using vim-plug: >
 Using lazy.nvim (Neovim): >
     { 'rudrab/vimf90', ft = { 'fortran' } }
 <
-Using Vundle: >
-    Plugin 'rudrab/vimf90'
-<
-Python Dependencies:
-For automated formatting and language server capabilities, `fprettify` and
-`fortls` can be installed automatically by running: >
-    :FortranInstallDeps
-<
-or via pip: >
-    pip install fprettify fortran-language-server
-<
+
+Recommended Companion Tools:
+  * Fortran Package Manager (fpm): https://fpm.fortran-lang.org/
+  * Language Server (fortls): pipx install fortls
+  * Formatter (fprettify): pipx install fprettify
+  * Snippets: honza/vim-snippets or friendly-snippets with LuaSnip / UltiSnips
+  * Symbol Outline: majutsushi/tagbar or stevearc/aerial.nvim
 
 ==============================================================================
 3. CONFIGURATION OPTIONS                                     *vimf90-options*
 
 *g:fortran_leader*
     Leader key used for default vimf90 mappings.
-    Default: "`" (backtick) or |mapleader|
+    Default: |mapleader| or "\"
 
 *g:fortran_compiler*
     Fortran compiler executable.
     Default: "gfortran" (supports "ifx", "ifort", "nvfortran", "flang", etc.)
 
-*g:fortran_fcflags*
-    Compiler flags for compiling object files.
-    Default: "-Wall -O0 -c"
-
-*g:fortran_flflags*
-    Compiler/linker flags for creating executables.
-    Default: "-Wall -O0"
-
-*g:fortran_exeExt*
-    Executable file extension (e.g. ".exe" on Windows, "" on Linux/macOS).
-    Default: ""
+*g:fortran_profile*
+    Active compilation profile: "debug", "release", "fast", or "sanitize".
+    Default: "debug"
 
 *g:fortran_async*
     Enable asynchronous non-blocking compilation for Vim 8+ and Neovim.
     Default: 1
 
-*g:fortran_run_terminal*
-    Run executables, fpm apps, and debuggers in a bottom terminal split instead of external shell.
+*g:fortran_format_on_save*
+    Automatically format buffer with `fprettify` on save.
     Default: 0
 
-*g:fortran_linter*
-    Formatting mode on buffer save:
-      0 : On-the-fly insert mode whitespace adjustment.
-      1 : Built-in regex whitespace formatting on save (default).
-      2 : Format with `fprettify` on save.
-     -1 : Disable automatic formatting.
+*g:fortran_doc_style*
+    Docstring template style: "ford" or "doxygen".
+    Default: "ford"
 
-*g:fprettify_options*
-    Options passed to `fprettify` when `g:fortran_linter = 2`.
-    Default: "--silent"
-
-*g:fortran_completer*
-    Key mapped to complete Fortran constructs.
-    Default: "<F3>"
-
-*g:fortran_update_timestamp*
-    Automatically update `! Last Modified: ...` header comments on save.
-    Default: 1
+*g:fortran_run_terminal*
+    Run executables and debuggers in a bottom terminal split instead of external shell.
+    Default: 0
 
 ==============================================================================
 4. COMMANDS                                                 *vimf90-commands*
@@ -132,20 +112,21 @@ All commands are buffer-local and available in Fortran buffers:
 *:FortranDebug*
     Builds with debug flags (`-g`) and starts the debugger (`gdb` or `lldb`).
 
-*:FortranMake*
-    Executes `:make` with configured make arguments.
+*:FortranDoc* [ford|doxygen]
+    Generates a FORD or Doxygen documentation block above the current subprogram,
+    automatically inspecting dummy argument types, intents, and return values.
 
-*:FortranMakeArgs*
-    Prompts for make properties/targets.
+*:FortranProfile* [debug|release|fast|sanitize]
+    Sets the active compilation profile (compiler flags).
 
-*:FortranMakeProj*
-    Interactively generates standard Fortran project directory structure (`src/`, `help/`, `Makefile`).
+*:FortranCompiler* [gfortran|ifx|ifort|nvfortran|flang]
+    Sets the active compiler backend.
 
-*:FortranFormat*
-    Formats current buffer using the active formatter (`fprettify` or regex).
+*:FortranOpenMP* [on|off|toggle]
+    Toggles OpenMP multithreading compilation flags (`-fopenmp` / `-qopenmp`).
 
-*:FortranInstallDeps*
-    Installs recommended Python tooling (`fprettify`, `fortls`).
+*:FortranMPI* [on|off|toggle]
+    Toggles MPI compiler wrapper (`mpifort`, `mpiifx`, `mpiifort`, `mpif90`).
 
 *:FortranFpm* [subcommand]
     Runs an `fpm` command (with tab-completion for `build`, `run`, `test`, `new`, `clean`, etc.).
@@ -174,21 +155,14 @@ All commands are buffer-local and available in Fortran buffers:
 *:FortranFindModule* [name]
     Searches the project for the file defining `module <name>` and opens it.
 
-*:FortranDoc* [ford|doxygen]
-    Generates a FORD or Doxygen documentation block above the current subprogram,
-    automatically inspecting dummy argument types, intents, and return values.
+*:FortranFormat*
+    Formats current buffer using `fprettify`.
 
-*:FortranProfile* [debug|release|fast|sanitize]
-    Sets the active compilation profile (compiler flags).
+*:FortranMake*
+    Executes `:make` (historical fallback for Makefile repositories).
 
-*:FortranCompiler* [gfortran|ifx|ifort|nvfortran|flang]
-    Sets the active compiler backend.
-
-*:FortranOpenMP* [on|off|toggle]
-    Toggles OpenMP multithreading compilation flags (`-fopenmp` / `-qopenmp`).
-
-*:FortranMPI* [on|off|toggle]
-    Toggles MPI compiler wrapper (`mpifort`, `mpiifx`, `mpiifort`, `mpif90`).
+*:FortranMakeArgs*
+    Prompts for make properties/targets.
 
 ==============================================================================
 5. KEY MAPPINGS & <PLUG> TARGETS                            *vimf90-mappings*
@@ -202,9 +176,6 @@ Default shortcuts (using `<Leader>` or `g:fortran_leader`):
   `<leader>cr`     <Plug>(vimf90-run)                Build & Run executable
   `<leader>cl`     <Plug>(vimf90-cla)                Set command line arguments
   `<leader>cd`     <Plug>(vimf90-dbg)                Debug executable
-  `<leader>mk`     <Plug>(vimf90-make)               Run Makefile
-  `<leader>mp`     <Plug>(vimf90-makeprop)           Set make parameters
-  `<leader>gp`     <Plug>(vimf90-makeproj)           Generate project scaffolding
   `<leader>fb`     <Plug>(vimf90-fpm-build)          fpm build project
   `<leader>fr`     <Plug>(vimf90-fpm-run)            fpm run project
   `<leader>ft`     <Plug>(vimf90-fpm-test)           fpm test project
@@ -214,7 +185,8 @@ Default shortcuts (using `<Leader>` or `g:fortran_leader`):
   `<leader>pp`     <Plug>(vimf90-profile)            Switch/show build profile
   `<leader>po`     <Plug>(vimf90-openmp)             Toggle OpenMP
   `<leader>pm`     <Plug>(vimf90-mpi)                Toggle MPI
-  `<F3>`           <Plug>(vimf90-construct-complete) Smart construct complete
+  `<leader>mk`     <Plug>(vimf90-make)               Run Makefile (fallback)
+  `<leader>mp`     <Plug>(vimf90-makeprop)           Set make parameters
                    <Plug>(vimf90-format)             Format current buffer
 
   Text Objects (Visual / Operator-Pending):
@@ -250,8 +222,8 @@ In 2026, Fortran projects often span hundreds of files across nested folders
 with inter-module dependencies.
 
 |vimf90| handles large projects through:
-  1. Automatic Root Detection: Detects `fpm.toml`, `CMakeLists.txt`, `meson.build`,
-     `Makefile`, or `.git` up the directory tree.
+  1. Automatic Root Detection: Detects `fpm.toml`, `CMakeLists.txt`, `Makefile`,
+     or `.git` up the directory tree.
   2. Automatic Module Resolution: Discovers `.mod` and header directories across
      `src/`, `include/`, `build/`, `build/gfortran_*` and injects `-I` flags into
      single-file compile commands automatically.
@@ -308,42 +280,22 @@ Add `profiles#status()` to your statusline or lualine to display:
 `[gfortran:Debug:OMP:MPI]`.
 
 ==============================================================================
-11. CONSTRUCT COMPLETION                                 *vimf90-constructs*
+11. FORMATTING & LINTING                                 *vimf90-formatting*
 
-Pressing `<F3>` (or `g:fortran_completer`) at the end of a construct opening line
-automatically generates the matching `end` statement and positions the cursor inside:
-
-  Typed:                               Generated:
-  ----------------------------------------------------------------------------
-  `program my_app<F3>`                 program my_app
-                                         <cursor positioned here>
-                                       end program my_app
-
-  `loop1: do i = 1, 100<F3>`           loop1: do i = 1, 100
-                                         <cursor positioned here>
-                                       end do loop1
-
-  `type :: Particle<F3>`               type :: Particle
-                                         <cursor positioned here>
-                                       end type Particle
-
-==============================================================================
-12. FORMATTING & LINTING                                 *vimf90-formatting*
-
-Set `let g:fortran_linter = 2` in `.vimrc` to enable automatic `fprettify`
+Set `let g:fortran_format_on_save = 1` in `.vimrc` to enable automatic `fprettify`
 formatting whenever you save a Fortran file.
 
 You can also run `:FortranFormat` at any time on demand.
 
 ==============================================================================
-13. TAGBAR & SYMBOL OUTLINE INTEGRATION                       *vimf90-tagbar*
+12. TAGBAR & SYMBOL OUTLINE INTEGRATION                       *vimf90-tagbar*
 
 |vimf90| automatically registers `g:tagbar_type_fortran` for `majutsushi/tagbar`
 and `aerial.nvim`, providing a complete symbol hierarchy:
 `Program` -> `Module` -> `Derived Type` -> `Interface` -> `Subroutine` / `Function`.
 
 ==============================================================================
-14. ASYNCHRONOUS BUILD ENGINE                                 *vimf90-async*
+13. ASYNCHRONOUS BUILD ENGINE                                 *vimf90-async*
 
 When `g:fortran_async = 1` (default), running `:FortranCompile`, `:FortranExe`, or
 `:FortranFpmBuild` spawns background jobs using Vim 8+ `job_start` or Neovim
@@ -351,7 +303,7 @@ When `g:fortran_async = 1` (default), running `:FortranCompile`, `:FortranExe`, 
 without freezing the editor.
 
 ==============================================================================
-15. LANGUAGE SERVER PROTOCOL (LSP)                              *vimf90-lsp*
+14. LANGUAGE SERVER PROTOCOL (LSP)                              *vimf90-lsp*
 
 For coc.nvim, add the following configuration in your `coc-settings.json` or `.vimrc`: >
     let g:coc_user_config = {
@@ -367,7 +319,7 @@ For coc.nvim, add the following configuration in your `coc-settings.json` or `.v
 <
 
 ==============================================================================
-16. GUI MENU                                                    *vimf90-menu*
+15. GUI MENU                                                    *vimf90-menu*
 
 When running in GUI mode (gVim) with menu support enabled:
   * A top-level 'Fortran' menu appears automatically on Fortran buffers.
@@ -381,18 +333,19 @@ When running in GUI mode (gVim) with menu support enabled:
 <
 
 ==============================================================================
-17. CHANGE LOG                                           *vimf90-changelog*
+16. CHANGE LOG                                           *vimf90-changelog*
 
 v0.6.0:
+  * Streamlined architecture: removed redundant UltiSnips bundling, regex formatters,
+    insert-mode key hijacking, and legacy Autotools scaffolding.
+  * Standardized on Fortran Package Manager (`fpm`) as primary project tool.
   * Fortran Text Objects (`af`/`if`, `am`/`im`, `at`/`it`, `ad`/`id`, `ab`/`ib`).
   * Structural Motions (`]m`, `[m`, `]M`, `[M`).
   * Automatic FORD and Doxygen Docstring Generator (`:FortranDoc`, `<leader>dc`).
   * Build Profiles (Debug, Release, Fast, Sanitize), OpenMP, and MPI Presets.
   * Tagbar and Symbol Outline Hierarchy (`g:tagbar_type_fortran`).
-  * First-class Fortran Package Manager (`fpm`) integration (`build`, `run`, `test`, `new`).
   * Intelligent multi-file project management (root detection, include path resolution).
   * Project-wide Universal Ctags generation and module search (`:FortranFindModule`).
-  * Buffer-local `<buffer>` and `<Plug>` mappings architecture with `b:undo_ftplugin`.
   * Asynchronous build runner for Vim 8/9 & Neovim.
   * Multi-compiler errorformat support (`gfortran`, `ifort`, `ifx`, `nvfortran`, `flang`).
 
