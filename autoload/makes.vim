@@ -115,8 +115,8 @@ endfunction
 
 " Compile current buffer to object file {{{1
 function! makes#Fcompile(...) abort
-  let l:compiler = makes#get_opt('fortran_compiler', 'gfortran')
-  let l:fcflags  = makes#get_opt('fortran_fcflags', '-Wall -O0 -c')
+  let l:compiler = exists('b:fortran_compiler') ? b:fortran_compiler : profiles#get_effective_compiler()
+  let l:fcflags  = makes#get_opt('fortran_fcflags', profiles#get_flags() . ' -c')
   let l:objext   = makes#get_opt('fortran_objExt', '.o')
   let l:is_async = a:0 > 0 ? a:1 : makes#get_opt('fortran_async', 1)
 
@@ -188,8 +188,8 @@ endfunction
 
 " Generate executable {{{1
 function! makes#Fexe(...) abort
-  let l:compiler = makes#get_opt('fortran_compiler', 'gfortran')
-  let l:flflags  = makes#get_opt('fortran_flflags', '-Wall -O0')
+  let l:compiler = exists('b:fortran_compiler') ? b:fortran_compiler : profiles#get_effective_compiler()
+  let l:flflags  = makes#get_opt('fortran_flflags', profiles#get_flags())
   let l:exeext   = makes#get_opt('fortran_exeExt', '')
   let l:is_async = a:0 > 0 ? a:1 : makes#get_opt('fortran_async', 1)
   let l:on_finish = a:0 > 1 ? a:2 : v:null

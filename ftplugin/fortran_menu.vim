@@ -1,9 +1,10 @@
 "########################################################################
 " File:          ftplugin/fortran_menu.vim
 " Author:        Rudra Banerjee (bnrj DOT rudra at gmail.com)
-" Version:       0.5
+" Version:       0.6
 " License:       GPLv3
-" Description:   GUI Menu for Fortran tools with dynamic leader display
+" Description:   GUI Menu for Fortran tools with dynamic leader display,
+"                profiles, fpm, docstrings, and project tools
 "########################################################################
 
 let s:save_cpo = &cpo
@@ -69,6 +70,10 @@ if has('gui_running') && has('menu') && g:Fortran_menumode == 1
   let s:c_fpm_test   = s:format_shortcut(get(b:, 'fortran_fpm_test',  '\ft'))
   let s:c_tags       = s:format_shortcut(get(b:, 'fortran_tags',      '\tg'))
   let s:c_find_mod   = s:format_shortcut(get(b:, 'fortran_find_mod',  '\fm'))
+  let s:c_doc        = s:format_shortcut(get(b:, 'fortran_doc',       '\dc'))
+  let s:c_prof       = s:format_shortcut(get(b:, 'fortran_profile',   '\pp'))
+  let s:c_omp        = s:format_shortcut(get(b:, 'fortran_openmp',    '\po'))
+  let s:c_mpi        = s:format_shortcut(get(b:, 'fortran_mpi',       '\pm'))
   let s:c_make       = s:format_shortcut(get(b:, 'fortran_make',      '\mk'))
   let s:c_prop       = s:format_shortcut(get(b:, 'fortran_makeProp',  '\mp'))
   let s:c_proj       = s:format_shortcut(get(b:, 'fortran_genProj',   '\gp'))
@@ -93,6 +98,19 @@ if has('gui_running') && has('menu') && g:Fortran_menumode == 1
   call s:add_menu_item('&FPM.fpm\ &Run', s:c_fpm_run, ':FortranFpmRun<CR>')
   call s:add_menu_item('&FPM.fpm\ &Test', s:c_fpm_test, ':FortranFpmTest<CR>')
   call s:add_menu_item('&FPM.fpm\ &New\ Project', '', ':FortranFpmNew<CR>')
+
+  " Build Profiles & Presets Submenu
+  call s:add_menu_item('&Profiles.Profile:\ &Debug', s:c_prof, ':FortranProfile debug<CR>')
+  call s:add_menu_item('&Profiles.Profile:\ &Release', '', ':FortranProfile release<CR>')
+  call s:add_menu_item('&Profiles.Profile:\ &Fast\ Math', '', ':FortranProfile fast<CR>')
+  call s:add_menu_item('&Profiles.Profile:\ &Sanitize', '', ':FortranProfile sanitize<CR>')
+  call s:add_menu_item('&Profiles.sep_prof', '', '<Nop>')
+  call s:add_menu_item('&Profiles.Toggle\ &OpenMP', s:c_omp, ':FortranOpenMP<CR>')
+  call s:add_menu_item('&Profiles.Toggle\ &MPI', s:c_mpi, ':FortranMPI<CR>')
+
+  " Documentation Submenu
+  call s:add_menu_item('&Documentation.Generate\ &FORD\ Docstring', s:c_doc, ':FortranDoc ford<CR>')
+  call s:add_menu_item('&Documentation.Generate\ &Doxygen\ Docstring', '', ':FortranDoc doxygen<CR>')
 
   " Project & Tools Submenu
   call s:add_menu_item('&Project.&Build\ Project', '', ':FortranProjectBuild<CR>')

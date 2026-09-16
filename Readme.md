@@ -243,12 +243,58 @@ You can configure the options to your tastes.
 * `fortran_exeExt`: Executable Extension. Default is `''`.
 * `fortran_fcflags`: Compiler options. Default is `-Wall  -O0 -c `
 * `fortran_flflags`: Compiler options. Default is `-Wall  -O0 `
-###### Keyboard shortcuts (Your current options are visible in `menu`)
+### Fortran Text Objects & Motions
+
+`vimf90` provides native text objects and motions for seamless Fortran editing:
+
+* **Text Objects** (Visual `v` & Operator-pending `d`, `y`, `c`):
+  * `af` / `if`: Around / inside `subroutine` or `function`
+  * `am` / `im`: Around / inside `module` or `program`
+  * `at` / `it`: Around / inside derived `type` definition
+  * `ad` / `id`: Around / inside `do` loop
+  * `ab` / `ib`: Around / inside `block` or `interface`
+* **Structural Motions**:
+  * `]m` / `[m`: Jump to next / previous subprogram start
+  * `]M` / `[M`: Jump to next / previous `end subroutine` / `end function`
+
+### FORD & Doxygen Documentation Generator
+
+Place the cursor anywhere inside or on the header line of a subroutine/function and run `<leader>dc` or `:FortranDoc`:
+
+```fortran
+!> @brief <Brief description of compute_energy>
+!>
+!> @param[in]  pos real(8) description.
+!> @param[in]  mass real(8) description.
+!> @return     Return value (energy).
+function compute_energy(pos, mass) result(energy)
+```
+`vimf90` automatically inspects parameter types, `intent(in/out/inout)`, `optional` flags, and return values.
+
+### Build Profiles, OpenMP & MPI Presets
+
+Quickly switch compiler profiles and high-performance computing wrappers:
+
+* `:FortranProfile [debug|release|fast|sanitize]` or `<leader>pp`: Switch optimization profile.
+* `:FortranOpenMP` or `<leader>po`: Toggle OpenMP multithreading flags (`-fopenmp` / `-qopenmp`).
+* `:FortranMPI` or `<leader>pm`: Toggle MPI compiler wrappers (`mpifort`, `mpiifx`, `mpif90`).
+* Add `profiles#status()` to your statusline or lualine to show `[gfortran:Debug:OMP:MPI]`.
+
+### Tagbar & Symbol Outline Integration
+
+`vimf90` includes built-in `g:tagbar_type_fortran` support for [tagbar](https://github.com/majutsushi/tagbar) and [aerial.nvim](https://github.com/stevearc/aerial.nvim), providing full hierarchical symbol navigation:
+`Program` ➔ `Module` ➔ `Derived Type` ➔ `Interface` ➔ `Subroutine` / `Function`.
+
+#### Keyboard shortcuts (Your current options are visible in `menu`)
 * `fortran_compile`: Compile current buffer. Default is `<leader>cc`
 * `fortran_exe`: Create the executable, without running it. Default in `<leader>ce`
 * `fortran_run`: Compile and run current buffer. Default is `<leader>cr`
 * `fortran_cla`: Command Line Arguments for compile and run current buffer. Default is `<leader>cl`
 * `fortran_dbg`: Debug current buffer. Default is `<leader>cd`
+* `fortran_doc`: Generate FORD/Doxygen docstring. Default is `<leader>dc`
+* `fortran_profile`: Switch build profile. Default is `<leader>pp`
+* `fortran_openmp`: Toggle OpenMP. Default is `<leader>po`
+* `fortran_mpi`: Toggle MPI. Default is `<leader>pm`
 * `fortran_make`: Make if makefile exists. Default is `<leader>mk`
 * `fortran_makeProp`: CLA to make. Default is `<leader>mp`
 * `fortran_genProj`: Creates a gnu style project structure. Default is `<leader>gp`
@@ -259,7 +305,7 @@ You can configure the options to your tastes.
 * `fortran_find_mod`: Find module across project. Default is `<leader>fm`
 
 #### Menu
-GUI menu support is available under the `Fortran` menubar item. It dynamically displays the actual expanded leader shortcuts (e.g. `\cc`, `,cc`, or `<Space>cc`) next to each command and includes menus for Compilation, `fpm`, Project Management, Autotools, and Formatting.
+GUI menu support is available under the `Fortran` menubar item. It dynamically displays the actual expanded leader shortcuts (e.g. `\cc`, `,cc`, or `<Space>cc`) next to each command and includes menus for Compilation, `fpm`, Build Profiles, Documentation, Project Management, and Autotools.
 To enable dynamic dialect naming (e.g. `Fortran 2008`, `Fortran 2018` based on file extension), set:
 ```vim
 let g:fortran_menu_dynamic_dialect = 1
