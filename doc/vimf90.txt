@@ -13,11 +13,13 @@ CONTENTS                                                     *vimf90-contents*
 3. Configuration Options ..................... |vimf90-options|
 4. Commands .................................. |vimf90-commands|
 5. Key Mappings & <Plug> Targets ............. |vimf90-mappings|
-6. Construct Completion ...................... |vimf90-constructs|
-7. Formatting & Linting ...................... |vimf90-formatting|
-8. Asynchronous Build & Execution ............ |vimf90-async|
-9. Language Server (LSP) ..................... |vimf90-lsp|
-10. Change Log ............................... |vimf90-changelog|
+6. Fortran Package Manager (fpm) ............. |vimf90-fpm|
+7. Large Multi-File Projects ................. |vimf90-projects|
+8. Construct Completion ...................... |vimf90-constructs|
+9. Formatting & Linting ...................... |vimf90-formatting|
+10. Asynchronous Build Engine ................ |vimf90-async|
+11. Language Server (LSP) .................... |vimf90-lsp|
+12. Change Log ............................... |vimf90-changelog|
 
 ==============================================================================
 1. INTRODUCTION                                                *vimf90-intro*
@@ -25,6 +27,9 @@ CONTENTS                                                     *vimf90-contents*
 |vimf90| turns Vim / Neovim into a modern, responsive IDE for Fortran 90+.
 
 Key Features:
+  * First-class Fortran Package Manager (|fpm|) integration (`build`, `run`, `test`, `new`).
+  * Intelligent multi-file project management: root detection (`fpm`, `CMake`, `Meson`, `Make`),
+    automatic module search path (`-I`, `-J`) resolution, and project-wide Universal Ctags.
   * Smart Fortran construct completion (`program`, `module`, `subroutine`,
     `function`, `if-then`, `do`, `block`, `type`, `select case`, `interface`, etc.).
   * Non-blocking asynchronous compilation and linking using Vim 8/9 jobs and
@@ -33,7 +38,6 @@ Key Features:
     GNU Fortran (`gfortran`), Intel (`ifort`, `ifx`), NVIDIA (`nvfortran`),
     and LLVM (`flang`).
   * Automated formatting via `fprettify` or built-in whitespace rules.
-  * Built-in interactive project generation and autotools scaffolding.
   * Strict buffer isolation: all mappings and settings are buffer-local (`<buffer>`)
     with full |b:undo_ftplugin| support.
 
@@ -86,7 +90,7 @@ or via pip: >
     Default: 1
 
 *g:fortran_run_terminal*
-    Run executables and debuggers in a bottom terminal split instead of external shell.
+    Run executables, fpm apps, and debuggers in a bottom terminal split instead of external shell.
     Default: 0
 
 *g:fortran_linter*
@@ -114,7 +118,7 @@ or via pip: >
 All commands are buffer-local and available in Fortran buffers:
 
 *:FortranCompile*
-    Compiles current buffer to an object file (`.o`).
+    Compiles current buffer to an object file (`.o`), auto-resolving project include paths.
 
 *:FortranExe*
     Compiles and links current buffer to an executable.
@@ -143,6 +147,33 @@ All commands are buffer-local and available in Fortran buffers:
 *:FortranInstallDeps*
     Installs recommended Python tooling (`fprettify`, `fortls`).
 
+*:FortranFpm* [subcommand]
+    Runs an `fpm` command (with tab-completion for `build`, `run`, `test`, `new`, `clean`, etc.).
+
+*:FortranFpmBuild* [args]
+    Runs `fpm build` asynchronously from the project root.
+
+*:FortranFpmRun* [args]
+    Runs `fpm run` from the project root.
+
+*:FortranFpmTest* [args]
+    Runs `fpm test` from the project root.
+
+*:FortranFpmNew* [name]
+    Initializes a new Fortran Package Manager project.
+
+*:FortranProjectBuild* [args]
+    Automatically builds the project using detected build system (`fpm`, `cmake`, `make`).
+
+*:FortranProjectRoot*
+    Displays the detected project root directory.
+
+*:FortranTags*
+    Generates / updates Universal Ctags across the entire Fortran project.
+
+*:FortranFindModule* [name]
+    Searches the project for the file defining `module <name>` and opens it.
+
 ==============================================================================
 5. KEY MAPPINGS & <PLUG> TARGETS                            *vimf90-mappings*
 
@@ -158,16 +189,46 @@ Default shortcuts (using `<Leader>` or `g:fortran_leader`):
   `<leader>mk`     <Plug>(vimf90-make)               Run Makefile
   `<leader>mp`     <Plug>(vimf90-makeprop)           Set make parameters
   `<leader>gp`     <Plug>(vimf90-makeproj)           Generate project scaffolding
+  `<leader>fb`     <Plug>(vimf90-fpm-build)          fpm build project
+  `<leader>fr`     <Plug>(vimf90-fpm-run)            fpm run project
+  `<leader>ft`     <Plug>(vimf90-fpm-test)           fpm test project
+  `<leader>tg`     <Plug>(vimf90-tags)               Generate project Ctags
+  `<leader>fm`     <Plug>(vimf90-find-module)        Find & jump to module
   `<F3>`           <Plug>(vimf90-construct-complete) Smart construct complete
                    <Plug>(vimf90-format)             Format current buffer
 
-Custom mapping example in your `.vimrc`: >
-    nmap <buffer> <leader>fc <Plug>(vimf90-compile)
-    nmap <buffer> <leader>fr <Plug>(vimf90-run)
-<
+==============================================================================
+6. FORTRAN PACKAGE MANAGER (FPM)                                *vimf90-fpm*
+
+|vimf90| provides first-class support for modern `fpm` (https://fpm.fortran-lang.org/).
+
+When working inside an `fpm` repository (any folder containing `fpm.toml`),
+|vimf90| automatically detects the project root.
+
+  * `<leader>fb` or `:FortranFpmBuild`: Compiles the whole project asynchronously.
+  * `<leader>fr` or `:FortranFpmRun`: Runs the project's executable application.
+  * `<leader>ft` or `:FortranFpmTest`: Runs all unit tests.
+  * `:FortranFpmNew my_lib`: Scaffolds a new standard Fortran library or app.
 
 ==============================================================================
-6. CONSTRUCT COMPLETION                                  *vimf90-constructs*
+7. LARGE MULTI-FILE PROJECTS                               *vimf90-projects*
+
+In 2026, Fortran projects often span hundreds of files across nested folders
+with inter-module dependencies.
+
+|vimf90| handles large projects through:
+  1. Automatic Root Detection: Detects `fpm.toml`, `CMakeLists.txt`, `meson.build`,
+     `Makefile`, or `.git` up the directory tree.
+  2. Automatic Module Resolution: Discovers `.mod` and header directories across
+     `src/`, `include/`, `build/`, `build/gfortran_*` and injects `-I` flags into
+     single-file compile commands automatically.
+  3. Universal Ctags: Run `<leader>tg` or `:FortranTags` to generate tags across all
+     modules, subroutines, types, and interfaces in the repository.
+  4. Module Navigation: Run `<leader>fm` or `:FortranFindModule <name>` to instantly
+     jump to the file defining a module.
+
+==============================================================================
+8. CONSTRUCT COMPLETION                                  *vimf90-constructs*
 
 Pressing `<F3>` (or `g:fortran_completer`) at the end of a construct opening line
 automatically generates the matching `end` statement and positions the cursor inside:
@@ -187,7 +248,7 @@ automatically generates the matching `end` statement and positions the cursor in
                                        end type Particle
 
 ==============================================================================
-7. FORMATTING & LINTING                                  *vimf90-formatting*
+9. FORMATTING & LINTING                                  *vimf90-formatting*
 
 Set `let g:fortran_linter = 2` in `.vimrc` to enable automatic `fprettify`
 formatting whenever you save a Fortran file.
@@ -195,15 +256,15 @@ formatting whenever you save a Fortran file.
 You can also run `:FortranFormat` at any time on demand.
 
 ==============================================================================
-8. ASYNCHRONOUS BUILD & EXECUTION                             *vimf90-async*
+10. ASYNCHRONOUS BUILD ENGINE                                 *vimf90-async*
 
-When `g:fortran_async = 1` (default), running `:FortranCompile` or `:FortranExe`
-spawns background jobs using Vim 8+ `job_start` or Neovim `jobstart`. Output is
-parsed and streamed into the QuickFix window in the background without freezing
-the editor.
+When `g:fortran_async = 1` (default), running `:FortranCompile`, `:FortranExe`, or
+`:FortranFpmBuild` spawns background jobs using Vim 8+ `job_start` or Neovim
+`jobstart`. Output is parsed and streamed into the QuickFix window in the background
+without freezing the editor.
 
 ==============================================================================
-9. LANGUAGE SERVER PROTOCOL (LSP)                               *vimf90-lsp*
+11. LANGUAGE SERVER PROTOCOL (LSP)                              *vimf90-lsp*
 
 For coc.nvim, add the following configuration in your `coc-settings.json` or `.vimrc`: >
     let g:coc_user_config = {
@@ -212,22 +273,22 @@ For coc.nvim, add the following configuration in your `coc-settings.json` or `.v
           \       'command': 'fortls',
           \       'args': ['--lowercase_intrinsics'],
           \       'filetypes': ['fortran'],
-          \       'rootPatterns': ['.fortls', '.git/']
+          \       'rootPatterns': ['fpm.toml', '.fortls', '.git/']
           \     }
           \   }
           \ }
 <
 
 ==============================================================================
-10. CHANGE LOG                                           *vimf90-changelog*
+12. CHANGE LOG                                           *vimf90-changelog*
 
-v0.4.0:
-  * Complete buffer-local architecture (`<buffer>`, `<Plug>` mappings, `b:undo_ftplugin`).
-  * Added non-blocking asynchronous compilation engine for Vim 8/9 and Neovim.
-  * Added multi-compiler errorformat support (`gfortran`, `ifort`, `ifx`, `nvfortran`, `flang`).
-  * Python construct completion overhaul: casing preservation, new constructs (`block`, `interface`, `select type`).
-  * Fixed PEP 668 non-interactive dependency installation.
-  * Unified user commands `:FortranCompile`, `:FortranExe`, `:FortranRun`, etc.
+v0.5.0:
+  * First-class Fortran Package Manager (`fpm`) integration (`build`, `run`, `test`, `new`).
+  * Intelligent multi-file project management (root detection, include path resolution).
+  * Project-wide Universal Ctags generation and module search (`:FortranFindModule`).
+  * Buffer-local `<buffer>` and `<Plug>` mappings architecture with `b:undo_ftplugin`.
+  * Asynchronous build runner for Vim 8/9 & Neovim.
+  * Multi-compiler errorformat support (`gfortran`, `ifort`, `ifx`, `nvfortran`, `flang`).
 
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:

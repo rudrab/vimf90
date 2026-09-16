@@ -32,7 +32,7 @@ endfunction
 " Asynchronous Job Callbacks {{{1
 let s:current_job = v:null
 
-function! s:on_job_out(ctx, lines) abort
+function! makes#on_job_out(ctx, lines) abort
   for l:line in a:lines
     if !empty(l:line)
       call add(a:ctx.output, l:line)
@@ -40,7 +40,7 @@ function! s:on_job_out(ctx, lines) abort
   endfor
 endfunction
 
-function! s:on_job_exit(ctx, status) abort
+function! makes#on_job_exit(ctx, status) abort
   let l:saved_efm = &errorformat
   try
     let &errorformat = a:ctx.efm
@@ -61,7 +61,7 @@ function! s:on_job_exit(ctx, status) abort
     botright cwindow
   endif
 
-  if !empty(a:ctx.on_finish)
+  if !empty(get(a:ctx, 'on_finish', v:null))
     call call(a:ctx.on_finish, [l:success])
   endif
 endfunction
@@ -88,9 +88,9 @@ function! s:run_async_job(cmd, opts) abort
   " Neovim async execution
   if has('nvim')
     let l:callbacks = {
-          \ 'on_stdout': {j, d, e -> s:on_job_out(l:context, d)},
-          \ 'on_stderr': {j, d, e -> s:on_job_out(l:context, d)},
-          \ 'on_exit':   {j, s, e -> s:on_job_exit(l:context, s)},
+          \ 'on_stdout': {j, d, e -> makes#on_job_out(l:context, d)},
+          \ 'on_stderr': {j, d, e -> makes#on_job_out(l:context, d)},
+          \ 'on_exit':   {j, s, e -> makes#on_job_exit(l:context, s)},
           \ }
     let s:current_job = jobstart(a:cmd, l:callbacks)
     return 1
@@ -98,9 +98,9 @@ function! s:run_async_job(cmd, opts) abort
   " Vim 8/9 async execution
   elseif has('job') && has('channel')
     let l:callbacks = {
-          \ 'out_cb':   {c, msg -> s:on_job_out(l:context, [msg])},
-          \ 'err_cb':   {c, msg -> s:on_job_out(l:context, [msg])},
-          \ 'exit_cb':  {j, status -> s:on_job_exit(l:context, status)},
+          \ 'out_cb':   {c, msg -> makes#on_job_out(l:context, [msg])},
+          \ 'err_cb':   {c, msg -> makes#on_job_out(l:context, [msg])},
+          \ 'exit_cb':  {j, status -> makes#on_job_exit(l:context, status)},
           \ 'mode':     'nl',
           \ }
     let s:current_job = job_start(a:cmd, l:callbacks)
@@ -119,6 +119,12 @@ function! makes#Fcompile(...) abort
   let l:fcflags  = makes#get_opt('fortran_fcflags', '-Wall -O0 -c')
   let l:objext   = makes#get_opt('fortran_objExt', '.o')
   let l:is_async = a:0 > 0 ? a:1 : makes#get_opt('fortran_async', 1)
+
+  " Automatically append multi-file project include directories
+  let l:proj_inc = project#get_include_flags()
+  if !empty(l:proj_inc)
+    let l:fcflags .= ' ' . l:proj_inc
+  endif
 
   let l:sou = expand('%:p')
   if empty(l:sou)
@@ -187,6 +193,12 @@ function! makes#Fexe(...) abort
   let l:exeext   = makes#get_opt('fortran_exeExt', '')
   let l:is_async = a:0 > 0 ? a:1 : makes#get_opt('fortran_async', 1)
   let l:on_finish = a:0 > 1 ? a:2 : v:null
+
+  " Automatically append multi-file project include directories
+  let l:proj_inc = project#get_include_flags()
+  if !empty(l:proj_inc)
+    let l:flflags .= ' ' . l:proj_inc
+  endif
 
   let l:sou = expand('%:p')
   if empty(l:sou)

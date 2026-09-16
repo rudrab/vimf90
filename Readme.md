@@ -214,13 +214,35 @@ where
 
 For more, use dedicated linting packages like `fortls` or [ALE](https://github.com/w0rp/ale).
 
+### Fortran Package Manager (fpm) Support
+
+`vimf90` includes first-class support for modern [fpm](https://fpm.fortran-lang.org/):
+
+* `<leader>fb` or `:FortranFpmBuild [args]`: Compile the whole fpm project asynchronously.
+* `<leader>fr` or `:FortranFpmRun [args]`: Run the fpm application.
+* `<leader>ft` or `:FortranFpmTest [args]`: Run all unit tests.
+* `:FortranFpmNew <name>`: Create a new standard Fortran project template.
+* `:FortranFpm <command>`: Generic fpm runner with tab-completion.
+
+### Large Multi-File Project Support
+
+For large Fortran projects (spanning hundreds of modules across subdirectories):
+
+1. **Automatic Root Detection**: Finds `fpm.toml`, `CMakeLists.txt`, `meson.build`, `Makefile`, or `.git` up the directory tree.
+2. **Automatic Module (`.mod`) Path Resolution**: Automatically discovers include and `.mod` directories in `src/`, `include/`, `build/`, `build/gfortran_*` and injects `-I` flags into compilation.
+3. **Project-Wide Universal Ctags**: Run `<leader>tg` or `:FortranTags` to generate tags across all modules, subroutines, and types.
+4. **Module Navigation**: Run `<leader>fm` or `:FortranFindModule <name>` to jump to the file defining any module across the project.
+5. **Universal Project Build**: `:FortranProjectBuild` automatically builds using the detected build tool (`fpm`, `CMake`, `Make`).
+
 ### Compile and Autotool Support
 Some build and [GNU autotool](https://www.gnu.org/software/automake/) features are added. 
 You can configure the options to your tastes.
 ##### Available compilation options
 ###### variables
-* `fortran_compiler`: Set fortran compiler. Default is `gfortran`
-* `fortran_exeExt`: Executable Extension. Default is `''`. So, the executable of `foo.f90` is `foo`
+* `fortran_compiler`: Set fortran compiler. Default is `gfortran` (supports `ifx`, `ifort`, `nvfortran`, `flang`)
+* `fortran_async`: Enable background non-blocking compilation for Vim 8+ and Neovim. Default is `1`.
+* `fortran_run_terminal`: Run apps/debuggers in a bottom terminal split. Default is `0`.
+* `fortran_exeExt`: Executable Extension. Default is `''`.
 * `fortran_fcflags`: Compiler options. Default is `-Wall  -O0 -c `
 * `fortran_flflags`: Compiler options. Default is `-Wall  -O0 `
 ###### Keyboard shortcuts (Your current options are visible in `menu`)
@@ -230,16 +252,17 @@ You can configure the options to your tastes.
 * `fortran_cla`: Command Line Arguments for compile and run current buffer. Default is `<leader>cl`
 * `fortran_dbg`: Debug current buffer. Default is `<leader>cd`
 * `fortran_make`: Make if makefile exists. Default is `<leader>mk`
-* `fortran_makeProp`: CLA to  make. Default is `<leader>mp`
+* `fortran_makeProp`: CLA to make. Default is `<leader>mp`
 * `fortran_genProj`: Creates a gnu style project structure. Default is `<leader>gp`
+* `fortran_fpm_build`: fpm build. Default is `<leader>fb`
+* `fortran_fpm_run`: fpm run. Default is `<leader>fr`
+* `fortran_fpm_test`: fpm test. Default is `<leader>ft`
+* `fortran_tags`: Generate project Ctags. Default is `<leader>tg`
+* `fortran_find_mod`: Find module across project. Default is `<leader>fm`
 
 #### Menu
-Menu is added for `gui`-help. it helps building project using 
-gnu-`autotool`. Every fortran file will open with `fortran90` element 
-in the menubar.
-it currently has the option of compile(`make`, `make clean`, `build current 
-file`), `automake`( a rudimentary configure.ac and makefile.am file 
-generator) and programing blocks (as given in [Subprograms](#vimf90-subs)).
+Menu is added for `gui`-help. Every fortran file will open with `fortran90` element in the menubar.
+It provides options for compile (`make`, build current file, `fpm`), autotools, and programming blocks.
 
 
 ### Language Server Protocol 
