@@ -124,17 +124,21 @@ All mappings are buffer-local and respect `g:fortran_leader` (defaults to `<Lead
   * `:FortranReplRestart`: Restart the active REPL session.
   * `:FortranScratch [program|matrix|openmp|module|test]`: Open ephemeral scientific scratchpad.
   * `:FortranScratchRun`: Compile, execute, and display output of the scratchpad buffer.
-* **Fortran Package Manager (`fpm`)**:
+* **Fortran Package Manager (`fpm`) & LSP Synchronization**:
   * `:FortranFpm [subcmd]` / `:FortranFpmBuild` / `:FortranFpmRun [target]` / `:FortranFpmTest [target]`
   * `:FortranFpmTestCurrent`: Run only the unit test in the active buffer.
   * `:FortranFpmAdd <dependency>`: Add standard dependency (`stdlib`, `test-drive`, `lapack`, `toml-f`) to `fpm.toml`.
-  * `:FortranFpmNew <name>`: Scaffold a new standard Fortran package.
+  * `:FortranFpmNew <name>`: Scaffold a new standard Fortran package and initialize `.fortls`.
+  * `:FortranFortlsConfig`: Synchronize `.fortls` LSP config directly from fpm layout and dependencies (isolating `fortls` from compiler hash churn in `build/`).
 * **FORD Documentation**:
   * `:FortranDoc [ford|doxygen]`: Generate documentation header for subroutine, function, module, type, or interface.
   * `:FordBuild`: Build project FORD documentation asynchronously.
   * `:FordPreview`: Build & open project documentation in default web browser.
-* **Project Navigation**:
+* **Project Navigation & Delegation**:
   * `:FortranProjectBuild` / `:FortranProjectRoot` / `:FortranTags` / `:FortranFindModule <name>`
+  * Extract exact `-I` & `-J` module paths automatically from `build/compile_commands.json`.
+  * Custom root delegation: `b:fortran_project_root`, `g:fortran_project_root`, `g:Fortran_root_provider`.
+  * External build runner delegation: `g:Fortran_build_provider` (for `vim-dispatch` or `asyncrun.vim`).
 * **Compiler & HPC Profiles**:
   * `:FortranCompile` / `:FortranExe` / `:FortranRun` / `:FortranArgs` / `:FortranDebug`
   * `:FortranProfile [debug|release|fast|sanitize]`
@@ -146,7 +150,7 @@ All mappings are buffer-local and respect `g:fortran_leader` (defaults to `<Lead
 
 ---
 
-## ⛭ Configuration
+## ⛭ Configuration & Delegation Hooks
 
 Add optional settings to `.vimrc` or `init.lua`:
 
@@ -169,6 +173,12 @@ let g:fortran_format_on_save = 0
 " Default docstring style ('ford' or 'doxygen')
 let g:fortran_doc_style = 'ford'
 
+" Pluggable root provider (e.g. integrate with project.nvim / vim-rooter)
+" let g:Fortran_root_provider = {-> FindProjectRoot()}
+
+" Pluggable build provider (e.g. delegate builds to asyncrun or vim-dispatch)
+" let g:Fortran_build_provider = {opts -> DispatchBuild(opts)}
+
 " Statusline helper: returns e.g. '[gfortran:Debug:OMP:MPI]'
 " statusline=%<%f\ %h%m%r%=%{profiles#status()}\ %-14.(%l,%c%V%)\ %P
 ```
@@ -176,6 +186,8 @@ let g:fortran_doc_style = 'ford'
 ---
 
 ## ⟠ Language Server Protocol (`fortls`) Setup
+
+`vimf90` automatically generates and maintains a lean, optimized `.fortls` file in your `fpm` project root. It explicitly enumerates all project source directories and dependencies (`build/dependencies/*/src`) while completely excluding `build/` and `.git/`. This eliminates module definition duplication and keeps `fortls` blazing fast.
 
 For `coc.nvim`, add to `coc-settings.json`:
 ```json
@@ -185,7 +197,7 @@ For `coc.nvim`, add to `coc-settings.json`:
       "command": "fortls",
       "args": ["--lowercase_intrinsics"],
       "filetypes": ["fortran"],
-      "rootPatterns": ["fpm.toml", ".fortls", ".git/"]
+      "rootPatterns": [".fortls", "fpm.toml", ".git/"]
     }
   }
 }
@@ -195,7 +207,7 @@ For Neovim native LSP (`nvim-lspconfig`):
 ```lua
 require('lspconfig').fortls.setup{
   cmd = { "fortls", "--lowercase_intrinsics" },
-  root_dir = require('lspconfig.util').root_pattern("fpm.toml", ".fortls", ".git")
+  root_dir = require('lspconfig.util').root_pattern(".fortls", "fpm.toml", ".git")
 }
 ```
 

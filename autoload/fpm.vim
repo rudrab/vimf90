@@ -132,11 +132,16 @@ function! fpm#execute(subcmd, args, ...) abort
 
     if l:is_async && (has('job') || has('nvim'))
       echon 'Running fpm ' . a:subcmd . ' in ' . fnamemodify(l:root, ':t') . ' (async)...'
+      let l:On_finish = v:null
+      if a:subcmd ==# 'build'
+        let l:On_finish = {success -> success ? fortls#generate(l:root) : 0}
+      endif
       let l:opts = {
             \ 'title': 'fpm ' . a:subcmd . ' (' . fnamemodify(l:root, ':t') . ')',
             \ 'success_msg': 'fpm ' . a:subcmd . ' completed successfully.',
             \ 'fail_msg': 'fpm ' . a:subcmd . ' failed.',
             \ 'efm': l:efm,
+            \ 'on_finish': l:On_finish,
             \ }
       return s:run_async_in_dir(l:cmd_list, l:root, l:opts)
     else
@@ -152,6 +157,9 @@ function! fpm#execute(subcmd, args, ...) abort
         redraw!
         if v:shell_error == 0 && !s:qf_has_errors()
           echomsg 'fpm ' . a:subcmd . ' completed successfully.'
+          if a:subcmd ==# 'build'
+            call fortls#generate(l:root)
+          endif
           return 1
         else
           echohl ErrorMsg | echo 'fpm ' . a:subcmd . ' failed.' | echohl None
@@ -175,6 +183,7 @@ function! s:run_async_in_dir(cmd_list, dir, opts) abort
   let l:success_msg = get(a:opts, 'success_msg', 'Finished.')
   let l:fail_msg    = get(a:opts, 'fail_msg', 'Failed.')
   let l:efm         = get(a:opts, 'efm', '')
+  let l:On_finish   = get(a:opts, 'on_finish', v:null)
 
   call setqflist([], 'r', {'title': l:title, 'items': []})
 
@@ -185,6 +194,7 @@ function! s:run_async_in_dir(cmd_list, dir, opts) abort
         \ 'success_msg': l:success_msg,
         \ 'fail_msg': l:fail_msg,
         \ 'efm': l:efm,
+        \ 'on_finish': l:On_finish,
         \ }
 
   if has('nvim')
@@ -308,6 +318,7 @@ function! fpm#new(name) abort
 
   execute '!fpm new ' . fnameescape(l:pname)
   if isdirectory(l:pname)
+    call fortls#generate(fnamemodify(l:pname, ':p'))
     let l:main_file = filereadable(l:pname . '/app/main.f90') ? l:pname . '/app/main.f90' : l:pname . '/src/' . l:pname . '.f90'
     execute 'edit ' . fnameescape(l:main_file)
     echomsg 'New fpm project "' . l:pname . '" initialized.'

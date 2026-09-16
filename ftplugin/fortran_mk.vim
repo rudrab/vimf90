@@ -139,10 +139,11 @@ command! -buffer -bar -nargs=?                                              Fort
 command! -buffer -bar -nargs=1 -complete=customlist,fpm#complete_known_deps FortranFpmAdd         call fpm#add_dependency(<q-args>)
 
 " User commands - Multi-file Project Tools
-command! -buffer -bar -nargs=* FortranProjectBuild call project#build(<q-args>)
-command! -buffer -bar          FortranProjectRoot  echo project#find_root()
-command! -buffer -bar          FortranTags         call project#generate_tags()
-command! -buffer -bar -nargs=? FortranFindModule   call project#find_module(<q-args>)
+command! -buffer -bar -nargs=* FortranProjectBuild  call project#build(<q-args>)
+command! -buffer -bar          FortranProjectRoot   echo project#find_root()
+command! -buffer -bar          FortranTags          call project#generate_tags()
+command! -buffer -bar -nargs=? FortranFindModule    call project#find_module(<q-args>)
+command! -buffer -bar          FortranFortlsConfig  call fortls#generate()
 
 " User commands - Interactive REPL & Scratchpad
 command! -buffer -bar -nargs=?                                                  FortranReplOpen          call repl#open(<q-args>)
@@ -194,6 +195,7 @@ let s:cmds = [
       \ 'FortranFpm', 'FortranFpmBuild', 'FortranFpmRun', 'FortranFpmTest',
       \ 'FortranFpmTestCurrent', 'FortranFpmNew', 'FortranFpmAdd',
       \ 'FortranProjectBuild', 'FortranProjectRoot', 'FortranTags', 'FortranFindModule',
+      \ 'FortranFortlsConfig',
       \ 'FortranReplOpen', 'FortranReplToggle', 'FortranReplSend',
       \ 'FortranReplSendSubprogram', 'FortranReplSendBuffer', 'FortranReplRestart',
       \ 'FortranScratch', 'FortranScratchRun'

@@ -202,6 +202,11 @@ All commands are buffer-local and available in Fortran buffers:
 *:FortranProjectRoot*
     Displays the detected project root directory.
 
+*:FortranFortlsConfig*
+    Generates or synchronizes `.fortls` LSP configuration derived directly from
+    `fpm.toml`, source directories, and `build/dependencies/` without scanning
+    hash-churned compiler artifact directories.
+
 *:FortranTags*
     Generates / updates Universal Ctags across the entire Fortran project.
 
@@ -283,20 +288,24 @@ Default shortcuts (using `<Leader>` or `g:fortran_leader`):
      displayed side-by-side in a dedicated scratch output window.
 
 ==============================================================================
-7. FORTRAN PACKAGE MANAGER (FPM)                                *vimf90-fpm*
+7. FORTRAN PACKAGE MANAGER (FPM) & LSP SYNC                     *vimf90-fpm*
 
 |vimf90| provides first-class support for modern `fpm` (https://fpm.fortran-lang.org/).
 
 When working inside an `fpm` repository (any folder containing `fpm.toml`),
 |vimf90| automatically detects the project root and synchronizes active profiles.
 
-  * `<leader>fb` or `:FortranFpmBuild`: Compiles the whole project asynchronously.
+  * `<leader>fb` or `:FortranFpmBuild`: Compiles the whole project asynchronously and
+    automatically regenerates `.fortls` if dependencies or module layouts changed.
   * `<leader>fr` or `:FortranFpmRun`: Runs the project's executable application.
   * `<leader>ft` or `:FortranFpmTest`: Runs all unit tests.
-  * `:FortranFpmNew my_lib`: Scaffolds a new standard Fortran library or app.
+  * `<leader>tc` or `:FortranFpmTestCurrent`: Runs only the test in the active buffer.
+  * `:FortranFpmAdd <dep>`: Adds standard dependencies (`stdlib`, `test-drive`, `lapack`).
+  * `:FortranFpmNew <name>`: Scaffolds a new standard Fortran package and initializes `.fortls`.
+  * `:FortranFortlsConfig`: Manually generates or updates the `.fortls` LSP configuration.
 
 ==============================================================================
-7. LARGE MULTI-FILE PROJECTS                               *vimf90-projects*
+8. LARGE MULTI-FILE PROJECTS & DELEGATION HOOKS             *vimf90-projects*
 
 In 2026, Fortran projects often span hundreds of files across nested folders
 with inter-module dependencies.
@@ -304,12 +313,17 @@ with inter-module dependencies.
 |vimf90| handles large projects through:
   1. Automatic Root Detection: Detects `fpm.toml`, `CMakeLists.txt`, `Makefile`,
      or `.git` up the directory tree.
-  2. Automatic Module Resolution: Discovers `.mod` and header directories across
-     `src/`, `include/`, `build/`, `build/gfortran_*` and injects `-I` flags into
-     single-file compile commands automatically.
-  3. Universal Ctags: Run `<leader>tg` or `:FortranTags` to generate tags across all
+  2. Authoritative Module & Include Path Discovery: Automatically extracts exact
+     `-I` and `-J` module paths directly from `build/compile_commands.json` (falling
+     back to heuristic scanning for pre-built states).
+  3. External Root Provider Hooks:
+     * `b:fortran_project_root` / `g:fortran_project_root`: Override root path directly.
+     * `g:Fortran_root_provider`: Funcref returning root path (e.g. from `project.nvim` or `vim-rooter`).
+  4. External Build Runner Delegation:
+     * `g:Fortran_build_provider`: Funcref called before internal runner (e.g. for `vim-dispatch` or `asyncrun.vim`).
+  5. Universal Ctags: Run `<leader>tg` or `:FortranTags` to generate tags across all
      modules, subroutines, types, and interfaces in the repository.
-  4. Module Navigation: Run `<leader>fm` or `:FortranFindModule <name>` to instantly
+  6. Module Navigation: Run `<leader>fm` or `:FortranFindModule <name>` to instantly
      jump to the file defining a module.
 
 ==============================================================================
