@@ -72,6 +72,15 @@ function! fpm#list_app_targets() abort
   endfor
   return sort(l:targets)
 endfunction
+" QuickFix error validation helper {{{1
+function! s:qf_has_errors() abort
+  for l:item in getqflist()
+    if l:item.valid && (l:item.type ==# 'E' || l:item.type ==# 'e' || empty(l:item.type))
+      return 1
+    endif
+  endfor
+  return 0
+endfunction
 "}}}1
 
 " Run fpm command asynchronously or synchronously {{{1
@@ -138,13 +147,14 @@ function! fpm#execute(subcmd, args, ...) abort
       try
         let &l:makeprg = 'fpm'
         let &l:errorformat = l:efm
-        execute 'silent make! ' . a:subcmd . ' ' . a:args
+        let l:full_args = join(l:cmd_list[1:], ' ')
+        execute 'silent make! ' . l:full_args
         redraw!
-        if v:shell_error == 0
+        if v:shell_error == 0 && !s:qf_has_errors()
           echomsg 'fpm ' . a:subcmd . ' completed successfully.'
           return 1
         else
-          echohl ErrorMsg | echo 'fpm ' . a:subcmd . ' failed with code ' . v:shell_error | echohl None
+          echohl ErrorMsg | echo 'fpm ' . a:subcmd . ' failed.' | echohl None
           botright cwindow
           return 0
         endif
@@ -170,6 +180,7 @@ function! s:run_async_in_dir(cmd_list, dir, opts) abort
 
   let l:context = {
         \ 'output': [],
+        \ 'partial': '',
         \ 'title': l:title,
         \ 'success_msg': l:success_msg,
         \ 'fail_msg': l:fail_msg,
@@ -191,6 +202,7 @@ function! s:run_async_in_dir(cmd_list, dir, opts) abort
           \ 'out_cb':   {c, msg -> makes#on_job_out(l:context, [msg])},
           \ 'err_cb':   {c, msg -> makes#on_job_out(l:context, [msg])},
           \ 'exit_cb':  {j, status -> makes#on_job_exit(l:context, status)},
+          \ 'close_cb': {c -> makes#on_job_close(l:context)},
           \ 'mode':     'nl',
           \ }
     call job_start(a:cmd_list, l:callbacks)

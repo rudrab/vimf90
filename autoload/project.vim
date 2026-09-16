@@ -22,7 +22,12 @@ function! project#find_root(...) abort
       let l:found = finddir(l:indicator, l:start_dir . ';')
     endif
     if !empty(l:found)
-      return fnamemodify(l:found, ':p:h')
+      let l:full_path = fnamemodify(l:found, ':p')
+      if isdirectory(l:found) || l:found =~# '\.git$'
+        return fnamemodify(l:full_path, ':h:h')
+      else
+        return fnamemodify(l:full_path, ':h')
+      endif
     endif
   endfor
 
@@ -48,9 +53,9 @@ endfunction
 "}}}1
 
 " Discover module (.mod) and include directories in the project {{{1
-function! project#get_include_flags(...) abort
+function! project#get_include_dirs(...) abort
   let l:root = a:0 > 0 ? a:1 : project#find_root()
-  let l:flags = []
+  let l:dirs = []
 
   let l:candidate_dirs = [
         \ l:root,
@@ -70,11 +75,16 @@ function! project#get_include_flags(...) abort
 
   for l:dir in l:candidate_dirs
     if isdirectory(l:dir)
-      call add(l:flags, '-I' . fnameescape(l:dir))
+      call add(l:dirs, l:dir)
     endif
   endfor
 
-  return join(l:flags, ' ')
+  return l:dirs
+endfunction
+
+function! project#get_include_flags(...) abort
+  let l:dirs = project#get_include_dirs(a:0 > 0 ? a:1 : project#find_root())
+  return join(map(l:dirs, '"-I" . fnameescape(v:val)'), ' ')
 endfunction
 "}}}1
 
@@ -88,9 +98,17 @@ function! project#build(...) abort
     return fpm#build(l:args)
   elseif l:type ==# 'cmake'
     let l:build_dir = isdirectory(l:root . '/build') ? 'build' : '.'
-    let l:cmd = 'cmake --build ' . l:build_dir . ' ' . l:args
+    let l:cmd = 'cmake --build ' . fnameescape(l:root . '/' . l:build_dir) . (!empty(l:args) ? (' ' . l:args) : '')
     echomsg 'Building CMake project in ' . l:root . '...'
-    execute 'silent make! -C ' . fnameescape(l:root . '/' . l:build_dir)
+    let l:makeprg_saved = &l:makeprg
+    try
+      let &l:makeprg = l:cmd
+      execute 'silent make!'
+      redraw!
+      botright cwindow
+    finally
+      let &l:makeprg = l:makeprg_saved
+    endtry
   elseif l:type ==# 'make'
     let l:orig_dir = getcwd()
     try
@@ -137,12 +155,12 @@ function! project#find_module(name) abort
   endif
 
   let l:root = project#find_root()
-  let l:pattern = '\c^\s*module\s\+' . l:mod_name . '\b'
+  let l:pattern = '\c^\s*module\s\+' . l:mod_name . '\>'
 
   " Search for files in project
   let l:files = globpath(l:root, '**/*.{f90,f95,f03,f08,F90,F95,f,F}', 0, 1)
   for l:file in l:files
-    for l:line in readfile(l:file, '', 100)
+    for l:line in readfile(l:file)
       if l:line =~? l:pattern
         execute 'edit ' . fnameescape(l:file)
         call search(l:pattern, 'w')

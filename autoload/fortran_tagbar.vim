@@ -8,7 +8,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! tagbar#setup() abort
+function! fortran_tagbar#setup() abort
   if !exists('g:tagbar_type_fortran')
     let g:tagbar_type_fortran = {
           \ 'ctagstype': 'fortran',

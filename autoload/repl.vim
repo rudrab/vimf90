@@ -30,13 +30,17 @@ function! repl#get_bufnr() abort
 endfunction
 
 function! s:on_repl_exit_nvim(job_id, data, event) abort
-  let s:repl_job = -1
-  let s:repl_bufnr = -1
+  if s:repl_job == a:job_id
+    let s:repl_job = -1
+    let s:repl_bufnr = -1
+  endif
 endfunction
 
 function! s:on_repl_exit_vim(job, status) abort
-  let s:repl_job = -1
-  let s:repl_bufnr = -1
+  if s:repl_bufnr > 0 && (!bufexists(s:repl_bufnr) || term_getstatus(s:repl_bufnr) =~# 'finished')
+    let s:repl_job = -1
+    let s:repl_bufnr = -1
+  endif
 endfunction
 
 function! repl#open(...) abort
@@ -130,12 +134,16 @@ endfunction
 
 function! repl#restart() abort
   if repl#is_active()
-    if has('nvim') && s:repl_job > 0
-      call jobstop(s:repl_job)
-    elseif exists('*term_sendkeys')
+    let l:old_job = s:repl_job
+    let s:repl_bufnr = -1
+    let s:repl_job = -1
+    if has('nvim') && l:old_job > 0
+      call jobstop(l:old_job)
+    elseif exists('*term_sendkeys') && s:repl_bufnr > 0
       call term_sendkeys(s:repl_bufnr, "exit\<CR>")
     endif
     call repl#close()
+  else
     let s:repl_bufnr = -1
     let s:repl_job = -1
   endif
@@ -188,13 +196,19 @@ function! repl#send_line(...) abort
   echomsg 'vimf90: Sent ' . len(l:lines) . ' line(s) to REPL.'
 endfunction
 
-function! repl#send_visual() range abort
-  let l:lines = getline(a:firstline, a:lastline)
+function! repl#send_range(first, last) abort
+  let l:lines = getline(a:first, a:last)
   if empty(l:lines)
     return
   endif
   call repl#send(l:lines)
-  echomsg 'vimf90: Sent ' . len(l:lines) . ' visual line(s) to REPL.'
+  echomsg 'vimf90: Sent ' . len(l:lines) . ' line(s) to REPL.'
+endfunction
+
+function! repl#send_visual(...) range abort
+  let l:first = a:0 > 0 ? a:1 : a:firstline
+  let l:last  = a:0 > 1 ? a:2 : a:lastline
+  call repl#send_range(l:first, l:last)
 endfunction
 
 function! repl#send_subprogram() abort
