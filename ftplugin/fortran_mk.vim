@@ -1,57 +1,64 @@
 "########################################################################
-" Filename:      fortran_make.vim
-" Copyright: Copyright (C) 2019 Rudra Banerjee
-" 
-"    This program is free software: you can redistribute it and/or modify
-"    it under the terms of the GNU General Public License as published by
-"    the Free Software Foundation, either version 3 of the License, or
-"    (at your option) any later version.
-"
-"    This program is distributed in the hope that it will be useful,
-"    but WITHOUT ANY WARRANTY; without even the implied warranty of
-"    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-"    GNU General Public License for more details.
-" Date:          03/07/2015
-" Description:   Make utility for fortran. 
-"                Largely adapted from c.vim
+" Filename:      ftplugin/fortran_mk.vim
+" Copyright:     Copyright (C) 2019-2026 Rudra Banerjee
+" License:       GPLv3
+" Description:   Fortran build/run commands and plug mappings
 "########################################################################
-" let s:Compiler   = get(g:, "fortran_compiler", "gfortran")
-" let s:ObjExt     = '.o'
-" let s:ModExt     = '.mod'
-" let b:ExeExt     = get(g:,'fortran_exeExt','')
-" let s:VimComp    = 'gfortran'
-" let s:FCFlags    = get(g:, 'fcflags','-Wall -O0 -c')
-" let s:FLFlags    = get(g:,'flflags','-Wall -O0')
-" let s:OutputGvim = 'vim'
 
-function! Compile()
-  :call makes#Fcompile()
+" Plug mappings
+nnoremap <buffer> <silent> <Plug>(vimf90-compile)   :call makes#Fcompile()<CR>
+nnoremap <buffer> <silent> <Plug>(vimf90-exe)       :call makes#Fexe()<CR>
+nnoremap <buffer> <silent> <Plug>(vimf90-run)       :call makes#Frun()<CR>
+nnoremap <buffer> <silent> <Plug>(vimf90-cla)       :call makes#Cla()<CR>
+nnoremap <buffer> <silent> <Plug>(vimf90-dbg)       :call makes#Fdbg()<CR>
+nnoremap <buffer> <silent> <Plug>(vimf90-make)      :call makes#MakeRun()<CR>
+nnoremap <buffer> <silent> <Plug>(vimf90-makeprop)  :call makes#MakeCla()<CR>
+nnoremap <buffer> <silent> <Plug>(vimf90-makeproj)  :call makes#MakeProj()<CR>
+
+" User commands
+command! -buffer -bar FortranCompile  call makes#Fcompile()
+command! -buffer -bar FortranExe      call makes#Fexe()
+command! -buffer -bar FortranRun      call makes#Frun()
+command! -buffer -bar FortranArgs     call makes#Cla()
+command! -buffer -bar FortranDebug    call makes#Fdbg()
+command! -buffer -bar FortranMake     call makes#MakeRun()
+command! -buffer -bar FortranMakeArgs call makes#MakeCla()
+command! -buffer -bar FortranMakeProj call makes#MakeProj()
+
+" Legacy helper function wrappers for backwards compatibility
+function! Compile() abort
+  return makes#Fcompile()
 endfunction
 
-function! Gexe()
-  :call makes#Fexe()
+function! Gexe() abort
+  return makes#Fexe()
 endfunction
 
-function! Run()
-  :call makes#Frun()
+function! Run() abort
+  return makes#Frun()
 endfunction
 
-function! CLArgs()
-  :call makes#Cla()
+function! CLArgs() abort
+  return makes#Cla()
 endfunction
 
-function! Debug()
-  :call makes#Fdbg()
+function! Debug() abort
+  return makes#Fdbg()
 endfunction
 
-function! Make()
-  :call makes#MakeRun()
+function! Make() abort
+  return makes#MakeRun()
 endfunction
 
-function! MakeProperties()
-  :call makes#MakeCla()
+function! MakeProperties() abort
+  return makes#MakeCla()
 endfunction
 
-function! MakeProject()
-  :call makes#MakeProj()
+function! MakeProject() abort
+  return makes#MakeProj()
 endfunction
+
+" Undo ftplugin
+let s:undo = 'delcommand FortranCompile | delcommand FortranExe | delcommand FortranRun | delcommand FortranArgs | delcommand FortranDebug | delcommand FortranMake | delcommand FortranMakeArgs | delcommand FortranMakeProj'
+let s:undo .= ' | silent! nunmap <buffer> <Plug>(vimf90-compile) | silent! nunmap <buffer> <Plug>(vimf90-exe) | silent! nunmap <buffer> <Plug>(vimf90-run) | silent! nunmap <buffer> <Plug>(vimf90-cla) | silent! nunmap <buffer> <Plug>(vimf90-dbg) | silent! nunmap <buffer> <Plug>(vimf90-make) | silent! nunmap <buffer> <Plug>(vimf90-makeprop) | silent! nunmap <buffer> <Plug>(vimf90-makeproj)'
+let b:undo_ftplugin = (exists('b:undo_ftplugin') ? b:undo_ftplugin . ' | ' : '') . s:undo
