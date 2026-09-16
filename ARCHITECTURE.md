@@ -13,6 +13,7 @@ All future development, AI assistants, and contributors MUST adhere to the follo
 * **Build System**: **`fpm` (Fortran Package Manager)** is the primary project and package management standard for `vimf90`. All new build and scaffolding features must prioritize `fpm`.
 * **Documentation**: **`FORD` (Fortran Documenter)** is the primary documentation engine.
 * **Modern Standards**: Focus on Modern Fortran (Fortran 2008, 2018, 2023) and High-Performance Scientific Computing (HPC, OpenMP, MPI, Coarrays).
+* **Coarrays are Native Language Syntax**: Coarrays are standard ISO Fortran syntax (F2008/F2018/F2023), not an external add-on library. Compiler presets natively include coarray flags (e.g., `-fcoarray=single` for `gfortran`) without requiring a separate "CAF mode" or segregated command namespace.
 
 ### 2. Legacy Methods Frozen
 * **No effort on GNU Autotools**: Autotools scaffolding (`configure.ac`, `Makefile.am`) is deprecated and must not be developed further.

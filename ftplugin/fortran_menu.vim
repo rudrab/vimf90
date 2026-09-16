@@ -77,10 +77,8 @@ if has('gui_running') && has('menu') && g:Fortran_menumode == 1
   let s:c_prof       = s:format_shortcut(get(b:, 'fortran_profile',       '\pp'))
   let s:c_omp        = s:format_shortcut(get(b:, 'fortran_openmp',        '\po'))
   let s:c_mpi        = s:format_shortcut(get(b:, 'fortran_mpi',           '\pm'))
-  let s:c_caf        = s:format_shortcut(get(b:, 'fortran_caf',           '\pc'))
   let s:c_gpu        = s:format_shortcut(get(b:, 'fortran_gpu',           '\pg'))
   let s:c_mpirun     = s:format_shortcut(get(b:, 'fortran_mpirun',        '\pr'))
-  let s:c_cafrun     = s:format_shortcut(get(b:, 'fortran_cafrun',        '\pn'))
   let s:c_repl_tog   = s:format_shortcut(get(b:, 'fortran_repl_toggle',    '\rt'))
   let s:c_repl_snd   = s:format_shortcut(get(b:, 'fortran_repl_send',      '\rs'))
   let s:c_repl_sub   = s:format_shortcut(get(b:, 'fortran_repl_subprog',   '\rm'))
@@ -137,11 +135,9 @@ if has('gui_running') && has('menu') && g:Fortran_menumode == 1
   call s:add_menu_item('&HPC.sep_hpc1', '', '<Nop>')
   call s:add_menu_item('&HPC.Toggle\ &OpenMP', s:c_omp, ':FortranOpenMP<CR>')
   call s:add_menu_item('&HPC.Toggle\ &MPI\ Wrapper', s:c_mpi, ':FortranMPI<CR>')
-  call s:add_menu_item('&HPC.Toggle\ &Coarray\ Fortran\ (CAF)', s:c_caf, ':FortranCAF<CR>')
   call s:add_menu_item('&HPC.Toggle\ &GPU\ Offloading', s:c_gpu, ':FortranGPU<CR>')
   call s:add_menu_item('&HPC.sep_hpc2', '', '<Nop>')
   call s:add_menu_item('&HPC.Run\ &MPI\ Cluster\ Job', s:c_mpirun, ':FortranMPIRun<CR>')
-  call s:add_menu_item('&HPC.Run\ &Coarray\ Job\ (cafrun)', s:c_cafrun, ':FortranCAFRun<CR>')
 
   " Documentation & FORD Submenu
   call s:add_menu_item('&Documentation.Generate\ &FORD\ Docstring', s:c_doc, ':FortranDoc ford<CR>')

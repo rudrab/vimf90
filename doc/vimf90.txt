@@ -18,7 +18,7 @@ CONTENTS                                                     *vimf90-contents*
 8. Large Multi-File Projects ................. |vimf90-projects|
 9. Text Objects & Motions .................... |vimf90-textobj|
 10. FORD & Doxygen Docstring Generator ....... |vimf90-doc|
-11. Supercomputing, Coarrays (CAF) & HPC ..... |vimf90-hpc|
+11. Supercomputing, Accelerators & HPC ....... |vimf90-hpc|
 12. Scientific Debugging & Matrix Inspector .. |vimf90-dap|
 13. Formatting & Linting ..................... |vimf90-formatting|
 14. Tagbar & Symbol Outline .................. |vimf90-tagbar|
@@ -337,32 +337,29 @@ Run `:FordBuild` (`<leader>db`) to build project-wide FORD documentation
 asynchronously, or `:FordPreview` (`<leader>dp`) to open it in your browser.
 
 ==============================================================================
-11. SUPERCOMPUTING, COARRAY FORTRAN (CAF) & HPC               *vimf90-hpc*
+11. SUPERCOMPUTING, ACCELERATORS & HPC                          *vimf90-hpc*
 
 |vimf90| provides first-class support for modern parallel standards and supercomputing:
 
-1. Build Profiles:
-   * `:FortranProfile debug`   -> `-g -O0 -Wall -Wextra -fcheck=all -fbacktrace`
-   * `:FortranProfile release` -> `-O3 -march=native -funroll-loops`
-   * `:FortranProfile fast`    -> `-O3 -ffast-math -march=native`
-   * `:FortranProfile sanitize`-> `-g -O1 -fsanitize=address,undefined`
+1. Build Profiles (with Native ISO Coarray Fortran):
+   * `:FortranProfile debug`   -> `-g -O0 -Wall -Wextra -fcheck=all -fbacktrace -fcoarray=single`
+   * `:FortranProfile release` -> `-O3 -march=native -funroll-loops -fcoarray=single`
+   * `:FortranProfile fast`    -> `-O3 -ffast-math -march=native -fcoarray=single`
+   * `:FortranProfile sanitize`-> `-g -O1 -fsanitize=address,undefined -fcoarray=single`
+   ISO Fortran Coarrays (`[*]`, `sync all`, `this_image()`) compile natively out-of-the-box.
 
 2. OpenMP & MPI:
    * `:FortranOpenMP` (`<leader>po`): Toggles OpenMP multithreading flags.
    * `:FortranMPI` (`<leader>pm`): Toggles MPI compiler wrapper (`mpifort` / `mpiifx`).
    * `:FortranMPIRun [ranks]` (`<leader>pr`): Launches multi-rank MPI cluster job (`mpirun -n <ranks>`).
 
-3. Coarray Fortran (CAF) (ISO Fortran 2008/2018):
-   * `:FortranCAF [single|lib|shared|distributed]` (`<leader>pc`): Toggles Coarray compiler flags.
-   * `:FortranCAFRun [images]` (`<leader>pn`): Launches multi-image Coarray execution (`cafrun -n <images>`).
-
-4. GPU Offloading (OpenACC & OpenMP Target Offload):
+3. GPU Offloading (OpenACC & OpenMP Target Offload):
    * `:FortranGPU [openmp|openacc|off]` (`<leader>pg`): Toggles GPU acceleration flags
      for NVIDIA (`-acc`/`-mp=gpu`), GCC (`-fopenacc`/`-fopenmp -foffload`), and Intel (`-fopenmp-targets=spir64`).
 
 Statusline helper:
 Add `profiles#status()` to your statusline or lualine to display:
-`[gfortran:Debug:OMP:MPI:CAF:GPU]`.
+`[gfortran:Debug:OMP:MPI:GPU]`.
 
 ==============================================================================
 12. SCIENTIFIC DEBUGGING & MATRIX INSPECTOR                    *vimf90-dap*
@@ -439,7 +436,7 @@ When running in GUI mode (gVim) with menu support enabled:
 18. CHANGE LOG                                           *vimf90-changelog*
 
 v0.8.0:
-  * Supercomputing & Modern Standards: Coarray Fortran (`:FortranCAF`, `:FortranCAFRun`),
+  * Supercomputing & Modern Standards: Native ISO Coarray Fortran support in build profiles,
     GPU offloading presets (OpenACC, OpenMP Target), and MPI cluster runners (`:FortranMPIRun`).
   * Scientific Debugging: Multi-Dimensional Array/Matrix Inspector (`:FortranInspectArray`, `<leader>da`),
     breakpoint toggle (`:FortranBreakpointToggle`), Termdebug and `nvim-dap` configurations.
