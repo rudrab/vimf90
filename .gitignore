@@ -1,2 +1,10 @@
 autoload/run_make.vim
 ftplugin/fortran_make.vim
+
+# Generated help tags
+doc/tags
+
+# Fortran build artefacts, should a stray compile land in the tree
+*.o
+*.mod
+*.smod

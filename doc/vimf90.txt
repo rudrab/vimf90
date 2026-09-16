@@ -25,7 +25,8 @@ CONTENTS                                                     *vimf90-contents*
 15. Asynchronous Build Engine ................ |vimf90-async|
 16. Language Server Protocol (LSP) ........... |vimf90-lsp|
 17. GUI Menu ................................. |vimf90-menu|
-18. Change Log ............................... |vimf90-changelog|
+18. Testing .................................. |vimf90-testing|
+19. Change Log ............................... |vimf90-changelog|
 
 ==============================================================================
 1. INTRODUCTION                                                *vimf90-intro*
@@ -33,6 +34,9 @@ CONTENTS                                                     *vimf90-contents*
 |vimf90| turns Vim / Neovim into a modern, responsive IDE for Fortran.
 
 Key Features:
+  * Automatic `fortls` project configuration: generates a correct `.fortls` from
+    your |fpm| layout so the language server indexes your sources and your
+    dependencies, and never the `build/` tree. See |vimf90-lsp|.
   * First-class Fortran Package Manager (|fpm|) integration (`build`, `run`, `test`, `new`).
   * Interactive LFortran REPL session runner and ephemeral scientific scratchpad.
   * Intelligent multi-file project management: root detection (`fpm`, `CMake`, `Makefile`),
@@ -418,6 +422,59 @@ without freezing the editor.
 ==============================================================================
 16. LANGUAGE SERVER PROTOCOL (LSP)                              *vimf90-lsp*
 
+                                                        *vimf90-fortls-config*
+Nothing in the Vim ecosystem understands |fpm| projects. `fortls` has no fpm
+awareness at all: its default `source_dirs` is `./**`, so on an fpm project it
+recurses into `build/` and indexes a copy of your whole source tree for every
+`build/<compiler>_<hash>/` directory fpm has ever produced. One project, six
+profiles, six duplicate definitions of every module. `nvim-lspconfig` does not
+list `fpm.toml` as a root marker either.
+
+|vimf90| closes that gap by generating the manifest for you: >
+
+    {
+      "_generated_by": "vimf90",
+      "source_dirs": ["app", "src", "src/utils", "test",
+                      "build/dependencies/mydep/src"],
+      "excl_paths": ["build", ".git"]
+    }
+<
+Two details make this worth automating rather than writing by hand:
+
+  * `fortls` does NOT recurse into explicitly configured `source_dirs`. A
+    nested `src/utils` is invisible unless it is named, so every directory
+    holding Fortran sources has to be enumerated, and re-enumerated whenever
+    the layout changes.
+  * `excl_paths` is exact string matching, not globbing. The `"build/**"` you
+    would naturally reach for matches no directory at all and silently changes
+    nothing, leaving the full recursive scan in place.
+
+Dependency sources live under `build/`, which is excluded, so they are listed
+explicitly; without that, every module coming from a dependency loses
+completion and go-to-definition. `include_dirs` is deliberately left out: it
+resolves preprocessor `#include` directives only. `fortls` never reads `.mod`
+files, and module symbols come exclusively from parsed source.
+
+Because no `build/<compiler>_<hash>` path is ever written into the manifest,
+fpm's hash churn stops mattering: a new hash directory simply never enters the
+index, and there is nothing to track. Regeneration is driven by source
+directories changing, not by builds.
+
+Regeneration happens on `:FortranFpmBuild`, on writing `fpm.toml`, on
+`:FortranFpmNew`, and on demand via `:FortranFortlsConfig`. The file is
+rewritten only when its contents would actually differ.
+
+A hand-written `.fortls` is never touched: if the file lacks the
+`_generated_by` marker, or cannot be parsed, |vimf90| leaves it alone. Set
+`g:fortran_fortls_autoconfig` to 0 to disable automatic generation entirely;
+`:FortranFortlsConfig` still works on demand.
+
+Point your LSP client at the project with `fpm.toml` FIRST in the root
+patterns: it is present before the first build, whereas `.fortls` only appears
+once |vimf90| has written it. Rooting the server correctly matters as much as
+scoping it, since `nvim-lspconfig`'s defaults for `fortls` are `.fortls` and
+`.git`, and with neither nearby the server can root somewhere very large.
+
 For coc.nvim, add the following configuration in your `coc-settings.json` or `.vimrc`: >
     let g:coc_user_config = {
           \   'languageserver': {
@@ -447,7 +504,28 @@ When running in GUI mode (gVim) with menu support enabled:
 <
 
 ==============================================================================
-18. CHANGE LOG                                           *vimf90-changelog*
+18. TESTING                                                  *vimf90-testing*
+
+The test suite is plain Vimscript built on Vim's own `assert_*` family, with no
+external dependencies: >
+
+    sh test/run.sh                       " everything
+    sh test/run.sh textobj project       " selected files
+    VF90_TEST=Test_name sh test/run.sh   " a single test
+    VIM=nvim sh test/run.sh              " against Neovim
+<
+It exits non-zero on failure, so it drops straight into CI. Tests needing
+`gfortran`, `fpm`, `fortls` or `luac` skip themselves when the tool is absent
+rather than failing.
+
+`test/test_plugin.vim` guards the failure mode where code is never reachable at
+all: an autoload file shadowing another plugin, an autocommand registered where
+it cannot fire, embedded Lua that never parses, `\b` used as a word boundary
+(Vim reads it as a backspace character, not a boundary), or a Funcref assigned
+to a lowercase name (|E704|).
+
+==============================================================================
+19. CHANGE LOG                                           *vimf90-changelog*
 
 v0.8.0:
   * Supercomputing & Modern Standards: Native ISO Coarray Fortran support in build profiles,

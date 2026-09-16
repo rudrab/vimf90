@@ -21,14 +21,16 @@ function! project#find_root(...) abort
       return expand(g:fortran_project_root)
     endif
 
-    for l:provider in ['g:Fortran_root_provider', 'g:fortran_root_provider']
-      if exists(l:provider)
-        let l:provided = call(eval(l:provider), [])
-        if !empty(l:provided)
-          return expand(l:provided)
-        endif
+    " Only the capitalised spelling exists: Vim refuses to assign a Funcref to a
+    " variable whose name starts lowercase (E704), so g:fortran_root_provider
+    " could never have been set in the first place. A string function name works
+    " here too, since call() accepts either.
+    if exists('g:Fortran_root_provider')
+      let l:provided = call(g:Fortran_root_provider, [])
+      if !empty(l:provided)
+        return expand(l:provided)
       endif
-    endfor
+    endif
   endif
 
   let l:start_dir = a:0 > 0 && !empty(a:1) ? a:1 : expand('%:p:h')
@@ -197,15 +199,14 @@ function! project#build(...) abort
   let l:type = project#detect_type(l:root)
   let l:args = a:0 > 0 ? a:1 : ''
 
-  " Allow delegation to external build providers (e.g. vim-dispatch, asyncrun)
-  for l:provider in ['g:Fortran_build_provider', 'g:fortran_build_provider']
-    if exists(l:provider)
-      let l:handled = call(eval(l:provider), [{'root': l:root, 'type': l:type, 'args': l:args}])
-      if l:handled
-        return 1
-      endif
+  " Allow delegation to external build providers (e.g. vim-dispatch, asyncrun).
+  " Capitalised for the same reason as g:Fortran_root_provider: E704.
+  if exists('g:Fortran_build_provider')
+    let l:handled = call(g:Fortran_build_provider, [{'root': l:root, 'type': l:type, 'args': l:args}])
+    if l:handled
+      return 1
     endif
-  endfor
+  endif
 
   if l:type ==# 'fpm'
     return fpm#build(l:args)

@@ -96,19 +96,23 @@ function! fortls#generate(...) abort
     endfor
   endfor
 
-  " Scan fpm dependencies in build/dependencies/*/src or include
-  let l:dep_dirs = globpath(l:root . '/build/dependencies', '*', 0, 1)
-  for l:dep in l:dep_dirs
-    if isdirectory(l:dep)
-      let l:dep_name = fnamemodify(l:dep, ':t')
+  " Scan fpm dependencies in build/dependencies/*/src or include. readdir()
+  " again rather than globpath(): the root is a path, not a pattern, and a
+  " project directory containing braces or brackets would otherwise be expanded.
+  let l:dep_root = l:root . '/build/dependencies'
+  if isdirectory(l:dep_root)
+    for l:dep_name in readdir(l:dep_root)
+      if !isdirectory(l:dep_root . '/' . l:dep_name)
+        continue
+      endif
       for l:sub in ['src', 'include', 'inc', 'app']
         let l:rel_dep_sub = 'build/dependencies/' . l:dep_name . '/' . l:sub
         for l:sdir in s:find_source_subdirs(l:root, l:rel_dep_sub)
           let l:all_source_dirs[l:sdir] = 1
         endfor
       endfor
-    endif
-  endfor
+    endfor
+  endif
 
   let l:sorted_source_dirs = sort(keys(l:all_source_dirs))
 

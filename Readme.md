@@ -4,8 +4,34 @@ A modern development environment for scientific and high-performance Fortran (F9
 
 ---
 
+## ⟠ Why vimf90: it teaches your language server about `fpm`
+
+Nothing in the Vim ecosystem understands Fortran Package Manager projects. `fortls` has no `fpm` awareness at all — its default `source_dirs` is `./**`, so on an `fpm` project it recurses straight into `build/` and indexes a copy of your entire source tree for **every** `build/<compiler>_<hash>/` directory `fpm` has ever produced. One project, six profiles, six duplicate definitions of every module. `nvim-lspconfig` does not list `fpm.toml` as a root marker either.
+
+**`vimf90` generates a correct `.fortls` for you**, and keeps it current:
+
+```json
+{
+  "_generated_by": "vimf90",
+  "source_dirs": ["app", "src", "src/utils", "test",
+                  "build/dependencies/mydep/src"],
+  "excl_paths": ["build", ".git"]
+}
+```
+
+Every source directory is enumerated by name, dependency sources stay reachable, and no build directory is ever listed. Measured on a project with six hash directories, the indexed set drops from eleven directories to six, with zero duplicate module symbols.
+
+The detail that makes this worth automating: `fortls` does **not** recurse into explicitly configured `source_dirs`, so a nested `src/utils` is invisible unless it is named — and its `excl_paths` is exact string matching, not globbing, so the `"build/**"` you would naturally write silently matches nothing and changes nothing. Getting this right by hand, and keeping it right as directories come and go, is exactly the kind of job an editor plugin should do for you.
+
+It also means **`fpm`'s hash churn stops mattering**. Because no `build/<compiler>_<hash>` path is ever written into the manifest, a new one appearing changes nothing, and there is nothing to track. Regeneration is driven by source directories changing — on `:FortranFpmBuild`, on writing `fpm.toml`, or on demand with `:FortranFortlsConfig`.
+
+A hand-written `.fortls` is never touched: without the `_generated_by` marker, your file wins.
+
+---
+
 ## ◈ Overview & Key Features
 
+* ⟠ **Automatic `fortls` Project Configuration**: Generates and maintains a correct `.fortls` from your `fpm` layout, so the language server indexes your sources and your dependencies — and never the `build/` tree. See [above](#-why-vimf90-it-teaches-your-language-server-about-fpm).
 * ◈ **Fortran Package Manager (`fpm`)**: Full asynchronous execution for `fpm build`, `fpm run`, `fpm test`, `fpm-test-current`, and `fpm new`.
 * ⚗ **Interactive LFortran REPL**: Integrated REPL workflow (`:FortranReplToggle` / `<leader>rt`) to send lines (`<leader>rs`), visual selections, enclosing subprograms (`<leader>rm`), or whole buffers (`<leader>rb`) directly to [LFortran](https://lfortran.org/).
 * ⧉ **Scientific Scratchpad**: Ephemeral prototyping buffer (`:FortranScratch` / `<leader>so`) with scientific templates (`program`, `matrix`, `openmp`, `module`, `test`) and instant execution (`:FortranScratchRun` / `<leader>sr`).
@@ -187,7 +213,7 @@ let g:fortran_doc_style = 'ford'
 
 ## ⟠ Language Server Protocol (`fortls`) Setup
 
-`vimf90` automatically generates and maintains a lean, optimized `.fortls` file in your `fpm` project root. It explicitly enumerates all project source directories and dependencies (`build/dependencies/*/src`) while completely excluding `build/` and `.git/`. This eliminates module definition duplication and keeps `fortls` blazing fast.
+The manifest is generated for you — see [Why vimf90](#-why-vimf90-it-teaches-your-language-server-about-fpm). All that remains is pointing your LSP client at the project. Put `fpm.toml` **first** in the root patterns: it is present before the first build, whereas `.fortls` only appears once `vimf90` has written it.
 
 For `coc.nvim`, add to `coc-settings.json`:
 ```json
@@ -197,7 +223,7 @@ For `coc.nvim`, add to `coc-settings.json`:
       "command": "fortls",
       "args": ["--lowercase_intrinsics"],
       "filetypes": ["fortran"],
-      "rootPatterns": [".fortls", "fpm.toml", ".git/"]
+      "rootPatterns": ["fpm.toml", ".fortls", ".git/"]
     }
   }
 }
@@ -207,9 +233,43 @@ For Neovim native LSP (`nvim-lspconfig`):
 ```lua
 require('lspconfig').fortls.setup{
   cmd = { "fortls", "--lowercase_intrinsics" },
-  root_dir = require('lspconfig.util').root_pattern(".fortls", "fpm.toml", ".git")
+  root_dir = require('lspconfig.util').root_pattern("fpm.toml", ".fortls", ".git")
 }
 ```
+
+Rooting the server correctly matters as much as scoping it: `nvim-lspconfig`'s default markers for `fortls` are `.fortls` and `.git`, and with neither nearby the server can end up rooted somewhere very large.
+
+| Setting | Default | Effect |
+|---|---|---|
+| `g:fortran_fortls_autoconfig` | `1` | Set to `0` to never write `.fortls` automatically. `:FortranFortlsConfig` still works on demand. |
+
+---
+
+## ⚑ Testing
+
+The suite is plain Vimscript with no external dependencies, built on Vim's own `assert_*` family:
+
+```sh
+sh test/run.sh                       # everything
+sh test/run.sh textobj project       # selected files
+VF90_TEST=Test_name sh test/run.sh   # a single test
+VIM=nvim sh test/run.sh              # against Neovim
+```
+
+It exits non-zero on failure, so it drops straight into CI. Tests that need `gfortran`, `fpm`, `fortls` or `luac` skip themselves when the tool is absent rather than failing.
+
+| File | Covers |
+|---|---|
+| `test_textobj.vim` | construct boundaries, typed function declarations, motions |
+| `test_project.vim` | root detection, include paths, module search, delegation hooks |
+| `test_fortls.vim` | generated manifests, checked against real `fortls` output |
+| `test_makes.vim` | compiling, linking, and how build status is decided |
+| `test_repl.vim` | REPL lifecycle, restart, sending text |
+| `test_fpm.vim` | project discovery, targets, completion, build hooks |
+| `test_doc.vim` | FORD configuration and the preview flow |
+| `test_plugin.vim` | loading, commands, mappings, autocommands, embedded Lua |
+
+`test_plugin.vim` is worth knowing about: it guards against the failure mode where code is never reachable at all — an autoload file shadowing another plugin, an autocommand registered where it cannot fire, embedded Lua that never parses, `\b` used as a word boundary (Vim reads it as a backspace), or a Funcref assigned to a lowercase name (`E704`).
 
 ---
 

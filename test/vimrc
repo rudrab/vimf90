@@ -1,0 +1,24 @@
+" Minimal, isolated environment for the vimf90 test suite.
+" Deliberately does not read the user's configuration: tests must describe the
+" plugin's behaviour, not whatever happens to be in ~/.vimrc.
+
+set nocompatible
+set nomore
+set noswapfile
+set nobackup
+set noundofile
+set viminfo=
+set shortmess+=F
+set belloff=all
+
+" 'ignorecase' is off by default but is worth pinning: several patterns in the
+" plugin are case-insensitive by construction, and a test that only passes
+" because the user happened to set 'ignorecase' would be worthless.
+set noignorecase
+
+let s:here = expand('<sfile>:p:h')
+execute 'set runtimepath^=' . fnameescape(fnamemodify(s:here, ':h'))
+execute 'set runtimepath+=' . fnameescape(s:here)
+
+filetype plugin indent on
+syntax on
