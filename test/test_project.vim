@@ -243,6 +243,16 @@ function! Test_find_module_respects_word_boundary() abort
   call assert_equal(l:before, expand('%:p'), 'solver must not match solver_extended')
 endfunction
 
+" Fixed-form sources carry extensions the free-form glob would miss.
+function! Test_find_module_searches_fixed_form_sources() abort
+  let l:dir = s:project('fpm')
+  call Vf90Write(l:dir . '/src/deep/legacy.for', [
+        \ '      MODULE LEGACY_MOD',
+        \ '      END MODULE LEGACY_MOD'])
+  call project#find_module('legacy_mod')
+  call assert_equal('legacy.for', expand('%:t'), '.for was not searched')
+endfunction
+
 function! Test_find_module_preserves_quickfix() abort
   let l:dir = s:project('fpm')
   call setqflist([], 'r', {'title': 'Fortran Build',

@@ -135,6 +135,23 @@ function! Test_send_subprogram_sends_enclosing_unit() abort
   call assert_match('lines 3-6', l:msg, 'expected the whole function, start to end')
 endfunction
 
+" A fixed-form program unit is bounded by a bare END, so the subprogram send
+" must follow the fixed-form rules rather than looking for END SUBROUTINE.
+function! Test_send_subprogram_handles_fixed_form() abort
+  call s:need_terminal()
+  let l:dir = Vf90Fixture('repl')
+  call Vf90OpenScratch(l:dir . '/legacy.f', [
+        \ '      PROGRAM MAIN',
+        \ '      CALL SUB1',
+        \ '      END',
+        \ '      SUBROUTINE SUB1',
+        \ '      WRITE(*,*) 1',
+        \ '      END'])
+  call cursor(5, 1)
+  let l:msg = execute('call repl#send_subprogram()')
+  call assert_match('lines 4-6', l:msg, 'expected the whole fixed-form subroutine')
+endfunction
+
 function! Test_send_opens_a_repl_when_none_is_running() abort
   call s:need_terminal()
   call assert_equal(0, repl#is_active(), 'precondition: nothing running')

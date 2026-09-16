@@ -37,7 +37,7 @@ A hand-written `.fortls` is never touched: without the `_generated_by` marker, y
 * ⧉ **Scientific Scratchpad**: Ephemeral prototyping buffer (`:FortranScratch` / `<leader>so`) with scientific templates (`program`, `matrix`, `openmp`, `module`, `test`) and instant execution (`:FortranScratchRun` / `<leader>sr`).
 * ⌕ **Multi-File Project Resolution**: Automatic project root detection, multi-directory module and include path discovery (`-I`), and cross-file module navigation (`:FortranFindModule`).
 * ⚡ **Asynchronous Build Engine**: Non-blocking background compilation for Vim 8/9 & Neovim with multi-compiler QuickFix error parsing (`gfortran`, `ifx`, `ifort`, `nvfortran`, `flang`).
-* ⎇ **Semantic Text Objects & Motions**: Domain-aware text objects (`vaf`/`vif` subprogram, `vam`/`vim` module, `vat`/`vit` derived type, `vad`/`vid` loop) and subprogram jumps (`]m`, `[m`, `]M`, `[M`).
+* ⎇ **Semantic Text Objects & Motions**: Domain-aware text objects (`vaf`/`vif` subprogram, `vam`/`vim` module, `vat`/`vit` derived type, `vad`/`vid` loop) and subprogram jumps (`]m`, `[m`, `]M`, `[M`) — in free form and in [fixed form](#-fixed-source-form-fortran-77) alike, including bare `END` and labelled `DO` loops.
 * ✎ **FORD Documentation Engine**: Automated docstring generator (`:FortranDoc` / `<leader>dc`) with parameter type, `intent(in/out/inout)`, and attribute deduction, plus asynchronous project documentation building and browser preview (`:FordBuild`, `:FordPreview`).
 * ⚙ **HPC & Compilation Profiles**: Switchable presets for `Debug`, `Release`, `Fast`, and `Sanitize`, with OpenMP multithreading, MPI wrappers, and native ISO Coarray Fortran support (`:FortranProfile`, `:FortranOpenMP`, `:FortranMPI`).
 * ⨁ **Accelerators & Supercomputing**: GPU offloading (`:FortranGPU` OpenACC/OpenMP Target) and MPI cluster job execution (`:FortranMPIRun`).
@@ -242,6 +242,42 @@ Rooting the server correctly matters as much as scoping it: `nvim-lspconfig`'s d
 | Setting | Default | Effect |
 |---|---|---|
 | `g:fortran_fortls_autoconfig` | `1` | Set to `0` to never write `.fortls` automatically. `:FortranFortlsConfig` still works on demand. |
+
+---
+
+## ⌗ Fixed Source Form (FORTRAN 77)
+
+Fixed-form sources are supported by the structural features, not merely tolerated. Source form is decided the way Vim's own `fortran` ftplugin decides it, so no extra configuration is needed:
+
+1. `b:fortran_fixed_source` — what the bundled ftplugin leaves behind, including its content sniffing for ambiguous extensions
+2. `g:fortran_fixed_source` / `g:fortran_free_source`
+3. the file extension: `.f`, `.for`, `.f77`, `.ftn` are fixed form, any case
+
+### What works
+
+| | Fixed form |
+|---|---|
+| `af` / `if` subprogram | `PROGRAM`, `SUBROUTINE`, `FUNCTION`, `BLOCK DATA` |
+| Typed functions | `REAL FUNCTION F(X)`, `INTEGER*4 FUNCTION N()`, `DOUBLE PRECISION FUNCTION` |
+| Unit termination | bare `END`, and `END SUBROUTINE`/`END FUNCTION`/`END PROGRAM` with or without a trailing name |
+| `ad` / `id` loop | labelled `DO 10 ... 10 CONTINUE`, **and** `DO ... END DO` |
+| Labelled loop terminator | any executable statement carrying the label, not just `CONTINUE` |
+| Nested and shared terminators | `DO 10` / `DO 10` closing on one `10 CONTINUE` resolves for both loops |
+| `am` / `im`, `at` / `it`, `ab` / `ib` | `MODULE`, `TYPE`, `INTERFACE`, `BLOCK` in fixed-form Fortran 90+ |
+| Motions | `]m`, `[m`, `]M`, `[M` across fixed-form program units |
+| Statement labels | columns 1–5 are skipped when matching a construct |
+| Comments | `C`, `c` and `*` in column one, plus `!` |
+| Continuation lines | a non-blank in column six continues the statement above and can neither open nor close a construct |
+| `:FortranReplSendSubprogram` | follows the fixed-form unit boundaries |
+| `:FortranFindModule` | searches `.f`, `.for`, `.f77`, `.ftn` alongside free-form sources |
+| Build, run, compile, profiles | unchanged — these are compiler invocations and never depended on source form |
+
+### What does not
+
+* **Column 73 onwards is not truncated.** Historically anything past column 72 is ignored by the compiler; `vimf90` reads the whole line, so a construct keyword parked in the card-identification field would be seen when the compiler would not see it.
+* **`ENTRY` is not a construct start.** An alternate entry point sits inside its enclosing unit rather than beginning one of its own.
+* **Arithmetic `IF` and statement functions** are not tracked. They are statements, not block constructs, and there is no region to select.
+* **`.f90` and friends are free form regardless of content.** If you keep fixed-form code in a free-form extension, set `b:fortran_fixed_source = 1` (or `g:fortran_fixed_source`) and everything above applies.
 
 ---
 

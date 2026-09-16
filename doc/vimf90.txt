@@ -17,6 +17,7 @@ CONTENTS                                                     *vimf90-contents*
 7. Fortran Package Manager (fpm) ............. |vimf90-fpm|
 8. Large Multi-File Projects ................. |vimf90-projects|
 9. Text Objects & Motions .................... |vimf90-textobj|
+9a. Fixed Source Form (FORTRAN 77) ........... |vimf90-fixedform|
 10. FORD & Doxygen Docstring Generator ....... |vimf90-doc|
 11. Supercomputing, Accelerators & HPC ....... |vimf90-hpc|
 12. Scientific Debugging & Matrix Inspector .. |vimf90-dap|
@@ -42,7 +43,9 @@ Key Features:
   * Intelligent multi-file project management: root detection (`fpm`, `CMake`, `Makefile`),
     automatic module search path (`-I`) resolution, and project-wide Universal Ctags.
   * Native Fortran text objects (`af`/`if`, `am`/`im`, `at`/`it`, `ad`/`id`, `ab`/`ib`)
-    and structural subprogram motions (`]m`, `[m`, `]M`, `[M`).
+    and structural subprogram motions (`]m`, `[m`, `]M`, `[M`), in free form and
+    in fixed form alike, including bare END and labelled DO loops. See
+    |vimf90-fixedform| for exactly what fixed-form support covers.
   * Automatic FORD & Doxygen docstring generator (`:FortranDoc`, `<leader>dc`)
     with argument type and intent deduction.
   * Scientific HPC presets: Debug, Release, Fast, and Sanitize profiles, with
@@ -342,6 +345,60 @@ with inter-module dependencies.
   * `vad` / `vid`: Select around / inside `do` loop.
   * `]m` / `[m`: Jump to next / previous subprogram header.
   * `]M` / `[M`: Jump to next / previous `end subroutine` / `end function`.
+
+==============================================================================
+9a. FIXED SOURCE FORM (FORTRAN 77)                        *vimf90-fixedform*
+
+Fixed-form sources are supported by the structural features, not merely
+tolerated. The source form is decided the way Vim's own fortran ftplugin
+decides it, so no extra configuration is normally needed:
+
+  1. `b:fortran_fixed_source`   what the bundled ftplugin leaves behind,
+                              including its content sniffing for ambiguous
+                              extensions
+  2. `g:fortran_fixed_source` / `g:fortran_free_source`
+  3. the file extension: .f, .for, .f77 and .ftn are fixed form, any case
+
+                                                    *vimf90-fixedform-support*
+WHAT WORKS
+
+  af / if            PROGRAM, SUBROUTINE, FUNCTION and BLOCK DATA units
+  typed functions    REAL FUNCTION F(X), INTEGER*4 FUNCTION N(),
+                     DOUBLE PRECISION FUNCTION
+  unit termination   a bare END, and END SUBROUTINE / END FUNCTION /
+                     END PROGRAM with or without a trailing name
+  ad / id            labelled DO 10 ... 10 CONTINUE, and DO ... END DO
+  loop terminator    any executable statement carrying the label, not only
+                     CONTINUE
+  nested loops       including two DO loops sharing one labelled terminator,
+                     which resolves correctly for both
+  am/im, at/it,      MODULE, TYPE, INTERFACE and BLOCK, for fixed-form
+  ab/ib              Fortran 90 and later
+  motions            ]m, [m, ]M and [M across fixed-form program units
+  statement labels   columns 1-5 are skipped when matching a construct
+  comments           C, c and * in column one, and !
+  continuation       a non-blank in column six continues the statement above
+                     and can neither open nor close a construct
+  REPL               :FortranReplSendSubprogram follows fixed-form boundaries
+  module search      :FortranFindModule also searches .f, .for, .f77 and .ftn
+  build and run      unchanged; these are compiler invocations and never
+                     depended on the source form
+
+                                                       *vimf90-fixedform-gaps*
+WHAT DOES NOT
+
+  * Column 73 onwards is not truncated. Historically the compiler ignores
+    anything past column 72, but |vimf90| reads the whole line, so a construct
+    keyword parked in the card-identification field is seen when the compiler
+    would not see it.
+  * ENTRY is not treated as the start of a construct. An alternate entry point
+    lives inside its enclosing unit rather than beginning one of its own.
+  * Arithmetic IF and statement functions are not tracked. They are statements
+    rather than block constructs, so there is no region to select.
+  * A .f90 extension means free form whatever the file contains. For
+    fixed-form code kept under a free-form extension, set
+    `b:fortran_fixed_source` to 1, or `g:fortran_fixed_source`, and everything
+    above applies.
 
 ==============================================================================
 10. FORD & DOXYGEN DOCSTRING GENERATOR                           *vimf90-doc*

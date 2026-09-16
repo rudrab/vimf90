@@ -271,7 +271,10 @@ function! project#find_module(name) abort
   let l:root = project#find_root()
   let l:pattern = '\c^\s*module\s\+' . l:mod_name . '\>'
 
-  let l:fortran_exts = ['f90', 'f95', 'f03', 'f08', 'F90', 'F95', 'f', 'F']
+  " Fixed-form extensions are included: a legacy tree is exactly the kind of
+  " project where hunting for a module by hand is least pleasant.
+  let l:fortran_exts = ['f90', 'f95', 'f03', 'f08', 'F90', 'F95', 'F03', 'F08',
+        \ 'f', 'F', 'for', 'FOR', 'f77', 'F77', 'ftn', 'FTN']
   let l:files = []
   for l:ext in l:fortran_exts
     let l:files += globpath(l:root, '**/*.' . l:ext, 0, 1)

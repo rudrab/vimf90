@@ -135,17 +135,112 @@ function! Test_subprogram_motion_backward() abort
 endfunction
 
 " ---------------------------------------------------------------------------
-" Known gap: fixed-form (F77) sources.
-"
-" These record what is not supported rather than asserting it is correct. If
-" fixed-form support is added, drop the skip and the assertions should pass.
+" Fixed source form (FORTRAN 77 and fixed-form Fortran 90+).
+" Line numbers refer to test/fixtures/fixedform/legacy.f.
 " ---------------------------------------------------------------------------
-function! Test_fixedform_constructs() abort
+function! Test_fixedform_is_detected_from_extension() abort
   let l:f = s:open('fixedform') . '/legacy.f'
-  let l:sub = s:bounds(l:f, 11, 'func')
-  if l:sub ==# [0, 0]
-    call Vf90Skip('fixed-form is not supported: bare END, labelled DO, column-1 comments')
-  endif
-  call assert_equal([10, 12], l:sub, 'SUBROUTINE ... END')
+  execute 'silent edit! ' . fnameescape(l:f)
+  call assert_equal(1, textobj#is_fixed_form(), '.f must be read as fixed form')
+endfunction
+
+function! Test_freeform_is_detected_from_extension() abort
+  let l:f = s:open('freeform') . '/typed.f90'
+  execute 'silent edit! ' . fnameescape(l:f)
+  call assert_equal(0, textobj#is_fixed_form(), '.f90 must be read as free form')
+endfunction
+
+" The buffer-local flag Vim's own ftplugin sets wins over the extension, so a
+" fixed-form file named .f90 is handled correctly.
+function! Test_fixedform_honours_buffer_flag() abort
+  let l:dir = Vf90Fixture('textobj')
+  let l:f = Vf90Write(l:dir . '/odd.f90', [
+        \ '      SUBROUTINE ODD',
+        \ '      WRITE(*,*) 1',
+        \ '      END'])
+  execute 'silent edit! ' . fnameescape(l:f)
+  let b:fortran_fixed_source = 1
+  try
+    call assert_equal(1, textobj#is_fixed_form())
+    call cursor(2, 1)
+    call assert_equal([1, 3], textobj#find_bounds('func'), 'bare END in a .f90 file')
+  finally
+    unlet b:fortran_fixed_source
+  endtry
+endfunction
+
+" A program unit ends at a bare END, with no keyword saying what is ending.
+function! Test_fixedform_bare_end_closes_program_unit() abort
+  let l:f = s:open('fixedform') . '/legacy.f'
+  call assert_equal([1, 8], s:bounds(l:f, 3, 'module'), 'PROGRAM ... END')
+  call assert_equal([10, 12], s:bounds(l:f, 11, 'func'), 'SUBROUTINE ... END')
+endfunction
+
+" Typed function declarations, including the INTEGER*4 extension form.
+function! Test_fixedform_typed_functions() abort
+  let l:f = s:open('fixedform') . '/legacy.f'
+  call assert_equal([14, 17], s:bounds(l:f, 16, 'func'), 'REAL FUNCTION')
+  call assert_equal([18, 21], s:bounds(l:f, 20, 'func'), 'INTEGER*4 FUNCTION')
+endfunction
+
+function! Test_fixedform_block_data() abort
+  let l:f = s:open('fixedform') . '/legacy.f'
+  call assert_equal([37, 40], s:bounds(l:f, 38, 'func'), 'BLOCK DATA ... END')
+endfunction
+
+" A labelled DO ends at the statement carrying its label, not at an END DO.
+function! Test_fixedform_labelled_do() abort
+  let l:f = s:open('fixedform') . '/legacy.f'
   call assert_equal([4, 6], s:bounds(l:f, 5, 'do'), 'DO 10 ... 10 CONTINUE')
+endfunction
+
+function! Test_fixedform_nested_labelled_do() abort
+  let l:f = s:open('fixedform') . '/legacy.f'
+  call assert_equal([25, 27], s:bounds(l:f, 26, 'do'), 'inner DO 30')
+  call assert_equal([24, 28], s:bounds(l:f, 24, 'do'), 'outer DO 20')
+endfunction
+
+" Fixed-form Fortran 90 may still use END DO.
+function! Test_fixedform_end_do_loop() abort
+  let l:f = s:open('fixedform') . '/legacy.f'
+  call assert_equal([29, 31], s:bounds(l:f, 30, 'do'), 'DO ... END DO')
+endfunction
+
+" C and * in column one are comments; they must not be mistaken for statements.
+function! Test_fixedform_column_one_comments() abort
+  let l:f = s:open('fixedform') . '/legacy.f'
+  execute 'silent edit! ' . fnameescape(l:f)
+  call assert_equal([10, 12], s:bounds(l:f, 11, 'func'),
+        \ 'a C comment between units must not extend the previous one')
+  call assert_equal([14, 17], s:bounds(l:f, 15, 'func'),
+        \ 'a * comment must not extend the previous unit')
+endfunction
+
+" A continuation line carries a non-blank in column six and continues the
+" statement above it, so it can neither open nor close a construct.
+function! Test_fixedform_continuation_lines() abort
+  let l:f = s:open('fixedform') . '/legacy.f'
+  call assert_equal([33, 36], s:bounds(l:f, 35, 'func'), 'continued SUBROUTINE header')
+endfunction
+
+function! Test_fixedform_subprogram_motion() abort
+  let l:f = s:open('fixedform') . '/legacy.f'
+  execute 'silent edit! ' . fnameescape(l:f)
+  call cursor(1, 1)
+  let l:hops = []
+  for l:i in range(6)
+    call textobj#jump('subprog', 1, 0)
+    call add(l:hops, line('.'))
+  endfor
+  call assert_equal([10, 14, 18, 22, 33, 37], l:hops, 'forward through fixed-form units')
+endfunction
+
+" Free form must be unaffected by any of the above.
+function! Test_freeform_still_requires_explicit_end() abort
+  let l:dir = Vf90Fixture('textobj')
+  let l:f = Vf90Write(l:dir . '/bare.f90', [
+        \ 'subroutine s()',
+        \ '  integer :: i',
+        \ 'end subroutine s'])
+  call assert_equal([1, 3], s:bounds(l:f, 2, 'func'), 'free form is unchanged')
 endfunction
