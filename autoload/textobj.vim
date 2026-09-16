@@ -14,24 +14,24 @@ let s:re_prefix = '\v^\s*(pure\s+|elemental\s+|recursive\s+|impure\s+|module\s+)
 
 let s:patterns = {
       \ 'func': {
-      \   'start': '\v^\s*(pure\s+|elemental\s+|recursive\s+|impure\s+|module\s+)*\ze%(<subroutine>|<function>)\s+\w+',
-      \   'end':   '\v^\s*<end>\s*%(<subroutine>|<function>)>'
+      \   'start': '\v\c^\s*(pure\s+|elemental\s+|recursive\s+|impure\s+|module\s+)*%(subroutine|function)\s+\w+',
+      \   'end':   '\v\c^\s*end\s*%(subroutine|function)>'
       \ },
       \ 'module': {
-      \   'start': '\v^\s*%(<module>|<submodule>|<program>)\s+\w+',
-      \   'end':   '\v^\s*<end>\s*%(<module>|<submodule>|<program>)>'
+      \   'start': '\v\c^\s*%(module\s+(procedure|subroutine|function|nature)@!\w+|submodule\s*\(|program\s+\w+)',
+      \   'end':   '\v\c^\s*end\s*%(module|submodule|program)>'
       \ },
       \ 'type': {
-      \   'start': '\v^\s*<type>%(%(,\s*%(public|private|abstract|extends\([^\)]+\)|bind\([^\)]+\)))*\s*::|\s+)\s*\w+',
-      \   'end':   '\v^\s*<end>\s*<type>>'
+      \   'start': '\v\c^\s*type%(%(,\s*%(public|private|abstract|extends\([^\)]+\)|bind\([^\)]+\)))*\s*::|\s+)\s*\w+',
+      \   'end':   '\v\c^\s*end\s*type>'
       \ },
       \ 'do': {
-      \   'start': '\v^\s*(%(\w+\s*:\s*)?<do>(\s+.*|\s*$))',
-      \   'end':   '\v^\s*<end>\s*<do>>'
+      \   'start': '\v\c^\s*(%(\w+\s*:\s*)?do(\s+.*|\s*$))',
+      \   'end':   '\v\c^\s*end\s*do>'
       \ },
       \ 'block': {
-      \   'start': '\v^\s*(%(\w+\s*:\s*)?<block>|<interface>)\s*($|[^a-zA-Z0-9_])',
-      \   'end':   '\v^\s*<end>\s*%(<block>|<interface>)>'
+      \   'start': '\v\c^\s*(%(\w+\s*:\s*)?block|interface)\s*($|[^a-zA-Z0-9_])',
+      \   'end':   '\v\c^\s*end\s*%(block|interface)>'
       \ }
       \ }
 
@@ -85,7 +85,7 @@ function! s:find_matching_end(pat_start, pat_end, start_line) abort
   call cursor(a:start_line, 1)
 
   while l:depth > 0
-    let l:next_match = search('\v(' . a:pat_start . '|' . a:pat_end . ')', 'W')
+    let l:next_match = search('\v\c(' . a:pat_start . '|' . a:pat_end . ')', 'W')
     if l:next_match == 0 || l:next_match > l:max_lines
       return 0
     endif
@@ -141,9 +141,9 @@ function! textobj#jump(pat_type, forward, to_end) abort
 
   if a:pat_type ==# 'subprog'
     if a:to_end
-      let l:pat = '\v^\s*<end>\s*%(<subroutine>|<function>|<program>|<module>|<submodule>)>'
+      let l:pat = '\v\c^\s*end\s*%(subroutine|function|program|module|submodule)>'
     else
-      let l:pat = '\v^\s*%(pure\s+|elemental\s+|recursive\s+|impure\s+|module\s+)*%(<subroutine>|<function>|<program>|<module>|<submodule>)\s+\w+'
+      let l:pat = '\v\c^\s*(pure\s+|elemental\s+|recursive\s+|impure\s+|module\s+)*%(subroutine|function|program|module\s+(procedure|subroutine|function|nature)@!\w+|submodule\s*\()'
     endif
   endif
 

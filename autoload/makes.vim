@@ -29,18 +29,73 @@ function! s:get_errorformat(compiler) abort
 endfunction
 "}}}1
 
+" QuickFix error validation helper {{{1
+function! s:qf_has_errors() abort
+  for l:item in getqflist()
+    if l:item.valid && (l:item.type ==# 'E' || l:item.type ==# 'e' || empty(l:item.type))
+      return 1
+    endif
+  endfor
+  return 0
+endfunction
+"}}}1
+
 " Asynchronous Job Callbacks {{{1
 let s:current_job = v:null
 
 function! makes#on_job_out(ctx, lines) abort
-  for l:line in a:lines
-    if !empty(l:line)
-      call add(a:ctx.output, l:line)
+  if has('nvim')
+    if empty(a:lines)
+      return
     endif
-  endfor
+    if !has_key(a:ctx, 'partial')
+      let a:ctx.partial = ''
+    endif
+    let a:ctx.partial .= a:lines[0]
+    if len(a:lines) > 1
+      if !empty(a:ctx.partial)
+        call add(a:ctx.output, a:ctx.partial)
+      endif
+      for l:i in range(1, len(a:lines) - 2)
+        if !empty(a:lines[l:i])
+          call add(a:ctx.output, a:lines[l:i])
+        endif
+      endfor
+      let a:ctx.partial = a:lines[-1]
+    endif
+  else
+    for l:line in a:lines
+      if !empty(l:line)
+        call add(a:ctx.output, l:line)
+      endif
+    endfor
+  endif
 endfunction
 
 function! makes#on_job_exit(ctx, status) abort
+  if has('nvim')
+    if has_key(a:ctx, 'partial') && !empty(a:ctx.partial)
+      call add(a:ctx.output, a:ctx.partial)
+      let a:ctx.partial = ''
+    endif
+    call s:finish_job(a:ctx, a:status)
+  else
+    let a:ctx.status = a:status
+    let a:ctx.exited = 1
+    if get(a:ctx, 'closed', 0)
+      call s:finish_job(a:ctx, a:ctx.status)
+    endif
+  endif
+endfunction
+
+function! makes#on_job_close(ctx) abort
+  let a:ctx.closed = 1
+  if get(a:ctx, 'exited', 0)
+    call s:finish_job(a:ctx, get(a:ctx, 'status', 0))
+  endif
+endfunction
+
+function! s:finish_job(ctx, status) abort
   let l:saved_efm = &errorformat
   try
     let &errorformat = a:ctx.efm
@@ -50,14 +105,14 @@ function! makes#on_job_exit(ctx, status) abort
   endtry
 
   redraw!
-  let l:success = (a:status == 0)
+  let l:success = (a:status == 0 && !s:qf_has_errors())
   if l:success
     echomsg a:ctx.success_msg
     if get(g:, 'fortran_qf_auto_close', 1)
       cclose
     endif
   else
-    echohl ErrorMsg | echo a:ctx.fail_msg . ' (exit code ' . a:status . ')' | echohl None
+    echohl ErrorMsg | echo a:ctx.fail_msg . (a:status != 0 ? ' (exit code ' . a:status . ')' : '') | echohl None
     botright cwindow
   endif
 
@@ -78,6 +133,7 @@ function! s:run_async_job(cmd, opts) abort
 
   let l:context = {
         \ 'output': [],
+        \ 'partial': '',
         \ 'title': l:title,
         \ 'success_msg': l:success_msg,
         \ 'fail_msg': l:fail_msg,
@@ -101,6 +157,7 @@ function! s:run_async_job(cmd, opts) abort
           \ 'out_cb':   {c, msg -> makes#on_job_out(l:context, [msg])},
           \ 'err_cb':   {c, msg -> makes#on_job_out(l:context, [msg])},
           \ 'exit_cb':  {j, status -> makes#on_job_exit(l:context, status)},
+          \ 'close_cb': {c -> makes#on_job_close(l:context)},
           \ 'mode':     'nl',
           \ }
     let s:current_job = job_start(a:cmd, l:callbacks)
@@ -120,10 +177,15 @@ function! makes#Fcompile(...) abort
   let l:objext   = makes#get_opt('fortran_objExt', '.o')
   let l:is_async = a:0 > 0 ? a:1 : makes#get_opt('fortran_async', 1)
 
-  " Automatically append multi-file project include directories
-  let l:proj_inc = project#get_include_flags()
-  if !empty(l:proj_inc)
-    let l:fcflags .= ' ' . l:proj_inc
+  " Multi-file project include directories
+  let l:inc_dirs = project#get_include_dirs()
+  let l:inc_flags_str = join(map(copy(l:inc_dirs), '"-I" . fnameescape(v:val)'), ' ')
+  let l:inc_flags_list = map(copy(l:inc_dirs), '"-I" . v:val')
+
+  if !empty(l:inc_flags_str)
+    let l:fcflags_full = l:fcflags . ' ' . l:inc_flags_str
+  else
+    let l:fcflags_full = l:fcflags
   endif
 
   let l:sou = expand('%:p')
@@ -144,7 +206,7 @@ function! makes#Fcompile(...) abort
   silent update
   cclose
 
-  let l:cmd_list = [l:compiler] + split(l:fcflags) + [l:sou, '-o', l:obj]
+  let l:cmd_list = [l:compiler] + split(l:fcflags) + l:inc_flags_list + [l:sou, '-o', l:obj]
   let l:efm = s:get_errorformat(l:compiler)
 
   " Attempt async build
@@ -166,15 +228,15 @@ function! makes#Fcompile(...) abort
     let &l:makeprg = l:compiler
     let &l:errorformat = l:efm
     echon 'Compiling ' . expand('%:t') . ' ...'
-    execute 'silent make! ' . l:fcflags . ' ' . fnameescape(l:sou) . ' -o ' . fnameescape(l:obj)
+    execute 'silent make! ' . l:fcflags_full . ' ' . fnameescape(l:sou) . ' -o ' . fnameescape(l:obj)
     redraw!
 
-    if v:shell_error == 0
+    if v:shell_error == 0 && !s:qf_has_errors()
       echomsg "'" . l:obj . "': Compiled successfully."
       let s:fortran_comp_success = 1
       return 1
     else
-      echohl ErrorMsg | echo 'Compilation failed with error code ' . v:shell_error | echohl None
+      echohl ErrorMsg | echo 'Compilation failed for ' . expand('%:t') | echohl None
       let s:fortran_comp_success = 0
       botright cwindow
       return 0
@@ -194,10 +256,15 @@ function! makes#Fexe(...) abort
   let l:is_async = a:0 > 0 ? a:1 : makes#get_opt('fortran_async', 1)
   let l:on_finish = a:0 > 1 ? a:2 : v:null
 
-  " Automatically append multi-file project include directories
-  let l:proj_inc = project#get_include_flags()
-  if !empty(l:proj_inc)
-    let l:flflags .= ' ' . l:proj_inc
+  " Multi-file project include directories
+  let l:inc_dirs = project#get_include_dirs()
+  let l:inc_flags_str = join(map(copy(l:inc_dirs), '"-I" . fnameescape(v:val)'), ' ')
+  let l:inc_flags_list = map(copy(l:inc_dirs), '"-I" . v:val')
+
+  if !empty(l:inc_flags_str)
+    let l:flflags_full = l:flflags . ' ' . l:inc_flags_str
+  else
+    let l:flflags_full = l:flflags
   endif
 
   let l:sou = expand('%:p')
@@ -212,7 +279,7 @@ function! makes#Fexe(...) abort
   silent update
   cclose
 
-  let l:cmd_list = [l:compiler] + split(l:flflags) + [l:sou, '-o', l:exe]
+  let l:cmd_list = [l:compiler] + split(l:flflags) + l:inc_flags_list + [l:sou, '-o', l:exe]
   let l:efm = s:get_errorformat(l:compiler)
 
   if l:is_async && (has('job') || has('nvim'))
@@ -234,10 +301,10 @@ function! makes#Fexe(...) abort
     let &l:makeprg = l:compiler
     let &l:errorformat = l:efm
     echon 'Building executable ' . fnamemodify(l:exe, ':t') . ' ...'
-    execute 'silent make! ' . l:flflags . ' ' . fnameescape(l:sou) . ' -o ' . fnameescape(l:exe)
+    execute 'silent make! ' . l:flflags_full . ' ' . fnameescape(l:sou) . ' -o ' . fnameescape(l:exe)
     redraw!
 
-    if v:shell_error == 0
+    if v:shell_error == 0 && !s:qf_has_errors()
       echomsg "'" . l:exe . "': Successfully linked."
       let s:fortran_link_success = 1
       if !empty(l:on_finish)
@@ -245,7 +312,7 @@ function! makes#Fexe(...) abort
       endif
       return 1
     else
-      echohl ErrorMsg | echo 'Build failed with error code ' . v:shell_error | echohl None
+      echohl ErrorMsg | echo 'Build failed for ' . fnamemodify(l:exe, ':t') | echohl None
       let s:fortran_link_success = 0
       botright cwindow
       if !empty(l:on_finish)

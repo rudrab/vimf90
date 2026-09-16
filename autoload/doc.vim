@@ -286,16 +286,20 @@ function! doc#create_default_ford_config(root_dir) abort
 endfunction
 
 function! doc#ford_build(...) abort
+  let l:on_finish = a:0 > 0 ? a:1 : v:null
+  let l:root = project#find_root()
+  if empty(l:root)
+    let l:root = getcwd()
+  endif
+
   if !executable('ford')
     echohl WarningMsg
     echo 'vimf90: FORD is not installed. Install with: pipx install ford'
     echohl None
+    if !empty(l:on_finish)
+      call call(l:on_finish, [0])
+    endif
     return 0
-  endif
-
-  let l:root = project#find_root()
-  if empty(l:root)
-    let l:root = getcwd()
   endif
 
   let l:cfg = doc#find_ford_config()
@@ -319,6 +323,7 @@ function! doc#ford_build(...) abort
             \ 'success_msg': 'FORD documentation built successfully.',
             \ 'fail_msg': 'FORD documentation build failed.',
             \ 'efm': l:efm,
+            \ 'on_finish': l:on_finish,
             \ }
       " Run async in project root directory
       return s:run_async_ford(l:cmd_list, l:root, l:opts)
@@ -326,13 +331,16 @@ function! doc#ford_build(...) abort
       " Synchronous execution
       let l:out = system('ford ' . fnameescape(fnamemodify(l:cfg, ':t')))
       redraw!
-      if v:shell_error == 0
+      let l:success = (v:shell_error == 0)
+      if l:success
         echomsg 'vimf90: FORD documentation built successfully.'
-        return 1
       else
         echohl ErrorMsg | echo 'vimf90: FORD build failed: ' . trim(l:out) | echohl None
-        return 0
       endif
+      if !empty(l:on_finish)
+        call call(l:on_finish, [l:success])
+      endif
+      return l:success
     endif
   finally
     execute 'lcd ' . fnameescape(l:orig_dir)
@@ -343,10 +351,12 @@ function! s:run_async_ford(cmd_list, dir, opts) abort
   call setqflist([], 'r', {'title': a:opts.title, 'items': []})
   let l:context = {
         \ 'output': [],
+        \ 'partial': '',
         \ 'title': a:opts.title,
         \ 'success_msg': a:opts.success_msg,
         \ 'fail_msg': a:opts.fail_msg,
         \ 'efm': a:opts.efm,
+        \ 'on_finish': get(a:opts, 'on_finish', v:null),
         \ }
 
   if has('nvim')
@@ -364,12 +374,37 @@ function! s:run_async_ford(cmd_list, dir, opts) abort
           \ 'out_cb':   {c, msg -> makes#on_job_out(l:context, [msg])},
           \ 'err_cb':   {c, msg -> makes#on_job_out(l:context, [msg])},
           \ 'exit_cb':  {j, status -> makes#on_job_exit(l:context, status)},
+          \ 'close_cb': {c -> makes#on_job_close(l:context)},
           \ 'mode':     'nl',
           \ }
     call job_start(a:cmd_list, l:callbacks)
     return 1
   endif
   return 0
+endfunction
+
+function! s:open_browser(html_path) abort
+  echomsg 'vimf90: Opening FORD docs in browser: ' . a:html_path
+  if has('unix') && !has('mac')
+    call system('xdg-open ' . fnameescape(a:html_path) . ' &')
+  elseif has('mac')
+    call system('open ' . fnameescape(a:html_path) . ' &')
+  elseif has('win32') || has('win64')
+    call system('start ' . fnameescape(a:html_path))
+  endif
+endfunction
+
+function! s:on_preview_build_finish(candidates, success) abort
+  if !a:success
+    return
+  endif
+  for l:cand in a:candidates
+    if filereadable(l:cand)
+      call s:open_browser(l:cand)
+      return
+    endif
+  endfor
+  echohl WarningMsg | echo 'vimf90: FORD build finished but index.html was not found in standard paths.' | echohl None
 endfunction
 
 function! doc#ford_preview() abort
@@ -384,40 +419,15 @@ function! doc#ford_preview() abort
         \ l:root . '/doc/index.html',
         \ ]
 
-  let l:index_html = ''
   for l:cand in l:doc_candidates
     if filereadable(l:cand)
-      let l:index_html = l:cand
-      break
+      call s:open_browser(l:cand)
+      return 1
     endif
   endfor
 
-  if empty(l:index_html)
-    echomsg 'vimf90: FORD documentation index not found. Building first...'
-    call doc#ford_build()
-    " Check again
-    for l:cand in l:doc_candidates
-      if filereadable(l:cand)
-        let l:index_html = l:cand
-        break
-      endif
-    endfor
-  endif
-
-  if empty(l:index_html)
-    echohl WarningMsg | echo 'vimf90: Could not find generated index.html. Run :FordBuild first.' | echohl None
-    return 0
-  endif
-
-  echomsg 'vimf90: Opening FORD docs in browser: ' . l:index_html
-  if has('unix') && !has('mac')
-    call system('xdg-open ' . fnameescape(l:index_html) . ' &')
-  elseif has('mac')
-    call system('open ' . fnameescape(l:index_html) . ' &')
-  elseif has('win32') || has('win64')
-    call system('start ' . fnameescape(l:index_html))
-  endif
-  return 1
+  echomsg 'vimf90: FORD documentation index not found. Building first...'
+  return doc#ford_build({success -> s:on_preview_build_finish(l:doc_candidates, success)})
 endfunction
 "}}}1
 

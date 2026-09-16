@@ -22,7 +22,7 @@ function! dap#setup() abort
           command = "gdb",
           args = { "-i", "dap" }
         }
-      end if
+      end
       if not dap.adapters.codelldb then
         dap.adapters.codelldb = {
           type = 'server',
@@ -32,7 +32,7 @@ function! dap#setup() abort
             args = {"--port", "${port}"},
           }
         }
-      end if
+      end
       dap.configurations.fortran = dap.configurations.fortran or {
         {
           name = "Launch Fortran Executable (GDB)",
@@ -71,6 +71,7 @@ function! dap#start() abort
   endif
 
   if has('nvim')
+    call dap#setup()
     let l:has_dap = 0
     lua << EOF
     local ok, dap = pcall(require, 'dap')

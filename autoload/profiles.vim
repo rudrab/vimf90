@@ -95,11 +95,9 @@ function! profiles#get_flags() abort
   endif
 
   " GPU Offloading flags (OpenACC / OpenMP Target)
-  if exists('*hpc#get_gpu_flags')
-    let l:gpu_flag = hpc#get_gpu_flags()
-    if !empty(l:gpu_flag)
-      let l:flags .= ' ' . l:gpu_flag
-    endif
+  let l:gpu_flag = hpc#get_gpu_flags()
+  if !empty(l:gpu_flag)
+    let l:flags .= ' ' . l:gpu_flag
   endif
 
   let l:extra = get(g:, 'fortran_extra_flags', '')
@@ -171,8 +169,9 @@ function! profiles#status() abort
   if profiles#is_mpi()
     call add(l:parts, 'MPI')
   endif
-  if exists('*hpc#get_gpu_mode') && hpc#get_gpu_mode() !=# 'off'
-    call add(l:parts, toupper(hpc#get_gpu_mode()))
+  let l:gpu_mode = hpc#get_gpu_mode()
+  if l:gpu_mode !=# 'off' && !empty(l:gpu_mode)
+    call add(l:parts, toupper(l:gpu_mode))
   endif
 
   return '[' . join(l:parts, ':') . ']'

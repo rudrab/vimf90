@@ -10,7 +10,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 " Initialize Tagbar integration if available
-call tagbar#setup()
+call fortran_tagbar#setup()
 
 " Plug mappings - Core Actions
 nnoremap <buffer> <silent> <Plug>(vimf90-compile)        :call makes#Fcompile()<CR>
@@ -52,7 +52,7 @@ nnoremap <buffer> <silent> <Plug>(vimf90-breakpoint-toggle) :call dap#toggle_bre
 nnoremap <buffer> <silent> <Plug>(vimf90-repl-toggle)       :call repl#toggle()<CR>
 nnoremap <buffer> <silent> <Plug>(vimf90-repl-open)         :call repl#open()<CR>
 nnoremap <buffer> <silent> <Plug>(vimf90-repl-send-line)    :<C-U>call repl#send_line(v:count1)<CR>
-xnoremap <buffer> <silent> <Plug>(vimf90-repl-send-visual)  :<C-U>call repl#send_visual()<CR>
+xnoremap <buffer> <silent> <Plug>(vimf90-repl-send-visual)  :call repl#send_visual()<CR>
 nnoremap <buffer> <silent> <Plug>(vimf90-repl-send-subprog) :call repl#send_subprogram()<CR>
 nnoremap <buffer> <silent> <Plug>(vimf90-repl-send-buffer)  :call repl#send_buffer()<CR>
 nnoremap <buffer> <silent> <Plug>(vimf90-repl-restart)      :call repl#restart()<CR>
@@ -147,7 +147,7 @@ command! -buffer -bar -nargs=? FortranFindModule   call project#find_module(<q-a
 " User commands - Interactive REPL & Scratchpad
 command! -buffer -bar -nargs=?                                                  FortranReplOpen          call repl#open(<q-args>)
 command! -buffer -bar                                                           FortranReplToggle        call repl#toggle()
-command! -buffer -bar -range                                                    FortranReplSend          call repl#send_visual()
+command! -buffer -bar -range                                                    FortranReplSend          <line1>,<line2>call repl#send_visual()
 command! -buffer -bar                                                           FortranReplSendSubprogram call repl#send_subprogram()
 command! -buffer -bar                                                           FortranReplSendBuffer    call repl#send_buffer()
 command! -buffer -bar                                                           FortranReplRestart       call repl#restart()
