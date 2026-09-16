@@ -13,17 +13,18 @@ CONTENTS                                                     *vimf90-contents*
 3. Configuration Options ..................... |vimf90-options|
 4. Commands .................................. |vimf90-commands|
 5. Key Mappings & <Plug> Targets ............. |vimf90-mappings|
-6. Fortran Package Manager (fpm) ............. |vimf90-fpm|
-7. Large Multi-File Projects ................. |vimf90-projects|
-8. Text Objects & Motions .................... |vimf90-textobj|
-9. FORD & Doxygen Docstring Generator ........ |vimf90-doc|
-10. Build Profiles, OpenMP & MPI Presets ..... |vimf90-profiles|
-11. Formatting & Linting ..................... |vimf90-formatting|
-12. Tagbar & Symbol Outline .................. |vimf90-tagbar|
-13. Asynchronous Build Engine ................ |vimf90-async|
-14. Language Server Protocol (LSP) ........... |vimf90-lsp|
-15. GUI Menu ................................. |vimf90-menu|
-16. Change Log ............................... |vimf90-changelog|
+6. Interactive LFortran REPL & Scratchpad .... |vimf90-repl|
+7. Fortran Package Manager (fpm) ............. |vimf90-fpm|
+8. Large Multi-File Projects ................. |vimf90-projects|
+9. Text Objects & Motions .................... |vimf90-textobj|
+10. FORD & Doxygen Docstring Generator ....... |vimf90-doc|
+11. Build Profiles, OpenMP & MPI Presets ..... |vimf90-profiles|
+12. Formatting & Linting ..................... |vimf90-formatting|
+13. Tagbar & Symbol Outline .................. |vimf90-tagbar|
+14. Asynchronous Build Engine ................ |vimf90-async|
+15. Language Server Protocol (LSP) ........... |vimf90-lsp|
+16. GUI Menu ................................. |vimf90-menu|
+17. Change Log ............................... |vimf90-changelog|
 
 ==============================================================================
 1. INTRODUCTION                                                *vimf90-intro*
@@ -32,6 +33,7 @@ CONTENTS                                                     *vimf90-contents*
 
 Key Features:
   * First-class Fortran Package Manager (|fpm|) integration (`build`, `run`, `test`, `new`).
+  * Interactive LFortran REPL session runner and ephemeral scientific scratchpad.
   * Intelligent multi-file project management: root detection (`fpm`, `CMake`, `Makefile`),
     automatic module search path (`-I`) resolution, and project-wide Universal Ctags.
   * Native Fortran text objects (`af`/`if`, `am`/`im`, `at`/`it`, `ad`/`id`, `ab`/`ib`)
@@ -56,6 +58,7 @@ Using lazy.nvim (Neovim): >
 
 Recommended Companion Tools:
   * Fortran Package Manager (fpm): https://fpm.fortran-lang.org/
+  * LFortran Interactive REPL: https://lfortran.org/
   * Language Server (fortls): pipx install fortls
   * Formatter (fprettify): pipx install fprettify
   * Snippets: honza/vim-snippets or friendly-snippets with LuaSnip / UltiSnips
@@ -80,6 +83,18 @@ Recommended Companion Tools:
     Enable asynchronous non-blocking compilation for Vim 8+ and Neovim.
     Default: 1
 
+*g:fortran_repl_command*
+    Executable command to start the interactive Fortran REPL.
+    Default: "lfortran"
+
+*g:fortran_repl_split*
+    Window split command for opening the REPL terminal.
+    Default: "botright 15split"
+
+*g:fortran_scratch_split*
+    Window split command for opening the scientific scratchpad.
+    Default: "botright vsplit"
+
 *g:fortran_format_on_save*
     Automatically format buffer with `fprettify` on save.
     Default: 0
@@ -96,6 +111,30 @@ Recommended Companion Tools:
 4. COMMANDS                                                 *vimf90-commands*
 
 All commands are buffer-local and available in Fortran buffers:
+
+*:FortranReplToggle*
+    Toggles the interactive LFortran REPL terminal split.
+
+*:FortranReplOpen* [cmd]
+    Opens or focuses the interactive Fortran REPL session.
+
+*:FortranReplSend*
+    Sends current line (or visual selection) to the active REPL.
+
+*:FortranReplSendSubprogram*
+    Sends the enclosing subroutine, function, or module to the REPL.
+
+*:FortranReplSendBuffer*
+    Sends the entire active buffer to the REPL.
+
+*:FortranReplRestart*
+    Restarts the active REPL terminal session.
+
+*:FortranScratch* [program|matrix|openmp|module|test]
+    Opens a temporary scientific scratchpad pre-populated with a clean modern template.
+
+*:FortranScratchRun*
+    Instantly compiles and executes the active scratchpad buffer, displaying output.
 
 *:FortranCompile*
     Compiles current buffer to an object file (`.o`), auto-resolving project include paths.
@@ -193,6 +232,12 @@ Default shortcuts (using `<Leader>` or `g:fortran_leader`):
   `<leader>fr`     <Plug>(vimf90-fpm-run)            fpm run project
   `<leader>ft`     <Plug>(vimf90-fpm-test)           fpm test all tests
   `<leader>tc`     <Plug>(vimf90-fpm-test-current)   fpm test current buffer test
+  `<leader>rt`     <Plug>(vimf90-repl-toggle)        Toggle LFortran REPL terminal
+  `<leader>rs`     <Plug>(vimf90-repl-send-line)     Send line (or visual) to REPL
+  `<leader>rm`     <Plug>(vimf90-repl-send-subprog)  Send subprogram to REPL
+  `<leader>rb`     <Plug>(vimf90-repl-send-buffer)   Send entire buffer to REPL
+  `<leader>so`     <Plug>(vimf90-scratch-open)       Open scientific scratchpad
+  `<leader>sr`     <Plug>(vimf90-scratch-run)        Run scientific scratchpad
   `<leader>tg`     <Plug>(vimf90-tags)               Generate project Ctags
   `<leader>fm`     <Plug>(vimf90-find-module)        Find & jump to module
   `<leader>dc`     <Plug>(vimf90-doc)                Generate FORD/Doxygen docstring
@@ -219,7 +264,25 @@ Default shortcuts (using `<Leader>` or `g:fortran_leader`):
   `]M` / `[M`      <Plug>(vimf90-motion-next/prev-end)    Jump to next/prev subprogram end
 
 ==============================================================================
-6. FORTRAN PACKAGE MANAGER (FPM)                                *vimf90-fpm*
+6. INTERACTIVE LFORTRAN REPL & SCRATCHPAD                      *vimf90-repl*
+
+|vimf90| brings Julia / Python-style interactive scientific prototyping to Fortran:
+
+1. Interactive LFortran REPL:
+   * Launch or toggle the interactive REPL split with `<leader>rt` or `:FortranReplToggle`.
+   * Send the current line with `<leader>rs` or visually select multiple lines and press `<leader>rs`.
+   * Send an entire subroutine or module with `<leader>rm` (`:FortranReplSendSubprogram`).
+   * Send the whole active file with `<leader>rb` (`:FortranReplSendBuffer`).
+   * Automatically works with Neovim (`termopen`/`chansend`) and Vim 8+ (`term_start`/`term_sendkeys`).
+
+2. Instant Scientific Scratchpad:
+   * Open an ephemeral, disposable scratchpad with `<leader>so` or `:FortranScratch [template]`.
+   * Templates available: `program`, `matrix`, `openmp`, `module`, `test`.
+   * Compile and run the scratchpad instantly with `<leader>sr` (`:FortranScratchRun`). Output is
+     displayed side-by-side in a dedicated scratch output window.
+
+==============================================================================
+7. FORTRAN PACKAGE MANAGER (FPM)                                *vimf90-fpm*
 
 |vimf90| provides first-class support for modern `fpm` (https://fpm.fortran-lang.org/).
 
@@ -335,12 +398,13 @@ For coc.nvim, add the following configuration in your `coc-settings.json` or `.v
 <
 
 ==============================================================================
-15. GUI MENU                                                    *vimf90-menu*
+16. GUI MENU                                                    *vimf90-menu*
 
 When running in GUI mode (gVim) with menu support enabled:
   * A top-level 'Fortran' menu appears automatically on Fortran buffers.
   * Dynamically shows exact expanded shortcuts (e.g. `\cc`, `,cc`, `<Space>cc`).
-  * Submenus for Compilation, fpm, Build Profiles, Documentation, and Projects.
+  * Submenus for Compilation, fpm, Interactive (REPL & Scratchpad), Build Profiles,
+    Documentation, and Projects.
   * To enable dynamic standard/dialect naming (e.g. 'Fortran 2008', 'Fortran 2018'): >
       let g:fortran_menu_dynamic_dialect = 1
 <
@@ -349,7 +413,16 @@ When running in GUI mode (gVim) with menu support enabled:
 <
 
 ==============================================================================
-16. CHANGE LOG                                           *vimf90-changelog*
+17. CHANGE LOG                                           *vimf90-changelog*
+
+v0.7.0:
+  * Interactive LFortran REPL Runner (`:FortranReplToggle`, `:FortranReplSend`,
+    `:FortranReplSendSubprogram`, `:FortranReplSendBuffer`, `:FortranReplRestart`).
+  * Instant Ephemeral Scientific Scratchpad (`:FortranScratch`, `:FortranScratchRun`).
+  * Granular `fpm test` single-target execution (`:FortranFpmTestCurrent`, `<leader>tc`).
+  * Automated FORD documentation project builder & live browser preview (`:FordBuild`, `:FordPreview`).
+  * Automated dependency injector (`:FortranFpmAdd`).
+  * Rich FORD docstring support for modules, derived types, and interfaces.
 
 v0.6.0:
   * Streamlined architecture: removed redundant UltiSnips bundling, regex formatters,

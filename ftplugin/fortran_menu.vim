@@ -77,6 +77,12 @@ if has('gui_running') && has('menu') && g:Fortran_menumode == 1
   let s:c_prof       = s:format_shortcut(get(b:, 'fortran_profile',       '\pp'))
   let s:c_omp        = s:format_shortcut(get(b:, 'fortran_openmp',        '\po'))
   let s:c_mpi        = s:format_shortcut(get(b:, 'fortran_mpi',           '\pm'))
+  let s:c_repl_tog   = s:format_shortcut(get(b:, 'fortran_repl_toggle',    '\rt'))
+  let s:c_repl_snd   = s:format_shortcut(get(b:, 'fortran_repl_send',      '\rs'))
+  let s:c_repl_sub   = s:format_shortcut(get(b:, 'fortran_repl_subprog',   '\rm'))
+  let s:c_repl_buf   = s:format_shortcut(get(b:, 'fortran_repl_buffer',    '\rb'))
+  let s:c_scrat_op   = s:format_shortcut(get(b:, 'fortran_scratch',        '\so'))
+  let s:c_scrat_rn   = s:format_shortcut(get(b:, 'fortran_scratch_run',    '\sr'))
   let s:c_make       = s:format_shortcut(get(b:, 'fortran_make',          '\mk'))
   let s:c_prop       = s:format_shortcut(get(b:, 'fortran_makeProp',      '\mp'))
 
@@ -103,6 +109,16 @@ if has('gui_running') && has('menu') && g:Fortran_menumode == 1
   call s:add_menu_item('&FPM.sep_fpm', '', '<Nop>')
   call s:add_menu_item('&FPM.fpm\ &New\ Project', '', ':FortranFpmNew<CR>')
   call s:add_menu_item('&FPM.fpm\ &Add\ Dependency...', '', ':FortranFpmAdd ')
+
+  " Interactive REPL & Scratchpad Submenu
+  call s:add_menu_item('&Interactive.Toggle\ &LFortran\ REPL', s:c_repl_tog, ':FortranReplToggle<CR>')
+  call s:add_menu_item('&Interactive.Send\ &Line\ /\ Selection', s:c_repl_snd, ':FortranReplSend<CR>')
+  call s:add_menu_item('&Interactive.Send\ Enclosing\ &Subprogram', s:c_repl_sub, ':FortranReplSendSubprogram<CR>')
+  call s:add_menu_item('&Interactive.Send\ Entire\ &Buffer', s:c_repl_buf, ':FortranReplSendBuffer<CR>')
+  call s:add_menu_item('&Interactive.Restart\ &REPL', '', ':FortranReplRestart<CR>')
+  call s:add_menu_item('&Interactive.sep_repl', '', '<Nop>')
+  call s:add_menu_item('&Interactive.Open\ Scientific\ &Scratchpad', s:c_scrat_op, ':FortranScratch<CR>')
+  call s:add_menu_item('&Interactive.&Run\ Scratchpad', s:c_scrat_rn, ':FortranScratchRun<CR>')
 
   " Build Profiles & Presets Submenu
   call s:add_menu_item('&Profiles.Profile:\ &Debug', s:c_prof, ':FortranProfile debug<CR>')
