@@ -6,11 +6,13 @@
 
 ## 🌟 Key Features
 
-* 📦 **First-Class Fortran Package Manager (`fpm`)**: Full asynchronous execution for `fpm build`, `fpm run`, `fpm test`, and `fpm new`.
+* 📦 **First-Class Fortran Package Manager (`fpm`)**: Full asynchronous execution for `fpm build`, `fpm run`, `fpm test`, `fpm-test-current`, and `fpm new`.
+* 🧪 **Interactive LFortran REPL Runner**: Live interactive REPL session (`:FortranReplToggle` / `<leader>rt`) to send lines (`<leader>rs`), visual selections, enclosing subprograms (`<leader>rm`), or whole buffers (`<leader>rb`) directly to [LFortran](https://lfortran.org/).
+* 🔬 **Instant Scientific Scratchpad**: One-command ephemeral scratchpad (`:FortranScratch` / `<leader>so`) with templates (`program`, `matrix`, `openmp`, `module`, `test`) and instant compile & execute (`:FortranScratchRun` / `<leader>sr`).
 * 🏗️ **Large Multi-File Project Intelligence**: Automatic project root detection, multi-directory `.mod`/include path discovery (`-I`), and cross-file module navigation (`:FortranFindModule`).
 * ⚡ **Asynchronous Build Engine**: Non-blocking background compilation for Vim 8/9 & Neovim with dynamic multi-compiler QuickFix error parsing (`gfortran`, `ifx`, `ifort`, `nvfortran`, `flang`).
 * 🎯 **Fortran Text Objects & Structural Motions**: Python/Julia-grade text objects (`vaf`/`vif` function, `vam`/`vim` module, `vat`/`vit` type, `vad`/`vid` loop) and subprogram jumps (`]m`, `[m`, `]M`, `[M`).
-* 📝 **Automatic FORD & Doxygen Docstring Generator**: One-command doc generator (`:FortranDoc` / `<leader>dc`) that automatically scans parameter types, `intent(in/out/inout)`, `optional` flags, and return values.
+* 📝 **Automatic FORD & Doxygen Docstring Generator**: One-command doc generator (`:FortranDoc` / `<leader>dc`) that automatically scans parameter types, `intent(in/out/inout)`, `optional` flags, and return values, plus asynchronous project doc building and browser preview (`:FordBuild`, `:FordPreview`).
 * ⚙️ **HPC & Build Profiles Presets**: Instant switching between `Debug`, `Release`, `Fast`, and `Sanitize` profiles, with one-key OpenMP multithreading and MPI wrapper toggles (`:FortranProfile`, `:FortranOpenMP`, `:FortranMPI`).
 * 🗂️ **Tagbar & Aerial Symbol Hierarchy**: Built-in Universal Ctags hierarchy (`Program` ➔ `Module` ➔ `Type` ➔ `Interface` ➔ `Subroutine`).
 * 🎨 **GUI Menu with Dynamic Leader Display**: Top-level `Fortran` menu displaying exact expanded keyboard shortcuts (`\cc`, `,cc`, or `<Space>cc`).
@@ -46,6 +48,7 @@ use 'rudrab/vimf90'
 | Tool / Plugin | Category | Importance | Description |
 |---|---|:---:|---|
 | [**fpm**](https://fpm.fortran-lang.org/) | Package Manager | **Highly Recommended** | The standard Fortran package manager & build system. |
+| [**LFortran**](https://lfortran.org/) | Interactive REPL | **Recommended** | Modern interactive Fortran compiler & REPL backend. |
 | [**fortls**](https://github.com/gnikit/fortls) | Language Server | **Recommended** | Fortran Language Server for hover docs, signature help, and autocomplete. |
 | [**fprettify**](https://github.com/pseewald/fprettify) | Formatter | **Recommended** | Auto-formatting via `:FortranFormat` or on save (`pipx install fprettify`). |
 | [**vim-snippets**](https://github.com/honza/vim-snippets) / [**friendly-snippets**](https://github.com/rafamadriz/friendly-snippets) | Snippets | **Recommended** | Community standard Fortran snippets with [LuaSnip](https://github.com/L3MON4D3/LuaSnip) or [UltiSnips](https://github.com/SirVer/ultisnips). |
@@ -70,6 +73,12 @@ All mappings are buffer-local and respect `g:fortran_leader` (defaults to `<Lead
 | `<leader>fr` | `<Plug>(vimf90-fpm-run)` | `fpm run` application |
 | `<leader>ft` | `<Plug>(vimf90-fpm-test)` | `fpm test` all unit tests |
 | `<leader>tc` | `<Plug>(vimf90-fpm-test-current)` | `fpm test` current test file / target under cursor |
+| `<leader>rt` | `<Plug>(vimf90-repl-toggle)` | Toggle interactive LFortran REPL terminal |
+| `<leader>rs` | `<Plug>(vimf90-repl-send-line)` | Send current line (or visual selection) to REPL |
+| `<leader>rm` | `<Plug>(vimf90-repl-send-subprog)` | Send enclosing subprogram / module to REPL |
+| `<leader>rb` | `<Plug>(vimf90-repl-send-buffer)` | Send entire buffer to REPL |
+| `<leader>so` | `<Plug>(vimf90-scratch-open)` | Open scientific Fortran scratchpad buffer |
+| `<leader>sr` | `<Plug>(vimf90-scratch-run)` | Compile & run scientific scratchpad buffer |
 | `<leader>tg` | `<Plug>(vimf90-tags)` | Generate project Universal Ctags |
 | `<leader>fm` | `<Plug>(vimf90-find-module)` | Find & jump to module definition across project |
 | `<leader>dc` | `<Plug>(vimf90-doc)` | Generate FORD / Doxygen docstring header |
@@ -96,6 +105,14 @@ All mappings are buffer-local and respect `g:fortran_leader` (defaults to `<Lead
 
 ## 🛠️ User Commands
 
+* **Interactive REPL & Scratchpad**:
+  * `:FortranReplToggle` / `:FortranReplOpen [cmd]`: Open / focus LFortran REPL terminal split.
+  * `:FortranReplSend`: Send visual selection or line to REPL.
+  * `:FortranReplSendSubprogram`: Send current subroutine/function/module to REPL.
+  * `:FortranReplSendBuffer`: Send entire active buffer to REPL.
+  * `:FortranReplRestart`: Restart the active REPL session.
+  * `:FortranScratch [program|matrix|openmp|module|test]`: Open ephemeral scientific scratchpad.
+  * `:FortranScratchRun`: Instantly compile and run the scratchpad code and display output.
 * **`fpm` Tooling**:
   * `:FortranFpm [subcmd]` / `:FortranFpmBuild` / `:FortranFpmRun [target]` / `:FortranFpmTest [target]`
   * `:FortranFpmTestCurrent`: Run only the unit test in the active buffer.

@@ -42,6 +42,17 @@ nnoremap <buffer> <silent> <Plug>(vimf90-profile)        :call profiles#set_prof
 nnoremap <buffer> <silent> <Plug>(vimf90-openmp)         :call profiles#toggle_openmp()<CR>
 nnoremap <buffer> <silent> <Plug>(vimf90-mpi)            :call profiles#toggle_mpi()<CR>
 
+" Plug mappings - Interactive REPL & Scratchpad
+nnoremap <buffer> <silent> <Plug>(vimf90-repl-toggle)       :call repl#toggle()<CR>
+nnoremap <buffer> <silent> <Plug>(vimf90-repl-open)         :call repl#open()<CR>
+nnoremap <buffer> <silent> <Plug>(vimf90-repl-send-line)    :<C-U>call repl#send_line(v:count1)<CR>
+xnoremap <buffer> <silent> <Plug>(vimf90-repl-send-visual)  :<C-U>call repl#send_visual()<CR>
+nnoremap <buffer> <silent> <Plug>(vimf90-repl-send-subprog) :call repl#send_subprogram()<CR>
+nnoremap <buffer> <silent> <Plug>(vimf90-repl-send-buffer)  :call repl#send_buffer()<CR>
+nnoremap <buffer> <silent> <Plug>(vimf90-repl-restart)      :call repl#restart()<CR>
+nnoremap <buffer> <silent> <Plug>(vimf90-scratch-open)      :call scratch#open()<CR>
+nnoremap <buffer> <silent> <Plug>(vimf90-scratch-run)       :call scratch#run()<CR>
+
 " Plug mappings - Text Objects
 xnoremap <buffer> <silent> <Plug>(vimf90-textobj-func-a)  :<C-U>call textobj#select('func', 0)<CR>
 xnoremap <buffer> <silent> <Plug>(vimf90-textobj-func-i)  :<C-U>call textobj#select('func', 1)<CR>
@@ -119,6 +130,16 @@ command! -buffer -bar          FortranProjectRoot  echo project#find_root()
 command! -buffer -bar          FortranTags         call project#generate_tags()
 command! -buffer -bar -nargs=? FortranFindModule   call project#find_module(<q-args>)
 
+" User commands - Interactive REPL & Scratchpad
+command! -buffer -bar -nargs=?                                                  FortranReplOpen          call repl#open(<q-args>)
+command! -buffer -bar                                                           FortranReplToggle        call repl#toggle()
+command! -buffer -bar -range                                                    FortranReplSend          call repl#send_visual()
+command! -buffer -bar                                                           FortranReplSendSubprogram call repl#send_subprogram()
+command! -buffer -bar                                                           FortranReplSendBuffer    call repl#send_buffer()
+command! -buffer -bar                                                           FortranReplRestart       call repl#restart()
+command! -buffer -bar -nargs=? -complete=customlist,scratch#complete_template   FortranScratch           call scratch#open(<q-args>)
+command! -buffer -bar                                                           FortranScratchRun        call scratch#run()
+
 " Legacy helper function wrappers for backwards compatibility
 function! Compile() abort
   return makes#Fcompile()
@@ -156,7 +177,10 @@ let s:cmds = [
       \ 'FortranProfile', 'FortranCompiler', 'FortranOpenMP', 'FortranMPI',
       \ 'FortranFpm', 'FortranFpmBuild', 'FortranFpmRun', 'FortranFpmTest',
       \ 'FortranFpmTestCurrent', 'FortranFpmNew', 'FortranFpmAdd',
-      \ 'FortranProjectBuild', 'FortranProjectRoot', 'FortranTags', 'FortranFindModule'
+      \ 'FortranProjectBuild', 'FortranProjectRoot', 'FortranTags', 'FortranFindModule',
+      \ 'FortranReplOpen', 'FortranReplToggle', 'FortranReplSend',
+      \ 'FortranReplSendSubprogram', 'FortranReplSendBuffer', 'FortranReplRestart',
+      \ 'FortranScratch', 'FortranScratchRun'
       \ ]
 let s:delcmds = join(map(s:cmds, '"delcommand " . v:val'), ' | ')
 
@@ -169,6 +193,10 @@ let s:plugs = [
       \ '<Plug>(vimf90-project-build)', '<Plug>(vimf90-tags)', '<Plug>(vimf90-find-module)',
       \ '<Plug>(vimf90-doc)', '<Plug>(vimf90-ford-build)', '<Plug>(vimf90-ford-preview)',
       \ '<Plug>(vimf90-profile)', '<Plug>(vimf90-openmp)', '<Plug>(vimf90-mpi)',
+      \ '<Plug>(vimf90-repl-toggle)', '<Plug>(vimf90-repl-open)', '<Plug>(vimf90-repl-send-line)',
+      \ '<Plug>(vimf90-repl-send-visual)', '<Plug>(vimf90-repl-send-subprog)',
+      \ '<Plug>(vimf90-repl-send-buffer)', '<Plug>(vimf90-repl-restart)',
+      \ '<Plug>(vimf90-scratch-open)', '<Plug>(vimf90-scratch-run)',
       \ '<Plug>(vimf90-textobj-func-a)', '<Plug>(vimf90-textobj-func-i)',
       \ '<Plug>(vimf90-textobj-mod-a)', '<Plug>(vimf90-textobj-mod-i)',
       \ '<Plug>(vimf90-textobj-type-a)', '<Plug>(vimf90-textobj-type-i)',
