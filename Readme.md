@@ -14,6 +14,8 @@ A modern development environment for scientific and high-performance Fortran (F9
 * ⎇ **Semantic Text Objects & Motions**: Domain-aware text objects (`vaf`/`vif` subprogram, `vam`/`vim` module, `vat`/`vit` derived type, `vad`/`vid` loop) and subprogram jumps (`]m`, `[m`, `]M`, `[M`).
 * ✎ **FORD Documentation Engine**: Automated docstring generator (`:FortranDoc` / `<leader>dc`) with parameter type, `intent(in/out/inout)`, and attribute deduction, plus asynchronous project documentation building and browser preview (`:FordBuild`, `:FordPreview`).
 * ⚙ **HPC & Compilation Profiles**: Switchable presets for `Debug`, `Release`, `Fast`, and `Sanitize`, with OpenMP multithreading and MPI wrapper toggles (`:FortranProfile`, `:FortranOpenMP`, `:FortranMPI`).
+* ⨁ **Coarray Fortran (CAF) & Supercomputing**: Parallel ISO Coarray Fortran runner (`:FortranCAF`, `:FortranCAFRun`), GPU offloading (`:FortranGPU` OpenACC/OpenMP Target), and MPI cluster job execution (`:FortranMPIRun`).
+* ⌖ **Scientific Debugging & Matrix Inspector**: GDB/LLDB/Termdebug and `nvim-dap` integration with breakpoint toggles (`:FortranBreakpointToggle`) and live multi-dimensional array visualization (`:FortranInspectArray` / `<leader>da`).
 * ☰ **Symbol Hierarchy**: Universal Ctags symbol tree (`Program` &rarr; `Module` &rarr; `Type` &rarr; `Interface` &rarr; `Subroutine`) compatible with `tagbar` and `aerial.nvim`.
 * ⛊ **Buffer-Local Hygiene**: All mappings and settings are strictly buffer-scoped with complete `b:undo_ftplugin` teardown.
 
@@ -46,6 +48,7 @@ use 'rudrab/vimf90'
 |---|---|:---:|---|
 | [**fpm**](https://fpm.fortran-lang.org/) | Package Manager | Recommended | Standard Fortran package manager and build system. |
 | [**LFortran**](https://lfortran.org/) | Interactive REPL | Recommended | Interactive Fortran compiler and REPL backend. |
+| [**OpenCoarrays**](https://opencoarrays.org/) | Parallel Runtime | Recommended | Coarray Fortran (CAF) multi-image runtime for GCC. |
 | [**fortls**](https://github.com/gnikit/fortls) | Language Server | Recommended | Language Server for hover docs, signature help, and completion. |
 | [**fprettify**](https://github.com/pseewald/fprettify) | Formatter | Recommended | Source code auto-formatting (`:FortranFormat` or on save). |
 | [**vim-snippets**](https://github.com/honza/vim-snippets) | Snippets | Recommended | Standard snippets for [LuaSnip](https://github.com/L3MON4D3/LuaSnip) or [UltiSnips](https://github.com/SirVer/ultisnips). |
@@ -84,6 +87,12 @@ All mappings are buffer-local and respect `g:fortran_leader` (defaults to `<Lead
 | `<leader>pp` | `<Plug>(vimf90-profile)` | Switch / show compilation profile |
 | `<leader>po` | `<Plug>(vimf90-openmp)` | Toggle OpenMP multithreading |
 | `<leader>pm` | `<Plug>(vimf90-mpi)` | Toggle MPI compiler wrapper |
+| `<leader>pc` | `<Plug>(vimf90-caf-toggle)` | Toggle Coarray Fortran (CAF) mode |
+| `<leader>pg` | `<Plug>(vimf90-gpu-toggle)` | Toggle GPU Offload (OpenACC / OpenMP Target) |
+| `<leader>pr` | `<Plug>(vimf90-mpi-run)` | Launch MPI multi-rank cluster execution (`mpirun`) |
+| `<leader>pn` | `<Plug>(vimf90-caf-run)` | Launch multi-image Coarray execution (`cafrun`) |
+| `<leader>da` | `<Plug>(vimf90-inspect-array)` | Inspect multi-dimensional array / matrix structure |
+| `<leader>dt` | `<Plug>(vimf90-breakpoint-toggle)` | Toggle debug breakpoint on current line |
 | `<leader>mk` | `<Plug>(vimf90-make)` | Run `make` (historical fallback) |
 | `<leader>mp` | `<Plug>(vimf90-makeprop)` | Set `make` target / properties |
 
@@ -102,6 +111,16 @@ All mappings are buffer-local and respect `g:fortran_leader` (defaults to `<Lead
 
 ## ⚙ User Commands
 
+* **Supercomputing, HPC & Parallel Standards**:
+  * `:FortranCAF [on|off|single|lib|shared|distributed]`: Configure Coarray Fortran mode.
+  * `:FortranGPU [openmp|openacc|off]`: Configure GPU offloading flags.
+  * `:FortranMPIRun [ranks] [args]`: Launch executable with `mpirun -n <ranks>` in terminal.
+  * `:FortranCAFRun [images] [args]`: Launch executable with `cafrun -n <images>`.
+* **Scientific Debugging & DAP**:
+  * `:FortranInspectArray [var] [rows] [cols]`: Formatted 2D matrix inspector for arrays.
+  * `:FortranBreakpointToggle`: Toggle breakpoint on current line for GDB / DAP.
+  * `:FortranTermdebug [exe]`: Start native Vim `Termdebug` session.
+  * `:FortranDapStart`: Launch `nvim-dap` debug session.
 * **Interactive REPL & Scratchpad**:
   * `:FortranReplToggle` / `:FortranReplOpen [cmd]`: Open or focus LFortran REPL terminal split.
   * `:FortranReplSend`: Send visual selection or line to REPL.
