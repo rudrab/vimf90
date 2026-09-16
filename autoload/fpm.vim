@@ -3,10 +3,23 @@
 " Copyright:     Copyright (C) 2026 Rudra Banerjee
 " License:       GPLv3
 " Description:   Fortran Package Manager (fpm) integration for vimf90
+"                Includes target discovery, test runner, and manifest helpers
 "########################################################################
 
 let s:save_cpo = &cpo
 set cpo&vim
+
+" Standard Scientific Fortran Dependencies Registry
+let s:known_dependencies = {
+      \ 'stdlib':        'stdlib = { git = "https://github.com/fortran-lang/stdlib.git" }',
+      \ 'test-drive':    'test-drive = { git = "https://github.com/fortran-lang/test-drive.git" }',
+      \ 'toml-f':        'toml-f = { git = "https://github.com/toml-f/toml-f.git" }',
+      \ 'lapack':        'lapack = { git = "https://github.com/fortran-lang/lapack.git" }',
+      \ 'json-fortran':  'json-fortran = { git = "https://github.com/jacobwilliams/json-fortran.git" }',
+      \ 'mstore':        'mstore = { git = "https://github.com/fortran-lang/mstore.git" }',
+      \ 'datetime':      'datetime-fortran = { git = "https://github.com/wavebitscientific/datetime-fortran.git" }',
+      \ 'csv-fortran':   'fortran-csv-module = { git = "https://github.com/jacobwilliams/fortran-csv-module.git" }',
+      \ }
 
 " Find fpm root directory containing fpm.toml {{{1
 function! fpm#find_root(...) abort
@@ -20,6 +33,44 @@ function! fpm#find_root(...) abort
     return fnamemodify(l:root, ':p:h')
   endif
   return ''
+endfunction
+"}}}1
+
+" Discover available test targets from test/ directory {{{1
+function! fpm#list_test_targets() abort
+  let l:root = fpm#find_root()
+  if empty(l:root) || !isdirectory(l:root . '/test')
+    return []
+  endif
+
+  let l:files = globpath(l:root . '/test', '*.f90', 0, 1)
+        \ + globpath(l:root . '/test', '*.F90', 0, 1)
+        \ + globpath(l:root . '/test', '*.f', 0, 1)
+
+  let l:targets = []
+  for l:f in l:files
+    call add(l:targets, fnamemodify(l:f, ':t:r'))
+  endfor
+  return sort(l:targets)
+endfunction
+"}}}1
+
+" Discover available app targets from app/ directory {{{1
+function! fpm#list_app_targets() abort
+  let l:root = fpm#find_root()
+  if empty(l:root) || !isdirectory(l:root . '/app')
+    return []
+  endif
+
+  let l:files = globpath(l:root . '/app', '*.f90', 0, 1)
+        \ + globpath(l:root . '/app', '*.F90', 0, 1)
+        \ + globpath(l:root . '/app', '*.f', 0, 1)
+
+  let l:targets = []
+  for l:f in l:files
+    call add(l:targets, fnamemodify(l:f, ':t:r'))
+  endfor
+  return sort(l:targets)
 endfunction
 "}}}1
 
@@ -44,11 +95,23 @@ function! fpm#execute(subcmd, args, ...) abort
 
   let l:is_async = a:0 > 0 ? a:1 : makes#get_opt('fortran_async', 1)
   let l:cmd_list = ['fpm', a:subcmd]
+  
+  " Inject profile flags if not specified
+  let l:flags_to_add = []
+  if index(['build', 'run', 'test'], a:subcmd) >= 0 && a:args !~# '--profile'
+    let l:prof = profiles#get_profile()
+    if l:prof ==# 'release'
+      call add(l:flags_to_add, '--profile')
+      call add(l:flags_to_add, 'release')
+    endif
+  endif
+
+  let l:cmd_list += l:flags_to_add
   if !empty(a:args)
     let l:cmd_list += split(a:args)
   endif
 
-  let l:compiler = makes#get_opt('fortran_compiler', 'gfortran')
+  let l:compiler = profiles#get_effective_compiler()
   let l:efm = '%A%f:%l:%c:,%C%p%*[0123456789^],%Z%trror: %m,%Z%twarning: %m,%C%.%#,%f:%l:%c: %m'
 
   silent update
@@ -66,7 +129,6 @@ function! fpm#execute(subcmd, args, ...) abort
             \ 'fail_msg': 'fpm ' . a:subcmd . ' failed.',
             \ 'efm': l:efm,
             \ }
-      " Delegate to async runner in makes.vim
       return s:run_async_in_dir(l:cmd_list, l:root, l:opts)
     else
       " Synchronous execution
@@ -146,8 +208,50 @@ endfunction
 
 function! fpm#test(...) abort
   let l:args = a:0 > 0 ? a:1 : ''
+  if !empty(l:args) && l:args !~# '^-'
+    " User passed target name directly, e.g. :FortranFpmTest test_solver
+    let l:args = '--target ' . l:args
+  endif
   return fpm#execute('test', l:args)
 endfunction
+
+" Run single unit test from active buffer {{{1
+function! fpm#test_current() abort
+  let l:root = fpm#find_root()
+  if empty(l:root)
+    echohl WarningMsg | echo 'vimf90: fpm.toml not found.' | echohl None
+    return 0
+  endif
+
+  let l:cur_file = expand('%:p')
+  let l:target = ''
+
+  " If file is inside test/ directory, use filename as target
+  if l:cur_file =~# '/test/'
+    let l:target = expand('%:t:r')
+  else
+    " Scan buffer for program test_...
+    let l:view = winsaveview()
+    let l:match_line = search('\v^\s*program\s+\w+', 'nw')
+    call winrestview(l:view)
+    if l:match_line > 0
+      let l:line_str = getline(l:match_line)
+      let l:m = matchlist(l:line_str, '\v^\s*program\s+(\w+)')
+      if !empty(l:m)
+        let l:target = l:m[1]
+      endif
+    endif
+  endif
+
+  if empty(l:target)
+    echohl WarningMsg | echo 'vimf90: Current buffer is not a recognized fpm test target. Running all tests...' | echohl None
+    return fpm#test('')
+  endif
+
+  echomsg 'vimf90: Running fpm test target [' . l:target . ']...'
+  return fpm#test('--target ' . l:target)
+endfunction
+"}}}1
 
 function! fpm#run(...) abort
   let l:root = fpm#find_root()
@@ -157,6 +261,10 @@ function! fpm#run(...) abort
   endif
 
   let l:args = a:0 > 0 ? a:1 : ''
+  if !empty(l:args) && l:args !~# '^-'
+    let l:args = '--target ' . l:args
+  endif
+
   let l:orig_dir = getcwd()
   try
     execute 'lcd ' . fnameescape(l:root)
@@ -188,10 +296,63 @@ function! fpm#new(name) abort
 
   execute '!fpm new ' . fnameescape(l:pname)
   if isdirectory(l:pname)
-    execute 'edit ' . fnameescape(l:pname . '/app/main.f90')
+    let l:main_file = filereadable(l:pname . '/app/main.f90') ? l:pname . '/app/main.f90' : l:pname . '/src/' . l:pname . '.f90'
+    execute 'edit ' . fnameescape(l:main_file)
     echomsg 'New fpm project "' . l:pname . '" initialized.'
   endif
 endfunction
+
+" Add standard dependency to fpm.toml manifest {{{1
+function! fpm#add_dependency(dep_name) abort
+  let l:root = fpm#find_root()
+  if empty(l:root)
+    echohl WarningMsg | echo 'vimf90: fpm.toml not found in project.' | echohl None
+    return 0
+  endif
+
+  let l:manifest = l:root . '/fpm.toml'
+  if !filereadable(l:manifest)
+    echohl ErrorMsg | echo 'vimf90: Cannot read ' . l:manifest | echohl None
+    return 0
+  endif
+
+  let l:dep = trim(tolower(a:dep_name))
+  if empty(l:dep)
+    echohl WarningMsg | echo 'vimf90: Specify dependency name (e.g. :FortranFpmAdd stdlib)' | echohl None
+    return 0
+  endif
+
+  let l:snippet = get(s:known_dependencies, l:dep, '')
+  if empty(l:snippet)
+    " Custom git dependency or name
+    let l:snippet = l:dep . ' = { git = "https://github.com/' . l:dep . '.git" }'
+  endif
+
+  let l:lines = readfile(l:manifest)
+  let l:has_dep_header = 0
+  let l:insert_idx = len(l:lines)
+
+  for l:i in range(len(l:lines))
+    if l:lines[l:i] =~# '^\s*\[dependencies\]'
+      let l:has_dep_header = 1
+      let l:insert_idx = l:i + 1
+      break
+    endif
+  endfor
+
+  if !l:has_dep_header
+    call add(l:lines, '')
+    call add(l:lines, '[dependencies]')
+    call add(l:lines, l:snippet)
+  else
+    call insert(l:lines, l:snippet, l:insert_idx)
+  endif
+
+  call writefile(l:lines, l:manifest)
+  echomsg 'vimf90: Added "' . l:dep . '" to ' . l:manifest
+  return 1
+endfunction
+"}}}1
 
 function! fpm#command(args) abort
   let l:parts = split(a:args)
@@ -211,14 +372,41 @@ function! fpm#command(args) abort
     call fpm#test(l:rest)
   elseif l:subcmd ==# 'new'
     call fpm#new(l:rest)
+  elseif l:subcmd ==# 'add'
+    call fpm#add_dependency(l:rest)
   else
     call fpm#execute(l:subcmd, l:rest)
   endif
 endfunction
 
+" Completion helpers
 function! fpm#complete(arglead, cmdline, cursorpos) abort
-  let l:subcommands = ['build', 'run', 'test', 'new', 'update', 'clean', 'install']
+  let l:tokens = split(a:cmdline)
+  if len(l:tokens) >= 2 && l:tokens[1] ==# 'test'
+    return fpm#complete_test_targets(a:arglead, a:cmdline, a:cursorpos)
+  elseif len(l:tokens) >= 2 && l:tokens[1] ==# 'run'
+    return fpm#complete_app_targets(a:arglead, a:cmdline, a:cursorpos)
+  elseif len(l:tokens) >= 2 && l:tokens[1] ==# 'add'
+    return fpm#complete_known_deps(a:arglead, a:cmdline, a:cursorpos)
+  endif
+
+  let l:subcommands = ['build', 'run', 'test', 'new', 'add', 'update', 'clean', 'install']
   return filter(l:subcommands, 'v:val =~ "^" . a:arglead')
+endfunction
+
+function! fpm#complete_test_targets(arglead, cmdline, cursorpos) abort
+  let l:targets = fpm#list_test_targets()
+  return filter(l:targets, 'v:val =~ "^" . a:arglead')
+endfunction
+
+function! fpm#complete_app_targets(arglead, cmdline, cursorpos) abort
+  let l:targets = fpm#list_app_targets()
+  return filter(l:targets, 'v:val =~ "^" . a:arglead')
+endfunction
+
+function! fpm#complete_known_deps(arglead, cmdline, cursorpos) abort
+  let l:deps = keys(s:known_dependencies)
+  return filter(l:deps, 'v:val =~ "^" . a:arglead')
 endfunction
 "}}}1
 

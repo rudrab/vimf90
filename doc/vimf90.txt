@@ -114,7 +114,14 @@ All commands are buffer-local and available in Fortran buffers:
 
 *:FortranDoc* [ford|doxygen]
     Generates a FORD or Doxygen documentation block above the current subprogram,
-    automatically inspecting dummy argument types, intents, and return values.
+    module, derived type, or interface.
+
+*:FordBuild*
+    Builds project FORD documentation asynchronously from the project root.
+
+*:FordPreview*
+    Builds and opens project FORD documentation index (`doc/html/index.html`) in
+    the default web browser.
 
 *:FortranProfile* [debug|release|fast|sanitize]
     Sets the active compilation profile (compiler flags).
@@ -129,7 +136,7 @@ All commands are buffer-local and available in Fortran buffers:
     Toggles MPI compiler wrapper (`mpifort`, `mpiifx`, `mpiifort`, `mpif90`).
 
 *:FortranFpm* [subcommand]
-    Runs an `fpm` command (with tab-completion for `build`, `run`, `test`, `new`, `clean`, etc.).
+    Runs an `fpm` command (with tab-completion for `build`, `run`, `test`, `new`, `add`, `clean`, etc.).
 
 *:FortranFpmBuild* [args]
     Runs `fpm build` asynchronously from the project root.
@@ -138,7 +145,13 @@ All commands are buffer-local and available in Fortran buffers:
     Runs `fpm run` from the project root.
 
 *:FortranFpmTest* [args]
-    Runs `fpm test` from the project root.
+    Runs `fpm test` from the project root (supports target completion).
+
+*:FortranFpmTestCurrent*
+    Runs only the unit test in the active buffer under the cursor.
+
+*:FortranFpmAdd* <dependency>
+    Adds a standard library dependency (`stdlib`, `test-drive`, `lapack`, `toml-f`) to `fpm.toml`.
 
 *:FortranFpmNew* [name]
     Initializes a new Fortran Package Manager project.
@@ -178,10 +191,13 @@ Default shortcuts (using `<Leader>` or `g:fortran_leader`):
   `<leader>cd`     <Plug>(vimf90-dbg)                Debug executable
   `<leader>fb`     <Plug>(vimf90-fpm-build)          fpm build project
   `<leader>fr`     <Plug>(vimf90-fpm-run)            fpm run project
-  `<leader>ft`     <Plug>(vimf90-fpm-test)           fpm test project
+  `<leader>ft`     <Plug>(vimf90-fpm-test)           fpm test all tests
+  `<leader>tc`     <Plug>(vimf90-fpm-test-current)   fpm test current buffer test
   `<leader>tg`     <Plug>(vimf90-tags)               Generate project Ctags
   `<leader>fm`     <Plug>(vimf90-find-module)        Find & jump to module
   `<leader>dc`     <Plug>(vimf90-doc)                Generate FORD/Doxygen docstring
+  `<leader>db`     <Plug>(vimf90-ford-build)         Build project FORD docs
+  `<leader>dp`     <Plug>(vimf90-ford-preview)       Preview FORD docs in browser
   `<leader>pp`     <Plug>(vimf90-profile)            Switch/show build profile
   `<leader>po`     <Plug>(vimf90-openmp)             Toggle OpenMP
   `<leader>pm`     <Plug>(vimf90-mpi)                Toggle MPI

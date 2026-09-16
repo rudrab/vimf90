@@ -68,10 +68,13 @@ All mappings are buffer-local and respect `g:fortran_leader` (defaults to `<Lead
 | `<leader>cd` | `<Plug>(vimf90-dbg)` | Debug executable (`gdb`/`lldb`) |
 | `<leader>fb` | `<Plug>(vimf90-fpm-build)` | `fpm build` project asynchronously |
 | `<leader>fr` | `<Plug>(vimf90-fpm-run)` | `fpm run` application |
-| `<leader>ft` | `<Plug>(vimf90-fpm-test)` | `fpm test` unit tests |
+| `<leader>ft` | `<Plug>(vimf90-fpm-test)` | `fpm test` all unit tests |
+| `<leader>tc` | `<Plug>(vimf90-fpm-test-current)` | `fpm test` current test file / target under cursor |
 | `<leader>tg` | `<Plug>(vimf90-tags)` | Generate project Universal Ctags |
 | `<leader>fm` | `<Plug>(vimf90-find-module)` | Find & jump to module definition across project |
 | `<leader>dc` | `<Plug>(vimf90-doc)` | Generate FORD / Doxygen docstring header |
+| `<leader>db` | `<Plug>(vimf90-ford-build)` | Build project FORD documentation (`:FordBuild`) |
+| `<leader>dp` | `<Plug>(vimf90-ford-preview)` | Preview FORD documentation in browser (`:FordPreview`) |
 | `<leader>pp` | `<Plug>(vimf90-profile)` | Switch / show compilation profile |
 | `<leader>po` | `<Plug>(vimf90-openmp)` | Toggle OpenMP multithreading |
 | `<leader>pm` | `<Plug>(vimf90-mpi)` | Toggle MPI compiler wrapper |
@@ -93,15 +96,25 @@ All mappings are buffer-local and respect `g:fortran_leader` (defaults to `<Lead
 
 ## 🛠️ User Commands
 
-* `:FortranFpm [subcommand]` / `:FortranFpmBuild` / `:FortranFpmRun` / `:FortranFpmTest` / `:FortranFpmNew <name>`
-* `:FortranProjectBuild` / `:FortranProjectRoot` / `:FortranTags` / `:FortranFindModule <name>`
-* `:FortranCompile` / `:FortranExe` / `:FortranRun` / `:FortranArgs` / `:FortranDebug`
-* `:FortranDoc [ford|doxygen]`
-* `:FortranProfile [debug|release|fast|sanitize]`
-* `:FortranCompiler [gfortran|ifx|ifort|nvfortran|flang]`
-* `:FortranOpenMP [on|off|toggle]` / `:FortranMPI [on|off|toggle]`
-* `:FortranFormat` (Delegates to `fprettify`)
-* `:FortranInstallDeps` (Advisory dependency helper)
+* **`fpm` Tooling**:
+  * `:FortranFpm [subcmd]` / `:FortranFpmBuild` / `:FortranFpmRun [target]` / `:FortranFpmTest [target]`
+  * `:FortranFpmTestCurrent`: Run only the unit test in the active buffer.
+  * `:FortranFpmAdd <dependency>`: Add standard dependency (`stdlib`, `test-drive`, `lapack`, `toml-f`) to `fpm.toml`.
+  * `:FortranFpmNew <name>`: Scaffold new standard Fortran package.
+* **`FORD` Documentation**:
+  * `:FortranDoc [ford|doxygen]`: Generate rich docstring for subroutine, function, module, type, or interface.
+  * `:FordBuild`: Build project FORD documentation asynchronously.
+  * `:FordPreview`: Build & open project documentation in default web browser.
+* **Project Tools**:
+  * `:FortranProjectBuild` / `:FortranProjectRoot` / `:FortranTags` / `:FortranFindModule <name>`
+* **Compiler & HPC Profiles**:
+  * `:FortranCompile` / `:FortranExe` / `:FortranRun` / `:FortranArgs` / `:FortranDebug`
+  * `:FortranProfile [debug|release|fast|sanitize]`
+  * `:FortranCompiler [gfortran|ifx|ifort|nvfortran|flang]`
+  * `:FortranOpenMP [on|off|toggle]` / `:FortranMPI [on|off|toggle]`
+* **Formatting**:
+  * `:FortranFormat` (Delegates to `fprettify`)
+  * `:FortranInstallDeps` (Advisory dependency helper)
 
 ---
 
