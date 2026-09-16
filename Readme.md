@@ -4,22 +4,22 @@ A modern development environment for scientific and high-performance Fortran (F9
 
 ---
 
-## Overview & Key Features
+## ◈ Overview & Key Features
 
-* **Fortran Package Manager (`fpm`)**: Full asynchronous execution for `fpm build`, `fpm run`, `fpm test`, `fpm-test-current`, and `fpm new`.
-* **Interactive LFortran REPL**: Integrated REPL workflow (`:FortranReplToggle` / `<leader>rt`) to send lines (`<leader>rs`), visual selections, enclosing subprograms (`<leader>rm`), or whole buffers (`<leader>rb`) directly to [LFortran](https://lfortran.org/).
-* **Scientific Scratchpad**: Ephemeral prototyping buffer (`:FortranScratch` / `<leader>so`) with scientific templates (`program`, `matrix`, `openmp`, `module`, `test`) and instant execution (`:FortranScratchRun` / `<leader>sr`).
-* **Multi-File Project Resolution**: Automatic project root detection, multi-directory module and include path discovery (`-I`), and cross-file module navigation (`:FortranFindModule`).
-* **Asynchronous Build Engine**: Non-blocking background compilation for Vim 8/9 & Neovim with multi-compiler QuickFix error parsing (`gfortran`, `ifx`, `ifort`, `nvfortran`, `flang`).
-* **Semantic Text Objects & Motions**: Domain-aware text objects (`vaf`/`vif` subprogram, `vam`/`vim` module, `vat`/`vit` derived type, `vad`/`vid` loop) and subprogram jumps (`]m`, `[m`, `]M`, `[M`).
-* **FORD Documentation Engine**: Automated docstring generator (`:FortranDoc` / `<leader>dc`) with parameter type, `intent(in/out/inout)`, and attribute deduction, plus asynchronous project documentation building and browser preview (`:FordBuild`, `:FordPreview`).
-* **HPC & Compilation Profiles**: Switchable presets for `Debug`, `Release`, `Fast`, and `Sanitize`, with OpenMP multithreading and MPI wrapper toggles (`:FortranProfile`, `:FortranOpenMP`, `:FortranMPI`).
-* **Symbol Hierarchy**: Universal Ctags symbol tree (`Program` &rarr; `Module` &rarr; `Type` &rarr; `Interface` &rarr; `Subroutine`) compatible with `tagbar` and `aerial.nvim`.
-* **Buffer-Local Hygiene**: All mappings and settings are strictly buffer-scoped with complete `b:undo_ftplugin` teardown.
+* ◈ **Fortran Package Manager (`fpm`)**: Full asynchronous execution for `fpm build`, `fpm run`, `fpm test`, `fpm-test-current`, and `fpm new`.
+* ⚗ **Interactive LFortran REPL**: Integrated REPL workflow (`:FortranReplToggle` / `<leader>rt`) to send lines (`<leader>rs`), visual selections, enclosing subprograms (`<leader>rm`), or whole buffers (`<leader>rb`) directly to [LFortran](https://lfortran.org/).
+* ⧉ **Scientific Scratchpad**: Ephemeral prototyping buffer (`:FortranScratch` / `<leader>so`) with scientific templates (`program`, `matrix`, `openmp`, `module`, `test`) and instant execution (`:FortranScratchRun` / `<leader>sr`).
+* ⌕ **Multi-File Project Resolution**: Automatic project root detection, multi-directory module and include path discovery (`-I`), and cross-file module navigation (`:FortranFindModule`).
+* ⚡ **Asynchronous Build Engine**: Non-blocking background compilation for Vim 8/9 & Neovim with multi-compiler QuickFix error parsing (`gfortran`, `ifx`, `ifort`, `nvfortran`, `flang`).
+* ⎇ **Semantic Text Objects & Motions**: Domain-aware text objects (`vaf`/`vif` subprogram, `vam`/`vim` module, `vat`/`vit` derived type, `vad`/`vid` loop) and subprogram jumps (`]m`, `[m`, `]M`, `[M`).
+* ✎ **FORD Documentation Engine**: Automated docstring generator (`:FortranDoc` / `<leader>dc`) with parameter type, `intent(in/out/inout)`, and attribute deduction, plus asynchronous project documentation building and browser preview (`:FordBuild`, `:FordPreview`).
+* ⚙ **HPC & Compilation Profiles**: Switchable presets for `Debug`, `Release`, `Fast`, and `Sanitize`, with OpenMP multithreading and MPI wrapper toggles (`:FortranProfile`, `:FortranOpenMP`, `:FortranMPI`).
+* ☰ **Symbol Hierarchy**: Universal Ctags symbol tree (`Program` &rarr; `Module` &rarr; `Type` &rarr; `Interface` &rarr; `Subroutine`) compatible with `tagbar` and `aerial.nvim`.
+* ⛊ **Buffer-Local Hygiene**: All mappings and settings are strictly buffer-scoped with complete `b:undo_ftplugin` teardown.
 
 ---
 
-## Installation
+## ⬡ Installation
 
 ### vim-plug
 ```vim
@@ -38,7 +38,7 @@ use 'rudrab/vimf90'
 
 ---
 
-## Recommended Ecosystem & Companion Tools
+## ⚗ Recommended Ecosystem & Companion Tools
 
 `vimf90` handles build orchestration, diagnostics parsing, project navigation, text objects, and docstrings, integrating cleanly with standard tools in the Vim/Neovim ecosystem:
 
@@ -55,7 +55,7 @@ use 'rudrab/vimf90'
 
 ---
 
-## Key Mappings
+## ⌨ Key Mappings
 
 All mappings are buffer-local and respect `g:fortran_leader` (defaults to `<Leader>` or `\`):
 
@@ -100,7 +100,7 @@ All mappings are buffer-local and respect `g:fortran_leader` (defaults to `<Lead
 
 ---
 
-## User Commands
+## ⚙ User Commands
 
 * **Interactive REPL & Scratchpad**:
   * `:FortranReplToggle` / `:FortranReplOpen [cmd]`: Open or focus LFortran REPL terminal split.
@@ -132,7 +132,7 @@ All mappings are buffer-local and respect `g:fortran_leader` (defaults to `<Lead
 
 ---
 
-## Configuration
+## ⛭ Configuration
 
 Add optional settings to `.vimrc` or `init.lua`:
 
@@ -161,7 +161,7 @@ let g:fortran_doc_style = 'ford'
 
 ---
 
-## Language Server Protocol (`fortls`) Setup
+## ⟠ Language Server Protocol (`fortls`) Setup
 
 For `coc.nvim`, add to `coc-settings.json`:
 ```json
@@ -187,6 +187,6 @@ require('lspconfig').fortls.setup{
 
 ---
 
-## License
+## ⚖ License
 
 GPLv3. Copyright (C) Rudra Banerjee.
