@@ -121,7 +121,7 @@ function! fpm#execute(subcmd, args, ...) abort
   endif
 
   let l:compiler = profiles#get_effective_compiler()
-  let l:efm = '%A%f:%l:%c:,%C%p%*[0123456789^],%Z%trror: %m,%Z%twarning: %m,%C%.%#,%f:%l:%c: %m'
+  let l:efm = '%A%f:%l:%c:,%C%p%*[0123456789^],%Z%trror: %m,%Z%tarning: %m,%C%.%#,%f:%l:%c: %m'
 
   silent update
 

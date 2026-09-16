@@ -286,7 +286,7 @@ function! doc#create_default_ford_config(root_dir) abort
 endfunction
 
 function! doc#ford_build(...) abort
-  let l:on_finish = a:0 > 0 ? a:1 : v:null
+  let l:On_finish = a:0 > 0 ? a:1 : v:null
   let l:root = project#find_root()
   if empty(l:root)
     let l:root = getcwd()
@@ -296,8 +296,8 @@ function! doc#ford_build(...) abort
     echohl WarningMsg
     echo 'vimf90: FORD is not installed. Install with: pipx install ford'
     echohl None
-    if !empty(l:on_finish)
-      call call(l:on_finish, [0])
+    if !empty(l:On_finish)
+      call call(l:On_finish, [0])
     endif
     return 0
   endif
@@ -323,7 +323,7 @@ function! doc#ford_build(...) abort
             \ 'success_msg': 'FORD documentation built successfully.',
             \ 'fail_msg': 'FORD documentation build failed.',
             \ 'efm': l:efm,
-            \ 'on_finish': l:on_finish,
+            \ 'on_finish': l:On_finish,
             \ }
       " Run async in project root directory
       return s:run_async_ford(l:cmd_list, l:root, l:opts)
@@ -337,8 +337,8 @@ function! doc#ford_build(...) abort
       else
         echohl ErrorMsg | echo 'vimf90: FORD build failed: ' . trim(l:out) | echohl None
       endif
-      if !empty(l:on_finish)
-        call call(l:on_finish, [l:success])
+      if !empty(l:On_finish)
+        call call(l:On_finish, [l:success])
       endif
       return l:success
     endif

@@ -10,6 +10,9 @@ let &cpo = s:save_cpo
 
 let s:repl_bufnr = -1
 let s:repl_job   = -1
+" Vim's exit_cb receives the job that ended, so the handle of the current
+" session is kept to tell it apart from a session that has been replaced.
+let s:repl_vim_job = v:null
 
 function! repl#is_active() abort
   if s:repl_bufnr <= 0 || !bufexists(s:repl_bufnr)
@@ -37,9 +40,10 @@ function! s:on_repl_exit_nvim(job_id, data, event) abort
 endfunction
 
 function! s:on_repl_exit_vim(job, status) abort
-  if s:repl_bufnr > 0 && (!bufexists(s:repl_bufnr) || term_getstatus(s:repl_bufnr) =~# 'finished')
+  if s:repl_vim_job isnot v:null && a:job is s:repl_vim_job
     let s:repl_job = -1
     let s:repl_bufnr = -1
+    let s:repl_vim_job = v:null
   endif
 endfunction
 
@@ -99,6 +103,7 @@ function! repl#open(...) abort
           \ 'term_name': 'Fortran REPL (' . l:bin . ')',
           \ 'exit_cb': function('s:on_repl_exit_vim')
           \ })
+    let s:repl_vim_job = s:repl_bufnr > 0 ? term_getjob(s:repl_bufnr) : v:null
     setlocal nonumber norelativenumber noswapfile
     if !l:focus
       call win_gotoid(l:cur_win)
@@ -115,8 +120,37 @@ function! repl#close() abort
   if s:repl_bufnr > 0 && bufexists(s:repl_bufnr)
     let l:win_list = win_findbuf(s:repl_bufnr)
     for l:win in l:win_list
-      call win_execute(l:win, 'close')
+      " 'hide' rather than 'close': Vim refuses to :close a terminal window
+      " whose job is still running (E948), and the session is only being put
+      " away here, not ended.
+      call win_execute(l:win, 'hide')
     endfor
+  endif
+endfunction
+
+" Close the window of a REPL buffer and dispose of it for good. Unlike
+" repl#close(), which only hides a still-running session, this is used when the
+" session is being replaced and must not be left behind.
+function! s:terminate_bufnr(bufnr) abort
+  if a:bufnr <= 0 || !bufexists(a:bufnr)
+    return
+  endif
+
+  for l:win in win_findbuf(a:bufnr)
+    call win_execute(l:win, 'hide')
+  endfor
+
+  " Vim keeps a terminal buffer and its process alive after the window is
+  " gone, so the job has to be stopped explicitly.
+  if !has('nvim') && exists('*term_getjob')
+    let l:job = term_getjob(a:bufnr)
+    if l:job isnot v:null && job_status(l:job) ==# 'run'
+      call job_stop(l:job)
+    endif
+  endif
+
+  if bufexists(a:bufnr)
+    silent! execute 'bwipeout! ' . a:bufnr
   endif
 endfunction
 
@@ -134,18 +168,24 @@ endfunction
 
 function! repl#restart() abort
   if repl#is_active()
+    " Detach the old session first so its exit callback cannot clear the
+    " handles of the replacement REPL, but keep the handles locally so the
+    " old window and process are still cleaned up below.
     let l:old_job = s:repl_job
+    let l:old_buf = s:repl_bufnr
     let s:repl_bufnr = -1
     let s:repl_job = -1
+    let s:repl_vim_job = v:null
     if has('nvim') && l:old_job > 0
       call jobstop(l:old_job)
-    elseif exists('*term_sendkeys') && s:repl_bufnr > 0
-      call term_sendkeys(s:repl_bufnr, "exit\<CR>")
+    elseif exists('*term_sendkeys') && l:old_buf > 0
+      call term_sendkeys(l:old_buf, "exit\<CR>")
     endif
-    call repl#close()
+    call s:terminate_bufnr(l:old_buf)
   else
     let s:repl_bufnr = -1
     let s:repl_job = -1
+    let s:repl_vim_job = v:null
   endif
   call repl#open()
   echomsg 'vimf90: REPL restarted.'

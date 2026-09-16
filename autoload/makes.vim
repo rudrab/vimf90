@@ -19,12 +19,12 @@ endfunction
 " Compiler errorformat resolution {{{1
 function! s:get_errorformat(compiler) abort
   if a:compiler =~? 'ifort\|ifx'
-    return '%f(%l): %trror #%n: %m,%f(%l): %twarning #%n: %m,%f(%l): %tremark #%n: %m'
+    return '%f(%l): %trror #%n: %m,%f(%l): %tarning #%n: %m,%f(%l): %temark #%n: %m'
   elseif a:compiler =~? 'nvfortran\|flang'
-    return '%f:%l:%c: %trror: %m,%f:%l:%c: %twarning: %m,%f:%l:%c: %m'
+    return '%f:%l:%c: %trror: %m,%f:%l:%c: %tarning: %m,%f:%l:%c: %m'
   else
     " Standard modern gfortran errorformat
-    return '%A%f:%l:%c:,%C%p%*[0123456789^],%Z%trror: %m,%Z%twarning: %m,%C%.%#,%f:%l:%c: %m'
+    return '%A%f:%l:%c:,%C%p%*[0123456789^],%Z%trror: %m,%Z%tarning: %m,%C%.%#,%f:%l:%c: %m'
   endif
 endfunction
 "}}}1
@@ -126,7 +126,7 @@ function! s:run_async_job(cmd, opts) abort
   let l:success_msg = get(a:opts, 'success_msg', 'Build finished successfully.')
   let l:fail_msg    = get(a:opts, 'fail_msg', 'Build failed.')
   let l:efm         = get(a:opts, 'efm', s:get_errorformat(makes#get_opt('fortran_compiler', 'gfortran')))
-  let l:on_finish   = get(a:opts, 'on_finish', v:null)
+  let l:On_finish   = get(a:opts, 'on_finish', v:null)
 
   " Clear QuickFix list before starting
   call setqflist([], 'r', {'title': l:title, 'items': []})
@@ -138,7 +138,7 @@ function! s:run_async_job(cmd, opts) abort
         \ 'success_msg': l:success_msg,
         \ 'fail_msg': l:fail_msg,
         \ 'efm': l:efm,
-        \ 'on_finish': l:on_finish,
+        \ 'on_finish': l:On_finish,
         \ }
 
   " Neovim async execution
@@ -254,7 +254,7 @@ function! makes#Fexe(...) abort
   let l:flflags  = makes#get_opt('fortran_flflags', profiles#get_flags())
   let l:exeext   = makes#get_opt('fortran_exeExt', '')
   let l:is_async = a:0 > 0 ? a:1 : makes#get_opt('fortran_async', 1)
-  let l:on_finish = a:0 > 1 ? a:2 : v:null
+  let l:On_finish = a:0 > 1 ? a:2 : v:null
 
   " Multi-file project include directories
   let l:inc_dirs = project#get_include_dirs()
@@ -289,7 +289,7 @@ function! makes#Fexe(...) abort
           \ 'success_msg': "'" . l:exe . "': Successfully linked.",
           \ 'fail_msg': 'Build failed for ' . fnamemodify(l:exe, ':t'),
           \ 'efm': l:efm,
-          \ 'on_finish': l:on_finish,
+          \ 'on_finish': l:On_finish,
           \ }
     return s:run_async_job(l:cmd_list, l:opts)
   endif
@@ -307,16 +307,16 @@ function! makes#Fexe(...) abort
     if v:shell_error == 0 && !s:qf_has_errors()
       echomsg "'" . l:exe . "': Successfully linked."
       let s:fortran_link_success = 1
-      if !empty(l:on_finish)
-        call call(l:on_finish, [1])
+      if !empty(l:On_finish)
+        call call(l:On_finish, [1])
       endif
       return 1
     else
       echohl ErrorMsg | echo 'Build failed for ' . fnamemodify(l:exe, ':t') | echohl None
       let s:fortran_link_success = 0
       botright cwindow
-      if !empty(l:on_finish)
-        call call(l:on_finish, [0])
+      if !empty(l:On_finish)
+        call call(l:On_finish, [0])
       endif
       return 0
     endif
