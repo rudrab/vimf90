@@ -76,7 +76,6 @@ if has('gui_running') && has('menu') && g:Fortran_menumode == 1
   let s:c_mpi        = s:format_shortcut(get(b:, 'fortran_mpi',       '\pm'))
   let s:c_make       = s:format_shortcut(get(b:, 'fortran_make',      '\mk'))
   let s:c_prop       = s:format_shortcut(get(b:, 'fortran_makeProp',  '\mp'))
-  let s:c_proj       = s:format_shortcut(get(b:, 'fortran_genProj',   '\gp'))
 
   " Helper for adding menu item
   function! s:add_menu_item(path, shortcut, cmd) abort
@@ -117,9 +116,8 @@ if has('gui_running') && has('menu') && g:Fortran_menumode == 1
   call s:add_menu_item('&Project.Generate\ &Tags', s:c_tags, ':FortranTags<CR>')
   call s:add_menu_item('&Project.Find\ &Module', s:c_find_mod, ':FortranFindModule<CR>')
   call s:add_menu_item('&Project.sep_proj', '', '<Nop>')
-  call s:add_menu_item('&Project.&Make', s:c_make, ':FortranMake<CR>')
+  call s:add_menu_item('&Project.&Make\ (Fallback)', s:c_make, ':FortranMake<CR>')
   call s:add_menu_item('&Project.Make\ &Properties', s:c_prop, ':FortranMakeArgs<CR>')
-  call s:add_menu_item('&Project.Generate\ &Autotools\ Project', s:c_proj, ':FortranMakeProj<CR>')
 
   " Direct entries
   execute 'anoremenu ' . s:root . '.--sep_top-- <Nop>'

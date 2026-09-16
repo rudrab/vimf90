@@ -24,7 +24,6 @@ let b:fortran_cla       = get(g:, 'fortran_cla',       s:leader . 'cl')
 let b:fortran_dbg       = get(g:, 'fortran_dbg',       s:leader . 'cd')
 let b:fortran_make      = get(g:, 'fortran_make',      s:leader . 'mk')
 let b:fortran_makeProp  = get(g:, 'fortran_makeProp',  s:leader . 'mp')
-let b:fortran_genProj   = get(g:, 'fortran_genProj',   s:leader . 'gp')
 let b:fortran_fpm_build = get(g:, 'fortran_fpm_build',  s:leader . 'fb')
 let b:fortran_fpm_run   = get(g:, 'fortran_fpm_run',    s:leader . 'fr')
 let b:fortran_fpm_test  = get(g:, 'fortran_fpm_test',   s:leader . 'ft')
@@ -52,7 +51,6 @@ call s:map_buf('n', b:fortran_cla,       '<Plug>(vimf90-cla)')
 call s:map_buf('n', b:fortran_dbg,       '<Plug>(vimf90-dbg)')
 call s:map_buf('n', b:fortran_make,      '<Plug>(vimf90-make)')
 call s:map_buf('n', b:fortran_makeProp,  '<Plug>(vimf90-makeprop)')
-call s:map_buf('n', b:fortran_genProj,   '<Plug>(vimf90-makeproj)')
 call s:map_buf('n', b:fortran_fpm_build, '<Plug>(vimf90-fpm-build)')
 call s:map_buf('n', b:fortran_fpm_run,   '<Plug>(vimf90-fpm-run)')
 call s:map_buf('n', b:fortran_fpm_test,  '<Plug>(vimf90-fpm-test)')
@@ -110,7 +108,7 @@ endif
 "}}}1
 
 " Undo ftplugin
-let s:undo_vars = 'unlet! b:fortran_compile b:fortran_exe b:fortran_run b:fortran_cla b:fortran_dbg b:fortran_make b:fortran_makeProp b:fortran_genProj b:fortran_fpm_build b:fortran_fpm_run b:fortran_fpm_test b:fortran_tags b:fortran_find_mod b:fortran_doc b:fortran_profile b:fortran_openmp b:fortran_mpi'
+let s:undo_vars = 'unlet! b:fortran_compile b:fortran_exe b:fortran_run b:fortran_cla b:fortran_dbg b:fortran_make b:fortran_makeProp b:fortran_fpm_build b:fortran_fpm_run b:fortran_fpm_test b:fortran_tags b:fortran_find_mod b:fortran_doc b:fortran_profile b:fortran_openmp b:fortran_mpi'
 let s:undo = s:undo_vars . ' | silent! augroup vimf90_timestamp | silent! autocmd! * <buffer> | silent! augroup END'
 if !empty(s:undo_maps)
   let s:undo .= ' | ' . join(s:undo_maps, ' | ')

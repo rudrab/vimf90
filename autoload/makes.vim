@@ -352,7 +352,7 @@ function! makes#Fdbg() abort
 endfunction
 "}}}1
 
-" Run Makefile {{{1
+" Run Makefile (historical fallback) {{{1
 function! makes#MakeRun() abort
   silent update
   cclose
@@ -367,38 +367,6 @@ function! makes#MakeCla() abort
   let l:prompt  = 'Make parameters/target: '
   let l:current = exists('b:MakeArgs') ? b:MakeArgs : ''
   let b:MakeArgs = input(l:prompt, l:current)
-endfunction
-"}}}1
-
-" Create standard project structure {{{1
-function! makes#MakeProj() abort
-  let l:prdir = input('Create new project directory: ', getcwd() . '/', 'dir')
-  if empty(l:prdir)
-    return
-  endif
-
-  let l:prdir = fnamemodify(l:prdir, ':p')
-  if !isdirectory(l:prdir)
-    call mkdir(l:prdir, 'p')
-  endif
-
-  call mkdir(l:prdir . '/help', 'p')
-  call mkdir(l:prdir . '/src', 'p')
-
-  for l:fname in ['ChangeLog', 'README.md', 'LICENSE', 'Makefile']
-    let l:fpath = l:prdir . '/' . l:fname
-    if !filereadable(l:fpath)
-      call writefile([], l:fpath)
-    endif
-  endfor
-
-  let l:cbf = expand('%:t')
-  if !empty(l:cbf) && filereadable(expand('%:p'))
-    silent execute '!mv ' . fnameescape(expand('%:p')) . ' ' . fnameescape(l:prdir . '/src/' . l:cbf)
-    execute 'bdelete! | edit ' . fnameescape(l:prdir . '/src/' . l:cbf)
-  endif
-
-  echomsg 'Project structure created at: ' . l:prdir
 endfunction
 "}}}1
 

@@ -20,7 +20,6 @@ nnoremap <buffer> <silent> <Plug>(vimf90-cla)            :call makes#Cla()<CR>
 nnoremap <buffer> <silent> <Plug>(vimf90-dbg)            :call makes#Fdbg()<CR>
 nnoremap <buffer> <silent> <Plug>(vimf90-make)           :call makes#MakeRun()<CR>
 nnoremap <buffer> <silent> <Plug>(vimf90-makeprop)       :call makes#MakeCla()<CR>
-nnoremap <buffer> <silent> <Plug>(vimf90-makeproj)       :call makes#MakeProj()<CR>
 
 " Plug mappings - fpm
 nnoremap <buffer> <silent> <Plug>(vimf90-fpm-build)      :call fpm#build()<CR>
@@ -90,7 +89,6 @@ command! -buffer -bar          FortranArgs        call makes#Cla()
 command! -buffer -bar          FortranDebug       call makes#Fdbg()
 command! -buffer -bar          FortranMake        call makes#MakeRun()
 command! -buffer -bar          FortranMakeArgs    call makes#MakeCla()
-command! -buffer -bar          FortranMakeProj    call makes#MakeProj()
 
 " User commands - Documentation Generator
 command! -buffer -bar -nargs=? FortranDoc call doc#generate(<q-args>)
@@ -143,14 +141,10 @@ function! MakeProperties() abort
   return makes#MakeCla()
 endfunction
 
-function! MakeProject() abort
-  return makes#MakeProj()
-endfunction
-
 " Undo ftplugin
 let s:cmds = [
       \ 'FortranCompile', 'FortranExe', 'FortranRun', 'FortranArgs', 'FortranDebug',
-      \ 'FortranMake', 'FortranMakeArgs', 'FortranMakeProj',
+      \ 'FortranMake', 'FortranMakeArgs',
       \ 'FortranDoc', 'FortranProfile', 'FortranCompiler', 'FortranOpenMP', 'FortranMPI',
       \ 'FortranFpm', 'FortranFpmBuild', 'FortranFpmRun', 'FortranFpmTest', 'FortranFpmNew',
       \ 'FortranProjectBuild', 'FortranProjectRoot', 'FortranTags', 'FortranFindModule'
@@ -160,7 +154,7 @@ let s:delcmds = join(map(s:cmds, '"delcommand " . v:val'), ' | ')
 let s:plugs = [
       \ '<Plug>(vimf90-compile)', '<Plug>(vimf90-exe)', '<Plug>(vimf90-run)',
       \ '<Plug>(vimf90-cla)', '<Plug>(vimf90-dbg)', '<Plug>(vimf90-make)',
-      \ '<Plug>(vimf90-makeprop)', '<Plug>(vimf90-makeproj)',
+      \ '<Plug>(vimf90-makeprop)',
       \ '<Plug>(vimf90-fpm-build)', '<Plug>(vimf90-fpm-run)', '<Plug>(vimf90-fpm-test)',
       \ '<Plug>(vimf90-project-build)', '<Plug>(vimf90-tags)', '<Plug>(vimf90-find-module)',
       \ '<Plug>(vimf90-doc)', '<Plug>(vimf90-profile)', '<Plug>(vimf90-openmp)', '<Plug>(vimf90-mpi)',
