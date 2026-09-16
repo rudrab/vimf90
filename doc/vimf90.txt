@@ -280,7 +280,20 @@ For coc.nvim, add the following configuration in your `coc-settings.json` or `.v
 <
 
 ==============================================================================
-12. CHANGE LOG                                           *vimf90-changelog*
+12. GUI MENU                                                    *vimf90-menu*
+
+When running in GUI mode (gVim) with menu support enabled:
+  * A top-level 'Fortran' menu appears automatically on Fortran buffers.
+  * Dynamically shows exact expanded shortcuts (e.g. `\cc`, `,cc`, `<Space>cc`).
+  * To enable dynamic standard/dialect naming (e.g. 'Fortran 2008', 'Fortran 2018'): >
+      let g:fortran_menu_dynamic_dialect = 1
+<
+  * To customize the menu title manually: >
+      let g:fortran_menu_name = '&Fortran'
+<
+
+==============================================================================
+13. CHANGE LOG                                           *vimf90-changelog*
 
 v0.5.0:
   * First-class Fortran Package Manager (`fpm`) integration (`build`, `run`, `test`, `new`).
