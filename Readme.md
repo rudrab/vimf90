@@ -290,7 +290,10 @@ sh test/run.sh                       # everything
 sh test/run.sh textobj project       # selected files
 VF90_TEST=Test_name sh test/run.sh   # a single test
 VF90_VIM=nvim sh test/run.sh         # against Neovim
+VF90_TIMEOUT=600 sh test/run.sh      # raise the 300s watchdog (0 disables)
 ```
+
+A watchdog kills the editor after `VF90_TIMEOUT` seconds and says so, and the suite fails if it finds a process it started and did not reap. Both exist because a wedged run once left nine headless Neovim instances running for over an hour, unnoticed. The REPL tests spawn `test/fixtures/bin/vf90-repl-stub` rather than `cat`, so a leftover is identifiable by name and can never be confused with something else on the machine.
 
 It exits non-zero on failure, so it drops straight into CI. Tests that need `gfortran`, `fpm`, `fortls` or `luac` skip themselves when the tool is absent rather than failing. The suite is green on both Vim 9.2 and Neovim 0.12.
 

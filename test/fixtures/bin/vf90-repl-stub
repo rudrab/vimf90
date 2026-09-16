@@ -1,0 +1,10 @@
+#!/bin/sh
+# Stand-in for lfortran in the REPL tests.
+#
+# Deliberately not `cat`: a leftover from a wedged test has to be identifiable
+# by name, so that cleaning it up cannot possibly hit an unrelated process on
+# the machine. Behaves like cat -- echo each line back and stay alive until the
+# job is stopped -- which is all the REPL tests need from a REPL.
+while IFS= read -r line; do
+  printf '%s\n' "$line"
+done

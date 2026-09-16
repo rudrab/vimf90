@@ -570,7 +570,15 @@ external dependencies: >
     sh test/run.sh textobj project       " selected files
     VF90_TEST=Test_name sh test/run.sh   " a single test
     VF90_VIM=nvim sh test/run.sh         " against Neovim
+    VF90_TIMEOUT=600 sh test/run.sh      " raise the watchdog (0 disables)
 <
+A watchdog kills the editor after VF90_TIMEOUT seconds, 300 by default, and
+says so rather than hanging. The suite also fails if it finds a process it
+started and did not reap. Both exist because a wedged run once left nine
+headless Neovim instances running for over an hour without anyone noticing.
+The REPL tests spawn `test/fixtures/bin/vf90-repl-stub` rather than `cat`, so
+that a leftover process is identifiable by name and cleaning one up cannot
+possibly hit something unrelated.
 It exits non-zero on failure, so it drops straight into CI. Tests needing
 `gfortran`, `fpm`, `fortls` or `luac` skip themselves when the tool is absent
 rather than failing. The suite is green on both Vim 9.2 and Neovim 0.12.

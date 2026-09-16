@@ -53,6 +53,60 @@ function! Vf90CopyFixture(name, dest) abort
   return a:dest
 endfunction
 
+" The stand-in REPL process. Distinctly named so that a leftover is
+" unmistakably ours: cleaning up stray `cat` processes can hit anything.
+function! Vf90ReplStub() abort
+  return s:testdir . '/fixtures/bin/vf90-repl-stub'
+endfunction
+
+" Stub processes currently running. The bracket around the first character
+" keeps pgrep from matching the shell that runs the pgrep.
+function! s:running_stubs() abort
+  if !executable('pgrep')
+    return []
+  endif
+  let l:out = system("pgrep -f '[v]f90-repl-stub'")
+  if v:shell_error > 1
+    return []
+  endif
+  return filter(split(l:out, "\n"), '!empty(trim(v:val))')
+endfunction
+
+" Stubs that were already running before the suite started. Anything in here
+" belongs to someone else -- an earlier aborted run, a second suite running in
+" parallel -- and must not be blamed on, or killed by, this one.
+let s:stub_baseline = []
+
+function! Vf90MarkStubBaseline() abort
+  let s:stub_baseline = s:running_stubs()
+  return s:stub_baseline
+endfunction
+
+" Processes this run started and failed to reap.
+"
+" Two things make a naive check flaky. A job stopped a moment ago is still on
+" its way out, because job_stop() delivers a signal and returns, so an
+" immediate look races the kernel. And a stray from an earlier run would be
+" reported against this one. Hence a settling period, and the baseline.
+function! Vf90LeakedProcesses(...) abort
+  let l:grace = a:0 > 0 ? a:1 : 1000
+  let l:waited = 0
+  while 1
+    let l:pids = filter(s:running_stubs(), 'index(s:stub_baseline, v:val) < 0')
+    if empty(l:pids) || l:waited >= l:grace
+      return l:pids
+    endif
+    sleep 100m
+    let l:waited += 100
+  endwhile
+endfunction
+
+function! Vf90KillLeaked() abort
+  for l:pid in Vf90LeakedProcesses()
+    call system('kill -9 ' . shellescape(trim(l:pid)) . ' 2>/dev/null')
+  endfor
+endfunction
+
 " Abandon the current test without failing it. Used when a test needs a tool
 " that is not installed, and for behaviour that is a known, documented gap.
 function! Vf90Skip(reason) abort

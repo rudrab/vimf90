@@ -1,16 +1,22 @@
 "########################################################################
 " test_repl.vim — the interactive REPL terminal.
 "
-" 'cat' stands in for lfortran: it stays alive until killed, which is all these
-" tests need from a REPL process.
+" test/fixtures/bin/vf90-repl-stub stands in for lfortran: it echoes what it is
+" given and stays alive until the job is stopped, which is all these tests need
+" from a REPL. It is used rather than `cat` so that a process left behind by a
+" wedged run is identifiable by name and can be cleaned up without any risk of
+" hitting something unrelated on the machine.
 "########################################################################
 
 function! s:need_terminal() abort
   if !has('terminal') && !has('nvim')
     call Vf90Skip('no terminal support')
   endif
-  call Vf90NeedExecutable('cat')
-  let g:fortran_repl_command = 'cat'
+  let l:stub = Vf90ReplStub()
+  if !executable(l:stub)
+    call Vf90Skip('the REPL stub is not executable: ' . l:stub)
+  endif
+  let g:fortran_repl_command = l:stub
 endfunction
 
 function! s:terminal_buffers() abort
@@ -150,6 +156,45 @@ function! Test_send_subprogram_handles_fixed_form() abort
   call cursor(5, 1)
   let l:msg = execute('call repl#send_subprogram()')
   call assert_match('lines 4-6', l:msg, 'expected the whole fixed-form subroutine')
+endfunction
+
+" ---------------------------------------------------------------------------
+" The leak detector itself
+"
+" The suite reports a process it started and did not reap as a failure. That
+" check is only worth having if it actually sees one, so this starts a stub
+" outside the plugin's bookkeeping, proves the detector finds it, and cleans up.
+" ---------------------------------------------------------------------------
+function! Test_leak_detector_sees_an_unreaped_process() abort
+  call s:need_terminal()
+  if !executable('pgrep')
+    call Vf90Skip('pgrep is not available')
+  endif
+  " Compare against whatever is running now rather than demanding a quiet
+  " machine: a stray from an earlier aborted run would otherwise fail this.
+  let l:before = Vf90LeakedProcesses(2000)
+
+  let l:stub = Vf90ReplStub()
+  if has('nvim')
+    let l:job = jobstart([l:stub])
+  else
+    let l:job = job_start([l:stub])
+  endif
+  try
+    " Poll for appearance rather than waiting out a grace period: the job is
+    " started asynchronously, so it may take a moment to show up.
+    call assert_equal(1, Vf90WaitFor({-> len(Vf90LeakedProcesses(0)) > len(l:before)}, 2000),
+          \ 'an unreaped stub was not detected')
+  finally
+    if has('nvim')
+      silent! call jobstop(l:job)
+    else
+      silent! call job_stop(l:job, 'kill')
+    endif
+    call Vf90KillLeaked()
+  endtry
+  call assert_equal(len(l:before), len(Vf90LeakedProcesses(2000)),
+        \ 'cleanup left something behind')
 endfunction
 
 function! Test_send_opens_a_repl_when_none_is_running() abort

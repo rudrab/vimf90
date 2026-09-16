@@ -87,6 +87,9 @@ endfunction
 
 function! s:main() abort
   call Vf90Mkdir(g:vf90_scratch)
+  " Anything already running belongs to someone else; only what this run adds
+  " counts as a leak.
+  call Vf90MarkStubBaseline()
   " Work from the scratch directory. Compilers drop artefacts relative to the
   " current directory -- gfortran writes .mod files there -- and no test may
   " leave anything behind in the repository.
@@ -104,6 +107,18 @@ function! s:main() abort
       call s:run_one(l:name)
     endfor
   endfor
+
+  " A test that spawns a process must reap it. A leak here is how a wedged run
+  " leaves editors and REPL stubs behind for someone to find hours later, so it
+  " is reported as a failure rather than tidied away in silence.
+  let l:leaked = Vf90LeakedProcesses()
+  if !empty(l:leaked)
+    let s:fail += 1
+    call s:out(printf('  X process leak: %d REPL stub(s) still running: %s',
+          \ len(l:leaked), join(l:leaked, ' ')))
+    call add(s:failures, 'process leak: ' . join(l:leaked, ' '))
+    call Vf90KillLeaked()
+  endif
 
   let l:elapsed = split(reltimestr(reltime(l:start)))[0]
   call s:out('')

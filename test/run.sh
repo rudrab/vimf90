@@ -5,6 +5,7 @@
 #   sh test/run.sh textobj project       only test_textobj.vim and test_project.vim
 #   VF90_TEST=Test_name sh test/run.sh   a single test
 #   VF90_VIM=nvim sh test/run.sh         run against Neovim
+#   VF90_TIMEOUT=600 sh test/run.sh      raise the 300s watchdog (0 disables)
 #
 # Exits non-zero if any test failed, so CI can use it directly.
 
@@ -39,17 +40,43 @@ export VF90_FILES VF90_REPORT
 # with tee in place v:shell_error reports tee's status rather than the
 # compiler's, which is exactly the condition the build-status tests pin down.
 log="$VF90_REPORT.log"
+
+# A wedged editor must not outlive the run. This is not hypothetical: a broken
+# $VIMRUNTIME once left nine headless Neovim instances running for over an hour,
+# and they ignored SIGTERM, hence -s KILL rather than the default signal.
+TIMEOUT=${VF90_TIMEOUT:-300}
+limit=""
+if [ "$TIMEOUT" -gt 0 ] 2>/dev/null && command -v timeout >/dev/null 2>&1; then
+  limit="timeout -s KILL $TIMEOUT"
+fi
+
+# When the watchdog kills the editor, the shell announces it with a "Killed"
+# line of its own. That comes from this script's shell rather than from the
+# job, so silencing it means pointing this script's stderr away for the
+# duration. Nothing is lost: the editor's own output is already going to $log.
+exec 3>&2 2>/dev/null
 case "$(basename "$EDITOR_BIN")" in
   nvim*)
-    "$EDITOR_BIN" --headless -u "$here/vimrc" -S "$here/run.vim" </dev/null >"$log" 2>&1
+    $limit "$EDITOR_BIN" --headless -u "$here/vimrc" -S "$here/run.vim" </dev/null >"$log" 2>&1
     ;;
   *)
-    "$EDITOR_BIN" -es -u "$here/vimrc" -S "$here/run.vim" </dev/null >"$log" 2>&1
+    $limit "$EDITOR_BIN" -es -u "$here/vimrc" -S "$here/run.vim" </dev/null >"$log" 2>&1
     ;;
 esac
 status=$?
+exec 2>&3 3>&-
 
 [ -s "$VF90_REPORT" ] && cat "$VF90_REPORT"
+
+# 137 is SIGKILL, which here means the run hit the limit above. Say so plainly:
+# the partial report printed above is the last thing that happened before it
+# stopped, which is the useful part.
+if [ "$status" -eq 137 ]; then
+  echo
+  echo "TIMED OUT after ${TIMEOUT}s and was killed. Raise VF90_TIMEOUT if the"
+  echo "suite is simply slow here; otherwise the report above ends at the hang."
+fi
+
 if [ "$status" -ne 0 ] && [ -s "$log" ]; then
   echo
   echo "--- editor output (last 20 lines) ---"
