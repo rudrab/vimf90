@@ -75,6 +75,22 @@ endfunction
 
 " Drop every buffer so one test cannot leak state into the next.
 function! Vf90Wipe() abort
+  for l:b in range(1, bufnr('$'))
+    if bufexists(l:b)
+      if has('nvim')
+        let l:job = getbufvar(l:b, 'terminal_job_id', 0)
+        if l:job > 0
+          silent! call chanclose(l:job)
+          silent! call jobstop(l:job)
+        endif
+      elseif exists('*term_getjob')
+        let l:job = term_getjob(l:b)
+        if l:job isnot v:null && job_status(l:job) ==# 'run'
+          silent! call job_stop(l:job)
+        endif
+      endif
+    endif
+  endfor
   silent! only!
   for l:b in range(1, bufnr('$'))
     if bufexists(l:b)

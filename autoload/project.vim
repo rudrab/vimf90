@@ -271,6 +271,17 @@ function! project#find_module(name) abort
   let l:root = project#find_root()
   let l:pattern = '\c^\s*module\s\+' . l:mod_name . '\>'
 
+  let l:fortran_exts = ['f90', 'f95', 'f03', 'f08', 'F90', 'F95', 'f', 'F']
+  let l:files = []
+  for l:ext in l:fortran_exts
+    let l:files += globpath(l:root, '**/*.' . l:ext, 0, 1)
+  endfor
+
+  if empty(l:files)
+    echohl WarningMsg | echo 'Module "' . l:mod_name . '" not found in project.' | echohl None
+    return
+  endif
+
   " Let :vimgrep scan the project rather than reading every source file into a
   " Vim list. 'j' keeps the cursor here until we know where to jump, and the
   " quickfix list is restored afterwards so build results survive the search.
@@ -278,7 +289,7 @@ function! project#find_module(name) abort
   let l:matches = []
   try
     execute 'noautocmd vimgrep /' . escape(l:pattern, '/') . '/j '
-          \ . fnameescape(l:root) . '/**/*.{f90,f95,f03,f08,F90,F95,f,F}'
+          \ . join(map(l:files, 'fnameescape(v:val)'), ' ')
     let l:matches = getqflist()
   catch /^Vim\%((\a\+)\)\=:E\%(479\|480\|683\)/
     " No matching line, or no source files to search

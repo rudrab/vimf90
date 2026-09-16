@@ -31,19 +31,18 @@ endfunction
 function! Test_fortran_buffer_defines_core_commands() abort
   let l:dir = Vf90Fixture('plugin')
   call Vf90OpenScratch(l:dir . '/a.f90', ['program a', 'end program a'])
-  setfiletype fortran
-  let l:commands = execute('command')
+  setlocal filetype=fortran
   for l:name in ['FortranCompile', 'FortranRun', 'FortranProjectBuild',
         \ 'FortranFortlsConfig', 'FortranReplToggle', 'FortranFindModule']
-    call assert_match('\<' . l:name . '\>', l:commands, l:name . ' is missing')
+    call assert_equal(2, exists(':' . l:name), l:name . ' is missing')
   endfor
 endfunction
 
 function! Test_fortran_buffer_defines_plug_mappings() abort
   let l:dir = Vf90Fixture('plugin')
   call Vf90OpenScratch(l:dir . '/a.f90', ['program a', 'end program a'])
-  setfiletype fortran
-  let l:maps = execute('nmap')
+  setlocal filetype=fortran
+  let l:maps = execute('nmap <buffer>')
   for l:name in ['vimf90-compile', 'vimf90-run', 'vimf90-repl-toggle']
     call assert_match(l:name, l:maps, '<Plug>(' . l:name . ') is missing')
   endfor
@@ -54,8 +53,11 @@ endfunction
 function! Test_visual_repl_mapping_keeps_its_range() abort
   let l:dir = Vf90Fixture('plugin')
   call Vf90OpenScratch(l:dir . '/a.f90', ['program a', 'end program a'])
-  setfiletype fortran
+  setlocal filetype=fortran
   let l:map = execute('xmap <Plug>(vimf90-repl-send-visual)')
+  " Assert the mapping exists first: 'No mapping found' contains no <C-U>
+  " either, so the check below would otherwise pass for the wrong reason.
+  call assert_match('repl#send_visual', l:map, 'the mapping is not defined at all')
   call assert_notmatch('<C-U>', l:map, 'the mapping discards the visual range')
 endfunction
 

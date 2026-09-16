@@ -253,10 +253,12 @@ The suite is plain Vimscript with no external dependencies, built on Vim's own `
 sh test/run.sh                       # everything
 sh test/run.sh textobj project       # selected files
 VF90_TEST=Test_name sh test/run.sh   # a single test
-VIM=nvim sh test/run.sh              # against Neovim
+VF90_VIM=nvim sh test/run.sh         # against Neovim
 ```
 
-It exits non-zero on failure, so it drops straight into CI. Tests that need `gfortran`, `fpm`, `fortls` or `luac` skip themselves when the tool is absent rather than failing.
+It exits non-zero on failure, so it drops straight into CI. Tests that need `gfortran`, `fpm`, `fortls` or `luac` skip themselves when the tool is absent rather than failing. The suite is green on both Vim 9.2 and Neovim 0.12.
+
+The editor variable is `VF90_VIM` rather than `VIM` on purpose: `$VIM` is Vim's own variable for locating `$VIMRUNTIME`, so exporting `VIM=nvim` sets `$VIMRUNTIME` to `nvim` and quietly breaks filetype detection along with every other runtime file — the editor still starts and still runs the tests, they just fail for reasons that have nothing to do with your change.
 
 | File | Covers |
 |---|---|

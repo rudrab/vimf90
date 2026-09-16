@@ -512,11 +512,18 @@ external dependencies: >
     sh test/run.sh                       " everything
     sh test/run.sh textobj project       " selected files
     VF90_TEST=Test_name sh test/run.sh   " a single test
-    VIM=nvim sh test/run.sh              " against Neovim
+    VF90_VIM=nvim sh test/run.sh         " against Neovim
 <
 It exits non-zero on failure, so it drops straight into CI. Tests needing
 `gfortran`, `fpm`, `fortls` or `luac` skip themselves when the tool is absent
-rather than failing.
+rather than failing. The suite is green on both Vim 9.2 and Neovim 0.12.
+
+The editor variable is `VF90_VIM`, not `VIM`, on purpose: $VIM is Vim's own
+variable for locating $VIMRUNTIME. Exporting VIM=nvim sets $VIMRUNTIME to
+"nvim", which breaks filetype detection and every other runtime file with it,
+silently -- the editor still starts and still runs the tests. `test/run.sh`
+therefore ignores a $VIM that is not a directory, since it cannot be a runtime
+root and can only do harm.
 
 `test/test_plugin.vim` guards the failure mode where code is never reachable at
 all: an autoload file shadowing another plugin, an autocommand registered where

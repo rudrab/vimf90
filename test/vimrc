@@ -21,4 +21,4 @@ execute 'set runtimepath^=' . fnameescape(fnamemodify(s:here, ':h'))
 execute 'set runtimepath+=' . fnameescape(s:here)
 
 filetype plugin indent on
-syntax on
+silent! syntax on
