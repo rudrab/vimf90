@@ -255,15 +255,17 @@ augroup coc
   autocmd!
   autocmd VimEnter * :silent CocStart
 augroup end
+
 let g:coc_user_config = {
       \   'languageserver': {
       \     'fortran': {
-      \       'command': '${HOME}/.local/bin/fortls',
+      \       'command': 'fortls',
       \       'args': ['--lowercase_intrinsics'],
       \       'filetypes': ['fortran'],
-      \       'rootPatterns': ['.fortls', '.git/'],
+      \       'rootPatterns': ['.fortls', '.git/']
       \     }
-      }
+      \   }
+      \ }
 ```
 
 

@@ -1,204 +1,233 @@
-*vimf90.txt*   A fortran-90+ plugin for easy editing vimf90
+*vimf90.txt*   A modern Fortran 90/95/2003/2008/2018 plugin for Vim & Neovim
        _            __ ___   ___        ~
 __   _(_)_ __ ___  / _/ _ \ / _ \   _   ~
 \ \ / / | '_ ` _ \| || (_) | | | |_| |_ ~
  \ V /| | | | | | |  _\__, | |_| |_   _|~
   \_/ |_|_| |_| |_|_|   /_/ \___/  |_|  ~
 
-=====================================================================
-CONTENTS                          *vimf90-contents*
+==============================================================================
+CONTENTS                                                     *vimf90-contents*
 
-1. Introduction ................... |vimf90-Intro|
-   1.1 What it is.................. |vimf90-About|
-2. Install ........................ |vimf90-Install|
-   2.1 Dependencies ............... |vimf90-Dependencies|
-3. Features ....................... |vimf90-Features|
-  3.1  construct .................. |vimf90-Construct|
-  3.2  statements ................. |vimf90-Stats|
-  3.3  subprograms ................ |vimf90-Subs|
-  3.4  completions ................ |vimf90-Comp|
-  3.5  List of available mappings . |vimf90-List|
-4. Menu                             |vimf90-Menu|
-5. Dependencies ................... |vimf90-Deps|
-6. Change Log ..................... |vimf90-Clog|
-=====================================================================
-1. Introduction                                 *vimf90-Intro*
-This is a fortran IDE for vim. It is intended to write fortran code faster and easier in vim.
-Unfortunately, due to shortage of time, this help file is not often updated. Please check the
-Readme in github or the project page for updated info. 
+1. Introduction .............................. |vimf90-intro|
+2. Installation .............................. |vimf90-install|
+3. Configuration Options ..................... |vimf90-options|
+4. Commands .................................. |vimf90-commands|
+5. Key Mappings & <Plug> Targets ............. |vimf90-mappings|
+6. Construct Completion ...................... |vimf90-constructs|
+7. Formatting & Linting ...................... |vimf90-formatting|
+8. Asynchronous Build & Execution ............ |vimf90-async|
+9. Language Server (LSP) ..................... |vimf90-lsp|
+10. Change Log ............................... |vimf90-changelog|
 
- * https://rudrab.github.io/vimf90/
- * https://github.com/rudrab/vimf90#introduction
+==============================================================================
+1. INTRODUCTION                                                *vimf90-intro*
 
+|vimf90| turns Vim / Neovim into a modern, responsive IDE for Fortran 90+.
 
-1.1 Features                                    *vimf90-About*
-  * An IDE like environment for fortran 90+
-  * Increases development speed considerably.
-  * Easy to add new subprograms
-  * Auto completion of program blocks, like if-endif etc.
-  * Popup menu for standard and user defined modules and subroutines
-  * Support for menu mode
-  * Support for gnu-autotools (configure, make)
-  * IMPORTANT: All options are properly updated at the github's README. Please have a look.
-=====================================================================
-2. Install                                      *vimf90-Install*
-The easiest way of installation is to use a vim plugin manager.  
+Key Features:
+  * Smart Fortran construct completion (`program`, `module`, `subroutine`,
+    `function`, `if-then`, `do`, `block`, `type`, `select case`, `interface`, etc.).
+  * Non-blocking asynchronous compilation and linking using Vim 8/9 jobs and
+    Neovim async jobs.
+  * Direct QuickFix integration with compiler errorformat support for
+    GNU Fortran (`gfortran`), Intel (`ifort`, `ifx`), NVIDIA (`nvfortran`),
+    and LLVM (`flang`).
+  * Automated formatting via `fprettify` or built-in whitespace rules.
+  * Built-in interactive project generation and autotools scaffolding.
+  * Strict buffer isolation: all mappings and settings are buffer-local (`<buffer>`)
+    with full |b:undo_ftplugin| support.
 
-Using Vundle:
->
-  Plugin 'rudrab/vimf90' 
+==============================================================================
+2. INSTALLATION                                              *vimf90-install*
+
+Using vim-plug: >
+    Plug 'rudrab/vimf90'
+<
+Using lazy.nvim (Neovim): >
+    { 'rudrab/vimf90', ft = { 'fortran' } }
+<
+Using Vundle: >
+    Plugin 'rudrab/vimf90'
+<
+Python Dependencies:
+For automated formatting and language server capabilities, `fprettify` and
+`fortls` can be installed automatically by running: >
+    :FortranInstallDeps
+<
+or via pip: >
+    pip install fprettify fortran-language-server
 <
 
-Using vim-plug:
->
-  Plug 'rudrab/vimf90'
+==============================================================================
+3. CONFIGURATION OPTIONS                                     *vimf90-options*
+
+*g:fortran_leader*
+    Leader key used for default vimf90 mappings.
+    Default: "`" (backtick) or |mapleader|
+
+*g:fortran_compiler*
+    Fortran compiler executable.
+    Default: "gfortran" (supports "ifx", "ifort", "nvfortran", "flang", etc.)
+
+*g:fortran_fcflags*
+    Compiler flags for compiling object files.
+    Default: "-Wall -O0 -c"
+
+*g:fortran_flflags*
+    Compiler/linker flags for creating executables.
+    Default: "-Wall -O0"
+
+*g:fortran_exeExt*
+    Executable file extension (e.g. ".exe" on Windows, "" on Linux/macOS).
+    Default: ""
+
+*g:fortran_async*
+    Enable asynchronous non-blocking compilation for Vim 8+ and Neovim.
+    Default: 1
+
+*g:fortran_run_terminal*
+    Run executables and debuggers in a bottom terminal split instead of external shell.
+    Default: 0
+
+*g:fortran_linter*
+    Formatting mode on buffer save:
+      0 : On-the-fly insert mode whitespace adjustment.
+      1 : Built-in regex whitespace formatting on save (default).
+      2 : Format with `fprettify` on save.
+     -1 : Disable automatic formatting.
+
+*g:fprettify_options*
+    Options passed to `fprettify` when `g:fortran_linter = 2`.
+    Default: "--silent"
+
+*g:fortran_completer*
+    Key mapped to complete Fortran constructs.
+    Default: "<F3>"
+
+*g:fortran_update_timestamp*
+    Automatically update `! Last Modified: ...` header comments on save.
+    Default: 1
+
+==============================================================================
+4. COMMANDS                                                 *vimf90-commands*
+
+All commands are buffer-local and available in Fortran buffers:
+
+*:FortranCompile*
+    Compiles current buffer to an object file (`.o`).
+
+*:FortranExe*
+    Compiles and links current buffer to an executable.
+
+*:FortranRun*
+    Builds and runs the current buffer's executable.
+
+*:FortranArgs*
+    Prompts for command-line arguments to pass when executing the binary.
+
+*:FortranDebug*
+    Builds with debug flags (`-g`) and starts the debugger (`gdb` or `lldb`).
+
+*:FortranMake*
+    Executes `:make` with configured make arguments.
+
+*:FortranMakeArgs*
+    Prompts for make properties/targets.
+
+*:FortranMakeProj*
+    Interactively generates standard Fortran project directory structure (`src/`, `help/`, `Makefile`).
+
+*:FortranFormat*
+    Formats current buffer using the active formatter (`fprettify` or regex).
+
+*:FortranInstallDeps*
+    Installs recommended Python tooling (`fprettify`, `fortls`).
+
+==============================================================================
+5. KEY MAPPINGS & <PLUG> TARGETS                            *vimf90-mappings*
+
+Default shortcuts (using `<Leader>` or `g:fortran_leader`):
+
+  Normal Mode      Target                            Action
+  ----------------------------------------------------------------------------
+  `<leader>cc`     <Plug>(vimf90-compile)            Compile object file
+  `<leader>ce`     <Plug>(vimf90-exe)                Generate executable
+  `<leader>cr`     <Plug>(vimf90-run)                Build & Run executable
+  `<leader>cl`     <Plug>(vimf90-cla)                Set command line arguments
+  `<leader>cd`     <Plug>(vimf90-dbg)                Debug executable
+  `<leader>mk`     <Plug>(vimf90-make)               Run Makefile
+  `<leader>mp`     <Plug>(vimf90-makeprop)           Set make parameters
+  `<leader>gp`     <Plug>(vimf90-makeproj)           Generate project scaffolding
+  `<F3>`           <Plug>(vimf90-construct-complete) Smart construct complete
+                   <Plug>(vimf90-format)             Format current buffer
+
+Custom mapping example in your `.vimrc`: >
+    nmap <buffer> <leader>fc <Plug>(vimf90-compile)
+    nmap <buffer> <leader>fr <Plug>(vimf90-run)
 <
 
-2.1 Dependencies                                *vimf90-Dependencies*
-Not to reinventing the wheel, this pluging depends on other awesome plugins:
-   * Ultisnips: (Essential)
-   * coc-nvim:  (Optional) For Language server support
+==============================================================================
+6. CONSTRUCT COMPLETION                                  *vimf90-constructs*
 
-=====================================================================
+Pressing `<F3>` (or `g:fortran_completer`) at the end of a construct opening line
+automatically generates the matching `end` statement and positions the cursor inside:
 
-3. Features                                    *vimf90-Features*
-Default `<Leader>` key used here is **`**. You can change this by using:
+  Typed:                               Generated:
+  ----------------------------------------------------------------------------
+  `program my_app<F3>`                 program my_app
+                                         <cursor positioned here>
+                                       end program my_app
 
->
-  let g:VimF90Leader = "your chosen key"
+  `loop1: do i = 1, 100<F3>`           loop1: do i = 1, 100
+                                         <cursor positioned here>
+                                       end do loop1
+
+  `type :: Particle<F3>`               type :: Particle
+                                         <cursor positioned here>
+                                       end type Particle
+
+==============================================================================
+7. FORMATTING & LINTING                                  *vimf90-formatting*
+
+Set `let g:fortran_linter = 2` in `.vimrc` to enable automatic `fprettify`
+formatting whenever you save a Fortran file.
+
+You can also run `:FortranFormat` at any time on demand.
+
+==============================================================================
+8. ASYNCHRONOUS BUILD & EXECUTION                             *vimf90-async*
+
+When `g:fortran_async = 1` (default), running `:FortranCompile` or `:FortranExe`
+spawns background jobs using Vim 8+ `job_start` or Neovim `jobstart`. Output is
+parsed and streamed into the QuickFix window in the background without freezing
+the editor.
+
+==============================================================================
+9. LANGUAGE SERVER PROTOCOL (LSP)                               *vimf90-lsp*
+
+For coc.nvim, add the following configuration in your `coc-settings.json` or `.vimrc`: >
+    let g:coc_user_config = {
+          \   'languageserver': {
+          \     'fortran': {
+          \       'command': 'fortls',
+          \       'args': ['--lowercase_intrinsics'],
+          \       'filetypes': ['fortran'],
+          \       'rootPatterns': ['.fortls', '.git/']
+          \     }
+          \   }
+          \ }
 <
 
-in your `.vimrc`.
+==============================================================================
+10. CHANGE LOG                                           *vimf90-changelog*
 
-This explains mappings of this plugin.
----------------------------------------------------------------------
+v0.4.0:
+  * Complete buffer-local architecture (`<buffer>`, `<Plug>` mappings, `b:undo_ftplugin`).
+  * Added non-blocking asynchronous compilation engine for Vim 8/9 and Neovim.
+  * Added multi-compiler errorformat support (`gfortran`, `ifort`, `ifx`, `nvfortran`, `flang`).
+  * Python construct completion overhaul: casing preservation, new constructs (`block`, `interface`, `select type`).
+  * Fixed PEP 668 non-interactive dependency installation.
+  * Unified user commands `:FortranCompile`, `:FortranExe`, `:FortranRun`, etc.
 
-3.1 construct                                   *vimf90-Construct*
-If,do,select etc statements, that are closed by a corresponding end
-is defined here. After typing the first line, pressing <F7> will
-complete the construct. For example:
- you type:                   you get:      ~
->
- trial: do i=1,10<F7>        trial: do i=1,10
-                               <cursor here>
-                             end do trial
-Avalable construct:
-  i) do, ii) if, iii)selectcase, iv)forall, v)type,
-
-NB: This part is largly copied from 
-(http://www.vim.org/scripts/script.php?script_id=2487)
----------------------------------------------------------------------
-
-3.2  Statements                                 *vimf90-stats*
-Some statements is included here for less typing. These are mostly
-one-liner or part of the line:
-you type:           you get:~
->
-`wr        write(⌶,*)<++>
-`rd        read(⌶,*)<++>
-`re        real(⌶)::<++>
-`int       integer(⌶)::<++>
-`ch        character(len=⌶)::<++> 
-`par       parameter
-`sre       selected_real_kind(⌶)
-`sie       selected_integer_kind(⌶)
-
-where ⌶ is the current cursor position.
-<
-The <++> is a nice option, a <CTRL+J> will put your cursor in that 
-position.
----------------------------------------------------------------------
-
-3.3  subprograms                                *vimf90-subs*
-This key-combinations makes program and subprograms header.  
-It supports program(`prg), module(`mod), subroutine and function. 
-As shown, typing the first 3 letter and pressing <Shift-TAB>
-will complete the header section of the program. e.g.
-you type:                  you get:~
->
- `prg    !This is file : <your file name>
-         ! Author= <users login name>
-         ! Started at: <current time>
-         ! 
-         Program  <program name you give, by default, filename>
-         Implicit None
-         <++Start Typing++>
-         End Program  <program name you give, by default, filename>
-<
----------------------------------------------------------------------
-
-3.4 Fortran subprogram complete                 *vimf90-comp*
-vimf90 now supports subprogram completions.  *<leader>use* and
-*<leader>call* will popup a list of modules and subroutine inside
-present working dirs and fortran's standard module and subroutines.
----------------------------------------------------------------------
-
-3.5 List of Mappings                            *vimf90-List*
-Type:                                            get:~
----------------------------------------------------------------------
-Construct                                       *vimf90-List-Cons*
->
- [name:]do[iterator]<F7>                        do construct 
- [name:]if(condition)then<F7>                   if construct 
- selectcase<F7>                                 select construct 
- forall<F7>                                     forall construct
- type::name<F7>                                 type  construct
----------------------------------------------------------------------
-Statements                                      *vimf90-List-State* 
->
- `wr                               write(<cursor here>,*)<++>
- `rd                               read(<cursor here>,*)<++>
- `re                               real(<cursor here>)::<++>
- `int                              integer::<cursor here>
- `ch                               character(len=<cursor here>)::<++> 
- `par                              parameter
- `sre                              selected_real_kind()
- `sie                              selected_integer_kind()
----------------------------------------------------------------------
-Program and Subprograms                         *vimf90-List-Subs*
->
- `prg                                           program header
- `mod                                           module header
- `sub                                           subroutine header
- `fun                                           function header
-=====================================================================
-
-4. Menu                                         *vimf90-Menu*
-Menu is added for gui-help. It helps building project using 
-gnu-autotool. Every fortran file will open with "Fortran90" element 
-in the Menubar.
-It currently has the option of Compile(Make, Make clean, build current 
-file), Automake( A rudimentary configure.ac and Makefile.am file 
-generator) and Programing blocks (as given in |vimf90-subs|).
-=====================================================================
-
-5. Dependencies                                 *vimf90-Deps*
-i) This plugin depends on snippets. This should work on standard
-snippets engine.  I have tested it with
-http://www.vim.org/scripts/script.php?script_id=2715.  
-The latest version is always be found in 
-https://github.com/SirVer/ultisnips
-=====================================================================
-
-6. Change Log                                   *vimf90-Clog*
-v1.0
-        * Major Update
-        * subroutine and module search is removed. This can be handed better with dedicated LSP
-v0.3
-        * Major update
-        * Inclusion of Fortran Menu
-        * Standard and inbuilt modules and subroutine pop up
-        * Help with Autotool
-v0.2
-        * Major update
-        * complete for subprogram
-        * Formatting update
-        * Major bugfixes in 
-                ** Ultisnips
-                ** Formats
-v0.1.0
-        *First stable, usable release
-v0.0.2
-        *Mostly maintenance release 
-v0.0.1
-        *Initial repo
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:
