@@ -259,8 +259,11 @@ You can configure the options to your tastes.
 * `fortran_find_mod`: Find module across project. Default is `<leader>fm`
 
 #### Menu
-Menu is added for `gui`-help. Every fortran file will open with `fortran90` element in the menubar.
-It provides options for compile (`make`, build current file, `fpm`), autotools, and programming blocks.
+GUI menu support is available under the `Fortran` menubar item. It dynamically displays the actual expanded leader shortcuts (e.g. `\cc`, `,cc`, or `<Space>cc`) next to each command and includes menus for Compilation, `fpm`, Project Management, Autotools, and Formatting.
+To enable dynamic dialect naming (e.g. `Fortran 2008`, `Fortran 2018` based on file extension), set:
+```vim
+let g:fortran_menu_dynamic_dialect = 1
+```
 
 
 ### Language Server Protocol
