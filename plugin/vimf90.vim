@@ -25,5 +25,8 @@ if get(g:, 'fortran_fortls_autoconfig', 1)
   augroup END
 endif
 
+" Global command: accessible even before opening a Fortran buffer
+command! -bar -bang FortranToc call toc#toggle('<bang>')
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

@@ -10,6 +10,10 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! makes#get_opt(name, default) abort
+  let l:key = substitute(a:name, '^fortran_', '', '')
+  if exists('b:vimf90') && has_key(b:vimf90, l:key)
+    return b:vimf90[l:key]
+  endif
   if exists('b:' . a:name)
     return get(b:, a:name)
   endif
@@ -372,8 +376,9 @@ function! makes#Cla() abort
     return
   endif
   let l:prompt  = 'Command line arguments for "' . l:exe . '": '
-  let l:current = exists('b:Clargs') ? b:Clargs : ''
+  let l:current = state#get('cla', exists('b:Clargs') ? b:Clargs : '')
   let b:Clargs  = input(l:prompt, l:current, 'file')
+  call state#set('cla', b:Clargs)
 endfunction
 "}}}1
 
@@ -432,8 +437,9 @@ endfunction
 " Make arguments / properties {{{1
 function! makes#MakeCla() abort
   let l:prompt  = 'Make parameters/target: '
-  let l:current = exists('b:MakeArgs') ? b:MakeArgs : ''
+  let l:current = state#get('make_args', exists('b:MakeArgs') ? b:MakeArgs : '')
   let b:MakeArgs = input(l:prompt, l:current)
+  call state#set('make_args', b:MakeArgs)
 endfunction
 "}}}1
 

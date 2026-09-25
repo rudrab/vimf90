@@ -46,6 +46,7 @@ let b:fortran_scratch       = get(g:, 'fortran_scratch_map',    s:leader . 'so')
 let b:fortran_scratch_run   = get(g:, 'fortran_scratch_run_map',s:leader . 'sr')
 let b:fortran_inspect_array = get(g:, 'fortran_inspect_arr_map',s:leader . 'da')
 let b:fortran_break_toggle  = get(g:, 'fortran_break_toggle_map', s:leader . 'dt')
+let b:fortran_toc           = get(g:, 'fortran_toc_map',        s:leader . 'tt')
 
 let s:undo_maps = []
 
@@ -80,6 +81,7 @@ call s:map_buf('n', b:fortran_gpu,           '<Plug>(vimf90-gpu-toggle)')
 call s:map_buf('n', b:fortran_mpirun,        '<Plug>(vimf90-mpi-run)')
 call s:map_buf('n', b:fortran_inspect_array, '<Plug>(vimf90-inspect-array)')
 call s:map_buf('n', b:fortran_break_toggle,  '<Plug>(vimf90-breakpoint-toggle)')
+call s:map_buf('n', b:fortran_toc,           '<Plug>(vimf90-toc)')
 
 " Interactive REPL & Scratchpad mappings
 call s:map_buf('n', b:fortran_repl_toggle,   '<Plug>(vimf90-repl-toggle)')
@@ -137,7 +139,7 @@ endif
 "}}}1
 
 " Undo ftplugin
-let s:undo_vars = 'unlet! b:fortran_compile b:fortran_exe b:fortran_run b:fortran_cla b:fortran_dbg b:fortran_make b:fortran_makeProp b:fortran_fpm_build b:fortran_fpm_run b:fortran_fpm_test b:fortran_fpm_test_cur b:fortran_tags b:fortran_find_mod b:fortran_doc b:fortran_ford_build b:fortran_ford_preview b:fortran_profile b:fortran_openmp b:fortran_mpi b:fortran_gpu b:fortran_mpirun b:fortran_repl_toggle b:fortran_repl_send b:fortran_repl_subprog b:fortran_repl_buffer b:fortran_scratch b:fortran_scratch_run b:fortran_inspect_array b:fortran_break_toggle'
+let s:undo_vars = 'unlet! b:fortran_compile b:fortran_exe b:fortran_run b:fortran_cla b:fortran_dbg b:fortran_make b:fortran_makeProp b:fortran_fpm_build b:fortran_fpm_run b:fortran_fpm_test b:fortran_fpm_test_cur b:fortran_tags b:fortran_find_mod b:fortran_doc b:fortran_ford_build b:fortran_ford_preview b:fortran_profile b:fortran_openmp b:fortran_mpi b:fortran_gpu b:fortran_mpirun b:fortran_repl_toggle b:fortran_repl_send b:fortran_repl_subprog b:fortran_repl_buffer b:fortran_scratch b:fortran_scratch_run b:fortran_inspect_array b:fortran_break_toggle b:fortran_toc'
 let s:undo = s:undo_vars . ' | silent! augroup vimf90_timestamp | silent! autocmd! * <buffer> | silent! augroup END'
 if !empty(s:undo_maps)
   let s:undo .= ' | ' . join(s:undo_maps, ' | ')

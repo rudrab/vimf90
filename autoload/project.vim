@@ -15,10 +15,9 @@ function! project#find_root(...) abort
   " the caller has not named a directory to search from: an explicit argument is
   " a question about that directory, not about the current project.
   if a:0 == 0 || empty(a:1)
-    if exists('b:fortran_project_root') && !empty(b:fortran_project_root)
-      return expand(b:fortran_project_root)
-    elseif exists('g:fortran_project_root') && !empty(g:fortran_project_root)
-      return expand(g:fortran_project_root)
+    let l:proj_root = state#get('project_root')
+    if !empty(l:proj_root)
+      return expand(l:proj_root)
     endif
 
     " Only the capitalised spelling exists: Vim refuses to assign a Funcref to a

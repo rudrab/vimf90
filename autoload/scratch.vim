@@ -126,6 +126,7 @@ function! scratch#open(...) abort
   command! -buffer -bar FortranScratchRun call scratch#run()
 
   echomsg 'vimf90: Scratchpad ready [' . l:tmpl_name . ']. Press <leader>sr or :FortranScratchRun to execute.'
+  return bufnr('%')
 endfunction
 
 function! s:show_output(title, lines, is_error) abort

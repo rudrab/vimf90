@@ -107,6 +107,7 @@ function! fortran_menu#items() abort
         \ ['&Documentation.&Preview\ FORD\ Docs\ in\ Browser', s:shortcut('fortran_ford_prev_map', '\dp'), ':FordPreview<CR>'],
         \
         \ ['&Project.&Build\ Project',                '',                                          ':FortranProjectBuild<CR>'],
+        \ ['&Project.&Outline\ (TOC)',                s:shortcut('fortran_toc', '\tt'),            ':FortranToc<CR>'],
         \ ['&Project.Generate\ &Tags',                s:shortcut('fortran_tags', '\tg'),           ':FortranTags<CR>'],
         \ ['&Project.Find\ &Module',                  s:shortcut('fortran_find_mod', '\fm'),       ':FortranFindModule<CR>'],
         \ ['&Project.-sep_proj-',                     '',                                          '<Nop>'],

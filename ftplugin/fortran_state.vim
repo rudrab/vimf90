@@ -44,13 +44,16 @@ if get(g:, 'fortran_format_on_save', get(g:, 'fortran_linter', 0) == 2 ? 1 : 0)
   augroup END
 endif
 
+" Initialize unified buffer state dict (b:vimf90)
+call state#init()
+
 " Commands and Plug mappings
 command! -buffer -bar FortranFormat call s:format_buffer()
 nnoremap <buffer> <silent> <Plug>(vimf90-format) :call <SID>format_buffer()<CR>
 command! -buffer -bar FortranInstallDeps call install_deps#check_deps(1)
 
 " Undo ftplugin
-let s:undo = 'delcommand FortranFormat | delcommand FortranInstallDeps | unlet! b:fortran_linter b:fprettify_options'
+let s:undo = 'delcommand FortranFormat | delcommand FortranInstallDeps | unlet! b:fortran_linter b:fprettify_options | call state#cleanup()'
 let s:undo .= ' | silent! augroup vimf90_format | silent! autocmd! * <buffer> | silent! augroup END'
 let s:undo .= ' | silent! nunmap <buffer> <Plug>(vimf90-format)'
 let b:undo_ftplugin = (exists('b:undo_ftplugin') ? b:undo_ftplugin . ' | ' : '') . s:undo

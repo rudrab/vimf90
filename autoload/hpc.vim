@@ -30,7 +30,7 @@ let s:gpu_presets = {
       \ }
 
 function! hpc#get_gpu_mode() abort
-  return get(g:, 'fortran_gpu', 'off')
+  return state#get('gpu', 'off')
 endfunction
 
 function! hpc#get_gpu_flags() abort
@@ -47,20 +47,23 @@ function! hpc#toggle_gpu(...) abort
   if a:0 > 0 && !empty(a:1)
     let l:arg = tolower(trim(a:1))
     if l:arg ==# 'off' || l:arg ==# '0' || l:arg ==# 'false'
-      let g:fortran_gpu = 'off'
+      let l:val = 'off'
     elseif l:arg ==# 'openacc' || l:arg ==# 'acc'
-      let g:fortran_gpu = 'openacc'
+      let l:val = 'openacc'
     elseif l:arg ==# 'openmp' || l:arg ==# 'target' || l:arg ==# 'omp'
-      let g:fortran_gpu = 'openmp'
+      let l:val = 'openmp'
     else
-      let g:fortran_gpu = l:arg
+      let l:val = l:arg
     endif
   else
     let l:cur = hpc#get_gpu_mode()
-    let g:fortran_gpu = (l:cur ==# 'off') ? 'openmp' : 'off'
+    let l:val = (l:cur ==# 'off') ? 'openmp' : 'off'
   endif
 
-  let l:status = (g:fortran_gpu !=# 'off') ? ('ENABLED [' . g:fortran_gpu . ', Flags: ' . hpc#get_gpu_flags() . ']') : 'DISABLED'
+  call state#set('gpu', l:val)
+  let g:fortran_gpu = l:val
+
+  let l:status = (l:val !=# 'off') ? ('ENABLED [' . l:val . ', Flags: ' . hpc#get_gpu_flags() . ']') : 'DISABLED'
   echo 'vimf90: GPU Offloading ' . l:status
 endfunction
 

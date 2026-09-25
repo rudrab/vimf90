@@ -33,7 +33,7 @@ function! Test_fortran_buffer_defines_core_commands() abort
   call Vf90OpenScratch(l:dir . '/a.f90', ['program a', 'end program a'])
   setlocal filetype=fortran
   for l:name in ['FortranCompile', 'FortranRun', 'FortranProjectBuild',
-        \ 'FortranFortlsConfig', 'FortranReplToggle', 'FortranFindModule']
+        \ 'FortranFortlsConfig', 'FortranReplToggle', 'FortranFindModule', 'FortranToc']
     call assert_equal(2, exists(':' . l:name), l:name . ' is missing')
   endfor
 endfunction
@@ -43,7 +43,7 @@ function! Test_fortran_buffer_defines_plug_mappings() abort
   call Vf90OpenScratch(l:dir . '/a.f90', ['program a', 'end program a'])
   setlocal filetype=fortran
   let l:maps = execute('nmap <buffer>')
-  for l:name in ['vimf90-compile', 'vimf90-run', 'vimf90-repl-toggle']
+  for l:name in ['vimf90-compile', 'vimf90-run', 'vimf90-repl-toggle', 'vimf90-toc']
     call assert_match(l:name, l:maps, '<Plug>(' . l:name . ') is missing')
   endfor
 endfunction

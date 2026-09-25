@@ -462,9 +462,29 @@ formatting whenever you save a Fortran file.
 You can also run `:FortranFormat` at any time on demand.
 
 ==============================================================================
-14. TAGBAR & SYMBOL OUTLINE INTEGRATION                       *vimf90-tagbar*
+14. NATIVE TABLE OF CONTENTS & SYMBOL OUTLINE                  *vimf90-toc*
+                                                               *vimf90-tagbar*
 
-|vimf90| automatically registers `g:tagbar_type_fortran` for `majutsushi/tagbar`
+|vimf90| provides a built-in, standalone Table of Contents / Outline sidebar
+inspired by `vimtex#toc`, without requiring external plugins or LSP:
+
+  * `:FortranToc` (`<leader>tt` / `<Plug>(vimf90-toc)`):
+    Toggles a sidebar window displaying modules, submodules, programs, subroutines,
+    functions, derived types, interfaces, and block data constructs.
+  * `:FortranToc!`:
+    Scans the entire project for all Fortran constructs across all source files.
+
+In the TOC sidebar window:
+  * `<CR>` or `o`   Jump to the definition in the source window.
+  * `q`             Close the TOC sidebar.
+  * `r` or `<C-l>`  Refresh the outline from the active buffer.
+
+Configuration options:
+  * `let g:fortran_toc_width = 35` (default: 35 columns)
+  * `let g:fortran_toc_position = 'left'` (options: `'left'`, `'right'`)
+
+Tagbar integration:
+|vimf90| also automatically registers `g:tagbar_type_fortran` for `majutsushi/tagbar`
 and `aerial.nvim`, providing a complete symbol hierarchy:
 `Program` -> `Module` -> `Derived Type` -> `Interface` -> `Subroutine` / `Function`.
 
