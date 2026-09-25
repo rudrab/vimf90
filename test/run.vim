@@ -32,6 +32,8 @@ endfunction
 " finishes, so a test that hangs leaves no trace in it; this file is what
 " run.sh reads to name the culprit when the watchdog fires.
 let s:current = s:report . '.current'
+" Exported so a test can narrow a hang further with Vf90Mark().
+let g:vf90_current = s:current
 
 function! s:mark_running(name) abort
   call writefile([a:name], s:current)
@@ -85,6 +87,9 @@ function! s:run_one(name) abort
   catch
     call add(v:errors, 'threw ' . v:exception . ' at ' . v:throwpoint)
   endtry
+  " Teardown is marked separately: wiping a terminal buffer is itself a
+  " candidate for hanging, and it must not be blamed on the test body.
+  call s:mark_running(a:name . ' [teardown]')
   call Vf90Wipe()
 
   call s:mark_idle()

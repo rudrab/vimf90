@@ -107,6 +107,14 @@ function! Vf90KillLeaked() abort
   endfor
 endfunction
 
+" Record how far a test has got, for pinpointing a hang that only happens
+" somewhere else. run.sh prints this when the watchdog fires.
+function! Vf90Mark(text) abort
+  if exists('g:vf90_current')
+    call writefile([a:text], g:vf90_current)
+  endif
+endfunction
+
 " Abandon the current test without failing it. Used when a test needs a tool
 " that is not installed, and for behaviour that is a known, documented gap.
 function! Vf90Skip(reason) abort

@@ -198,10 +198,15 @@ function! Test_leak_detector_sees_an_unreaped_process() abort
 endfunction
 
 function! Test_send_opens_a_repl_when_none_is_running() abort
+  call Vf90Mark('send_opens: need_terminal')
   call s:need_terminal()
+  call Vf90Mark('send_opens: precondition')
   call assert_equal(0, repl#is_active(), 'precondition: nothing running')
   " silent, because this is the one send test that does not capture output
   " through execute(); an unsilenced message can raise the hit-enter prompt.
+  call Vf90Mark('send_opens: about to send')
   silent call repl#send(['print *, 1'])
+  call Vf90Mark('send_opens: sent, checking active')
   call assert_equal(1, repl#is_active(), 'send should have started a REPL')
+  call Vf90Mark('send_opens: body done')
 endfunction
