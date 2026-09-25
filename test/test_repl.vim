@@ -204,14 +204,7 @@ function! Test_send_opens_a_repl_when_none_is_running() abort
   call assert_equal(0, repl#is_active(), 'precondition: nothing running')
   " silent, because this is the one send test that does not capture output
   " through execute(); an unsilenced message can raise the hit-enter prompt.
-  " Temporary instrumentation: repl#send() opens a REPL and then writes to it,
-  " and CI hangs somewhere in there. Doing the two halves separately says
-  " which. Revert to a plain repl#send() once the cause is known.
-  call Vf90Mark('send_opens: opening')
-  silent call repl#open()
-  call Vf90Mark('send_opens: opened, buf=' . repl#get_bufnr() . ' active=' . repl#is_active())
-  sleep 50m
-  call Vf90Mark('send_opens: pausing done, now sending')
+  call Vf90Mark('send_opens: about to send')
   silent call repl#send(['print *, 1'])
   call Vf90Mark('send_opens: sent, checking active')
   call assert_equal(1, repl#is_active(), 'send should have started a REPL')
