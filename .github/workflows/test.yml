@@ -46,11 +46,12 @@ jobs:
           sudo apt-get install -y --no-install-recommends gfortran lua5.4
           sudo ln -sf "$(command -v luac5.4)" /usr/local/bin/luac
           pipx install fortls
+          pipx install fortitude-lint
           FPM_VERSION=0.13.0
           curl -fsSL -o /tmp/fpm \
             "https://github.com/fortran-lang/fpm/releases/download/v${FPM_VERSION}/fpm-${FPM_VERSION}-linux-x86_64-gcc-12"
           sudo install -m 0755 /tmp/fpm /usr/local/bin/fpm
-          for tool in gfortran luac fortls fpm pgrep; do
+          for tool in gfortran luac fortls fortitude fpm pgrep; do
             printf '%-10s %s\n' "$tool" "$(command -v $tool || echo MISSING)"
           done
 
