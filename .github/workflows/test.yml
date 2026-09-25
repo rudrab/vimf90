@@ -13,6 +13,7 @@ jobs:
   test:
     name: ${{ matrix.editor }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -58,6 +59,9 @@ jobs:
           VF90_VIM: ${{ matrix.editor }}
           VF90_TIMEOUT: 600
         run: |
+          # GitHub's default shell does not set pipefail, so without this the
+          # pipeline reports tee's exit code and a failing suite looks green.
+          set -o pipefail
           sh test/run.sh | tee result.txt
           # A run where every test skipped would still exit 0, so require that
           # the suite actually ran.

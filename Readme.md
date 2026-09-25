@@ -40,6 +40,7 @@ A hand-written `.fortls` is never touched: without the `_generated_by` marker, y
 * ⌕ **Multi-File Project Resolution**: Automatic project root detection, multi-directory module and include path discovery (`-I`), and cross-file module navigation (`:FortranFindModule`).
 * ⚡ **Asynchronous Build Engine**: Non-blocking background compilation for Vim 8/9 & Neovim with multi-compiler QuickFix error parsing (`gfortran`, `ifx`, `ifort`, `nvfortran`, `flang`).
 * ⎇ **Semantic Text Objects & Motions**: Domain-aware text objects (`vaf`/`vif` subprogram, `vam`/`vim` module, `vat`/`vit` derived type, `vad`/`vid` loop) and subprogram jumps (`]m`, `[m`, `]M`, `[M`) — in free form and in [fixed form](#-fixed-source-form-fortran-77) alike, including bare `END` and labelled `DO` loops.
+* ⚐ **Linting**: `:FortranLint` runs [fortitude](https://github.com/PlasmaFAIR/fortitude) over the current file, or `:FortranLint!` over the project, into the quickfix list — the checks neither the compiler nor `fortls` makes, such as non-standard `integer*4` or a missing `implicit none (external)`.
 * ✎ **FORD Documentation Engine**: Automated docstring generator (`:FortranDoc` / `<leader>dc`) with parameter type, `intent(in/out/inout)`, and attribute deduction, plus asynchronous project documentation building and browser preview (`:FordBuild`, `:FordPreview`).
 * ⚙ **HPC & Compilation Profiles**: Switchable presets for `Debug`, `Release`, `Fast`, and `Sanitize`, with OpenMP multithreading, MPI wrappers, and native ISO Coarray Fortran support (`:FortranProfile`, `:FortranOpenMP`, `:FortranMPI`).
 * ⨁ **Accelerators & Supercomputing**: GPU offloading (`:FortranGPU` OpenACC/OpenMP Target) and MPI cluster job execution (`:FortranMPIRun`).
@@ -78,6 +79,7 @@ use 'rudrab/vimf90'
 | [**LFortran**](https://lfortran.org/) | Interactive REPL | Recommended | Interactive Fortran compiler and REPL backend. |
 | [**fortls**](https://github.com/gnikit/fortls) | Language Server | Recommended | Language Server for hover docs, signature help, and completion. |
 | [**fprettify**](https://github.com/pseewald/fprettify) | Formatter | Recommended | Source code auto-formatting (`:FortranFormat` or on save). |
+| [**fortitude**](https://github.com/PlasmaFAIR/fortitude) | Linter | Recommended | Style and portability checks (`:FortranLint`). |
 | [**vim-snippets**](https://github.com/honza/vim-snippets) | Snippets | Recommended | Standard snippets for [LuaSnip](https://github.com/L3MON4D3/LuaSnip) or [UltiSnips](https://github.com/SirVer/ultisnips). |
 | [**tagbar**](https://github.com/majutsushi/tagbar) / [**aerial.nvim**](https://github.com/stevearc/aerial.nvim) | Symbol Outline | Recommended | Hierarchical code outliner (auto-configured by `vimf90`). |
 | [**coc.nvim**](https://github.com/neoclide/coc.nvim) / **nvim-lspconfig** | LSP Client | Recommended | LSP client integration for `fortls`. |

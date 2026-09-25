@@ -21,6 +21,7 @@ CONTENTS                                                     *vimf90-contents*
 10. FORD & Doxygen Docstring Generator ....... |vimf90-doc|
 11. Supercomputing, Accelerators & HPC ....... |vimf90-hpc|
 12. Scientific Debugging & Matrix Inspector .. |vimf90-dap|
+12a. Linting (fortitude) ..................... |vimf90-lint|
 13. Formatting & Linting ..................... |vimf90-formatting|
 14. Tagbar & Symbol Outline .................. |vimf90-tagbar|
 15. Asynchronous Build Engine ................ |vimf90-async|
@@ -452,6 +453,29 @@ multi-dimensional arrays and matrix states:
    * Run `<leader>dt` or `:FortranBreakpointToggle` to set/clear breakpoints on the current line.
    * Run `:FortranDebug` (`<leader>cd`) or `:FortranTermdebug` to start interactive debugging.
    * Automatically configures `nvim-dap` for Neovim users with `gdb` and `codelldb` adapters.
+
+==============================================================================
+12a. LINTING (fortitude)                                     *vimf90-lint*
+
+`fortls` reports what the compiler would, and fprettify fixes layout. Neither
+says that `integer*4` is non-standard, or that a module lacks
+`implicit none (external)`. |fortitude| does, and fills that gap:
+
+  * `:FortranLint` (`<leader>ll`): check the current file.
+  * `:FortranLint!`: check the whole project from its root.
+
+Findings go to the quickfix list, one entry per finding with file, line and
+column. Finding something is not an error: the count is reported and the
+window opened, while a clean file says so and closes it. A non-zero exit with
+no findings means fortitude itself failed, and is reported as such.
+
+Install with: >
+    pip install --user fortitude-lint
+<
+                                                        *g:fortran_fortitude_args*
+`g:fortran_fortitude_args`   extra arguments, for instance '--select PORT021'
+                           to run one rule, or '--target-std f2008'.
+`g:fortran_fortitude_command`  the executable, when it is not on $PATH.
 
 ==============================================================================
 13. FORMATTING & LINTING                                 *vimf90-formatting*

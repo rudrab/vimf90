@@ -3,7 +3,8 @@
 " Author:        Rudra Banerjee (bnrj DOT rudra at gmail.com)
 " Version:       0.4
 " License:       GPLv3
-" Description:   Check and optionally install Fortran companion tools (fprettify, fortls)
+" Description:   Check and optionally install Fortran companion tools
+"                (fprettify, fortls, fortitude)
 "########################################################################
 
 let s:save_cpo = &cpo
@@ -17,9 +18,12 @@ function! install_deps#check_deps(...) abort
   if !executable('fortls')
     call add(l:missing, 'fortls')
   endif
+  if !executable('fortitude')
+    call add(l:missing, 'fortitude-lint')
+  endif
 
   if empty(l:missing)
-    echo 'vimf90: All recommended tools (fprettify, fortls) are installed and available.'
+    echo 'vimf90: All recommended tools (fprettify, fortls, fortitude) are installed and available.'
     return 1
   endif
 
@@ -29,7 +33,7 @@ function! install_deps#check_deps(...) abort
   if l:install_opt == 0
     " Default: concise one-line advisory
     echohl WarningMsg
-    echo 'vimf90: Optional tools missing: ' . l:miss_str . '. Install with: pipx install ' . join(l:missing, ' ') . ' (or :FortranInstallDeps install)'
+    echo 'vimf90: Optional tools missing: ' . l:miss_str . '. Install with: pip install --user ' . join(l:missing, ' ') . ' (or :FortranInstallDeps install)'
     echohl None
     return 0
   endif
@@ -45,18 +49,18 @@ function! install_deps#check_deps(...) abort
       echomsg 'vimf90: Successfully installed ' . l:miss_str . '.'
       return 1
     else
-      echohl ErrorMsg | echo 'vimf90: Installation failed. Please install manually using: pipx install ' . join(l:missing, ' ') | echohl None
+      echohl ErrorMsg | echo 'vimf90: Installation failed. Please install manually using: pip install --user ' . join(l:missing, ' ') | echohl None
       return 0
     endif
   else
-    echo 'vimf90: To install manually later, run: pipx install ' . join(l:missing, ' ')
+    echo 'vimf90: To install manually later, run: pip install --user ' . join(l:missing, ' ')
     return 0
   endif
 endfunction
 
 function! install_deps#run(arg) abort
   if a:arg =~? 'install\|force'
-    let l:missing = ['fprettify', 'fortls']
+    let l:missing = ['fprettify', 'fortls', 'fortitude-lint']
     let l:cmd = 'pip3 install --user ' . join(l:missing, ' ')
     echomsg 'vimf90: Running pip install...'
     let l:out = system(l:cmd)

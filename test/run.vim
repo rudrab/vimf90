@@ -28,6 +28,19 @@ function! s:out(msg) abort
   call writefile([a:msg], s:report, 'a')
 endfunction
 
+" The name of the test now running. The report only gains a line once a test
+" finishes, so a test that hangs leaves no trace in it; this file is what
+" run.sh reads to name the culprit when the watchdog fires.
+let s:current = s:report . '.current'
+
+function! s:mark_running(name) abort
+  call writefile([a:name], s:current)
+endfunction
+
+function! s:mark_idle() abort
+  call delete(s:current)
+endfunction
+
 let s:only = $VF90_TEST
 let s:filter = split($VF90_FILES)
 
@@ -59,6 +72,7 @@ let s:failures = []
 
 function! s:run_one(name) abort
   let v:errors = []
+  call s:mark_running(a:name)
   call Vf90ResetOptions()
   try
     call call(a:name, [])
@@ -66,12 +80,14 @@ function! s:run_one(name) abort
     let s:skip += 1
     call s:out(printf('  ~ %-44s skipped: %s', a:name, substitute(v:exception, '^VF90SKIP:', '', '')))
     call Vf90Wipe()
+    call s:mark_idle()
     return
   catch
     call add(v:errors, 'threw ' . v:exception . ' at ' . v:throwpoint)
   endtry
   call Vf90Wipe()
 
+  call s:mark_idle()
   if empty(v:errors)
     let s:pass += 1
     call s:out(printf('  . %s', a:name))

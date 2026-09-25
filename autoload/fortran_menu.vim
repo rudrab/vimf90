@@ -116,6 +116,7 @@ function! fortran_menu#items() abort
         \
         \ ['-sep_top-',                               '',                                          '<Nop>'],
         \ ['&Format\ Buffer',                         '',                                          ':FortranFormat<CR>'],
+        \ ['&Lint\ (fortitude)',                     s:shortcut('fortran_lint', '\ll'),          ':FortranLint<CR>'],
         \ ['&Help',                                   'VimF90\ Help',                              ':help vimf90.txt<CR>'],
         \ ]
 endfunction

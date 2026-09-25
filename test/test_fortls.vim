@@ -184,10 +184,24 @@ function! Test_fortls_indexes_exactly_the_listed_dirs() abort
         \ ['module demo', 'end module demo'])
   call fortls#generate(l:dir)
 
+  " What the generator controls is the set of directories the server indexes,
+  " so that is asserted unconditionally.
   let l:out = system('cd ' . shellescape(l:dir)
         \ . ' && fortls --debug_rootpath . --debug_workspace_symbols mod 2>&1')
   call assert_notmatch('does not exist', l:out, 'fortls rejected a source_dirs entry')
   call assert_notmatch('build/gfortran_', l:out, 'a stale hash dir was indexed')
+  " fortls 1.x prints these relative to the root and 3.x prints them absolute,
+  " so match the end of the line either way.
+  for l:want in ['/src', '/src/utils', '/app', '/test', '/build/dependencies/mydep/src']
+    call assert_match('\n\s*\S*' . escape(l:want, '/\.') . '\n', l:out, l:want . ' not indexed')
+  endfor
+
+  " Whether symbols can be queried from the command line depends on the fortls
+  " version: 3.x wants --debug_filepath as well and raises a TypeError without
+  " it, where 1.x did not. Assert the symbols only when the query worked.
+  if l:out =~# 'Traceback'
+    return
+  endif
   call assert_match('helper_mod', l:out, 'nested module not found')
   call assert_match('mydep_mod', l:out, 'dependency module not found')
 endfunction

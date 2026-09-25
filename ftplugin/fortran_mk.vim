@@ -32,6 +32,7 @@ nnoremap <buffer> <silent> <Plug>(vimf90-project-build)  :call project#build()<C
 nnoremap <buffer> <silent> <Plug>(vimf90-tags)           :call project#generate_tags()<CR>
 nnoremap <buffer> <silent> <Plug>(vimf90-find-module)    :call project#find_module('')<CR>
 nnoremap <buffer> <silent> <Plug>(vimf90-toc)            :call toc#toggle()<CR>
+nnoremap <buffer> <silent> <Plug>(vimf90-lint)           :call lint#run()<CR>
 
 " Plug mappings - Documentation & FORD
 nnoremap <buffer> <silent> <Plug>(vimf90-doc)            :call doc#generate('')<CR>
@@ -146,6 +147,7 @@ command! -buffer -bar          FortranTags          call project#generate_tags()
 command! -buffer -bar -nargs=? FortranFindModule    call project#find_module(<q-args>)
 command! -buffer -bar          FortranFortlsConfig  call fortls#generate()
 command! -buffer -bar -bang    FortranToc           call toc#toggle('<bang>')
+command! -buffer -bar -bang    FortranLint          call lint#run('<bang>')
 
 " User commands - Interactive REPL & Scratchpad
 command! -buffer -bar -nargs=?                                                  FortranReplOpen          call repl#open(<q-args>)
@@ -197,7 +199,7 @@ let s:cmds = [
       \ 'FortranFpm', 'FortranFpmBuild', 'FortranFpmRun', 'FortranFpmTest',
       \ 'FortranFpmTestCurrent', 'FortranFpmNew', 'FortranFpmAdd',
       \ 'FortranProjectBuild', 'FortranProjectRoot', 'FortranTags', 'FortranFindModule',
-      \ 'FortranFortlsConfig', 'FortranToc',
+      \ 'FortranFortlsConfig', 'FortranToc', 'FortranLint',
       \ 'FortranReplOpen', 'FortranReplToggle', 'FortranReplSend',
       \ 'FortranReplSendSubprogram', 'FortranReplSendBuffer', 'FortranReplRestart',
       \ 'FortranScratch', 'FortranScratchRun'
@@ -212,6 +214,7 @@ let s:plugs = [
       \ '<Plug>(vimf90-fpm-test-current)',
       \ '<Plug>(vimf90-project-build)', '<Plug>(vimf90-tags)', '<Plug>(vimf90-find-module)',
       \ '<Plug>(vimf90-toc)',
+      \ '<Plug>(vimf90-lint)',
       \ '<Plug>(vimf90-doc)', '<Plug>(vimf90-ford-build)', '<Plug>(vimf90-ford-preview)',
       \ '<Plug>(vimf90-profile)', '<Plug>(vimf90-openmp)', '<Plug>(vimf90-mpi)',
       \ '<Plug>(vimf90-gpu-toggle)', '<Plug>(vimf90-mpi-run)',

@@ -75,6 +75,9 @@ if [ "$status" -eq 137 ]; then
   echo
   echo "TIMED OUT after ${TIMEOUT}s and was killed. Raise VF90_TIMEOUT if the"
   echo "suite is simply slow here; otherwise the report above ends at the hang."
+  if [ -s "$VF90_REPORT.current" ]; then
+    echo "Hung in: $(cat "$VF90_REPORT.current")"
+  fi
 fi
 
 if [ "$status" -ne 0 ] && [ -s "$log" ]; then
@@ -82,5 +85,5 @@ if [ "$status" -ne 0 ] && [ -s "$log" ]; then
   echo "--- editor output (last 20 lines) ---"
   tail -20 "$log"
 fi
-rm -f "$VF90_REPORT" "$log"
+rm -f "$VF90_REPORT" "$VF90_REPORT.current" "$log"
 exit $status
