@@ -200,6 +200,8 @@ endfunction
 function! Test_send_opens_a_repl_when_none_is_running() abort
   call s:need_terminal()
   call assert_equal(0, repl#is_active(), 'precondition: nothing running')
-  call repl#send(['print *, 1'])
+  " silent, because this is the one send test that does not capture output
+  " through execute(); an unsilenced message can raise the hit-enter prompt.
+  silent call repl#send(['print *, 1'])
   call assert_equal(1, repl#is_active(), 'send should have started a REPL')
 endfunction

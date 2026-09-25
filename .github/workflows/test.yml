@@ -58,7 +58,7 @@ jobs:
       - name: Run the suite
         env:
           VF90_VIM: ${{ matrix.editor }}
-          VF90_TIMEOUT: 600
+          VF90_TIMEOUT: 300
         run: |
           # GitHub's default shell does not set pipefail, so without this the
           # pipeline reports tee's exit code and a failing suite looks green.

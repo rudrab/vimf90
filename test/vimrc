@@ -11,6 +11,12 @@ set viminfo=
 set shortmess+=F
 set belloff=all
 
+" A message that does not fit the command line raises the hit-enter prompt,
+" which in a headless editor waits for a keypress that never comes: the run
+" hangs until the watchdog kills it. Room for several lines avoids it, and
+" 'nomore' covers longer output.
+set cmdheight=10
+
 " 'ignorecase' is off by default but is worth pinning: several patterns in the
 " plugin are case-insensitive by construction, and a test that only passes
 " because the user happened to set 'ignorecase' would be worthless.
