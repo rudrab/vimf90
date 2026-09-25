@@ -214,8 +214,14 @@ endfunction
 function! repl#send(input) abort
   if !repl#is_active()
     call repl#open()
-    " Give terminal a brief moment to initialize if newly spawned
-    sleep 50m
+    " Wait for the terminal to come up rather than guessing at a delay. A
+    " fixed :sleep is a guess in both directions: too long on an idle machine,
+    " too short on a loaded one. Worse, in a headless Neovim with nothing to
+    " wake it, :sleep can block outright -- it hung the suite in CI once a
+    " previous test had left a terminal channel open.
+    if exists('*wait')
+      call wait(2000, {-> repl#is_active()}, 10)
+    endif
   endif
 
   let l:lines = []
