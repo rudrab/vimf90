@@ -1,5 +1,7 @@
 # vimf90
 
+[![tests](https://github.com/rudrab/vimf90/actions/workflows/test.yml/badge.svg?branch=devel)](https://github.com/rudrab/vimf90/actions/workflows/test.yml)
+
 A modern development environment for scientific and high-performance Fortran (F90, F95, F2003, F2008, F2018, F2023) in Vim and Neovim.
 
 ---
@@ -295,7 +297,7 @@ VF90_TIMEOUT=600 sh test/run.sh      # raise the 300s watchdog (0 disables)
 
 A watchdog kills the editor after `VF90_TIMEOUT` seconds and says so, and the suite fails if it finds a process it started and did not reap. Both exist because a wedged run once left nine headless Neovim instances running for over an hour, unnoticed. The REPL tests spawn `test/fixtures/bin/vf90-repl-stub` rather than `cat`, so a leftover is identifiable by name and can never be confused with something else on the machine.
 
-It exits non-zero on failure, so it drops straight into CI. Tests that need `gfortran`, `fpm`, `fortls` or `luac` skip themselves when the tool is absent rather than failing. The suite is green on both Vim 9.2 and Neovim 0.12.
+It runs in GitHub Actions on every push, against both editors, with `gfortran`, `fpm`, `fortls` and `luac` installed so that nothing skips; the run fails if anything does. Tests that need `gfortran`, `fpm`, `fortls` or `luac` skip themselves when the tool is absent rather than failing. The suite is green on both Vim 9.2 and Neovim 0.12.
 
 The editor variable is `VF90_VIM` rather than `VIM` on purpose: `$VIM` is Vim's own variable for locating `$VIMRUNTIME`, so exporting `VIM=nvim` sets `$VIMRUNTIME` to `nvim` and quietly breaks filetype detection along with every other runtime file — the editor still starts and still runs the tests, they just fail for reasons that have nothing to do with your change.
 

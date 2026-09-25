@@ -1,0 +1,67 @@
+name: tests
+
+on:
+  push:
+    branches: [master, devel]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.editor }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        editor: [vim, nvim]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # vim-nox is built with +job, +channel and +terminal, which the
+      # asynchronous build and REPL tests need; vim-tiny is not. Neovim comes
+      # from its own release rather than apt, whose build lags well behind.
+      - name: Install editor
+        run: |
+          sudo apt-get update -qq
+          if [ "${{ matrix.editor }}" = nvim ]; then
+            curl -fsSL -o /tmp/nvim.tar.gz \
+              https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.tar.gz
+            sudo tar -C /opt -xzf /tmp/nvim.tar.gz
+            sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
+          else
+            sudo apt-get install -y --no-install-recommends vim-nox
+          fi
+          ${{ matrix.editor }} --version | head -2
+
+      # Tests skip themselves when a tool is missing, so a failed install would
+      # quietly shrink the suite instead of failing it. Install them all, and
+      # assert below that nothing was skipped.
+      - name: Install the tools the suite uses
+        run: |
+          sudo apt-get install -y --no-install-recommends gfortran lua5.4
+          sudo ln -sf "$(command -v luac5.4)" /usr/local/bin/luac
+          pipx install fortls
+          FPM_VERSION=0.13.0
+          curl -fsSL -o /tmp/fpm \
+            "https://github.com/fortran-lang/fpm/releases/download/v${FPM_VERSION}/fpm-${FPM_VERSION}-linux-x86_64-gcc-12"
+          sudo install -m 0755 /tmp/fpm /usr/local/bin/fpm
+          for tool in gfortran luac fortls fpm pgrep; do
+            printf '%-10s %s\n' "$tool" "$(command -v $tool || echo MISSING)"
+          done
+
+      - name: Run the suite
+        env:
+          VF90_VIM: ${{ matrix.editor }}
+          VF90_TIMEOUT: 600
+        run: |
+          sh test/run.sh | tee result.txt
+          # A run where every test skipped would still exit 0, so require that
+          # the suite actually ran.
+          if grep -qE '[1-9][0-9]* skipped' result.txt; then
+            echo "::error::tests were skipped, so a tool above is missing"
+            exit 1
+          fi
