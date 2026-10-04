@@ -230,6 +230,36 @@ All commands are buffer-local and available in Fortran buffers:
 *:FortranMakeArgs*
     Prompts for make properties/targets.
 
+*:FortranGPU* [openmp|openacc|off]
+    Configures GPU acceleration flags (OpenACC or OpenMP Target offload).
+
+*:FortranMPIRun* [ranks] [args]
+    Launches executable with `mpirun -n <ranks>` in a terminal split or shell.
+
+*:FortranInspectArray* [var] [rows] [cols]
+    Opens the formatted 2D scientific matrix / array inspector window.
+
+*:FortranBreakpointToggle*
+    Toggles a debug breakpoint on the current line for GDB / DAP.
+
+*:FortranTermdebug* [exe]
+    Starts an interactive debugging session with Vim's built-in Termdebug.
+
+*:FortranDapStart*
+    Starts an interactive `nvim-dap` debug session (Neovim).
+
+*:FortranToc* [!]
+    Toggles the Table of Contents / Outline sidebar for the buffer, or
+    for the whole project when [!] is given.
+
+*:FortranLint* [!]
+    Runs the `fortitude` linter over the current file, or over the whole
+    project when [!] is given.
+
+*:FortranInstallDeps* [install]
+    Checks availability of companion tools (fprettify, fortls, fortitude)
+    and offers to install missing tools via pip.
+
 ==============================================================================
 5. KEY MAPPINGS & <PLUG> TARGETS                            *vimf90-mappings*
 
@@ -254,12 +284,18 @@ Default shortcuts (using `<Leader>` or `g:fortran_leader`):
   `<leader>sr`     <Plug>(vimf90-scratch-run)        Run scientific scratchpad
   `<leader>tg`     <Plug>(vimf90-tags)               Generate project Ctags
   `<leader>fm`     <Plug>(vimf90-find-module)        Find & jump to module
+  `<leader>tt`     <Plug>(vimf90-toc)                Toggle Table of Contents sidebar
+  `<leader>ll`     <Plug>(vimf90-lint)               Lint buffer / project (fortitude)
   `<leader>dc`     <Plug>(vimf90-doc)                Generate FORD/Doxygen docstring
   `<leader>db`     <Plug>(vimf90-ford-build)         Build project FORD docs
   `<leader>dp`     <Plug>(vimf90-ford-preview)       Preview FORD docs in browser
   `<leader>pp`     <Plug>(vimf90-profile)            Switch/show build profile
   `<leader>po`     <Plug>(vimf90-openmp)             Toggle OpenMP
   `<leader>pm`     <Plug>(vimf90-mpi)                Toggle MPI
+  `<leader>pg`     <Plug>(vimf90-gpu-toggle)         Toggle GPU offloading
+  `<leader>pr`     <Plug>(vimf90-mpi-run)            Run MPI cluster job
+  `<leader>da`     <Plug>(vimf90-inspect-array)      Inspect matrix / array
+  `<leader>dt`     <Plug>(vimf90-breakpoint-toggle)  Toggle debug breakpoint
   `<leader>mk`     <Plug>(vimf90-make)               Run Makefile (fallback)
   `<leader>mp`     <Plug>(vimf90-makeprop)           Set make parameters
                    <Plug>(vimf90-format)             Format current buffer
@@ -335,7 +371,7 @@ with inter-module dependencies.
      jump to the file defining a module.
 
 ==============================================================================
-8. TEXT OBJECTS & MOTIONS                                   *vimf90-textobj*
+9. TEXT OBJECTS & MOTIONS                                   *vimf90-textobj*
 
 |vimf90| includes native Fortran text objects and motions:
 
