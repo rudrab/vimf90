@@ -54,19 +54,19 @@ let s:presets = {
       \ }
 
 function! profiles#get_compiler() abort
-  return get(g:, 'fortran_compiler', 'gfortran')
+  return state#get('compiler')
 endfunction
 
 function! profiles#get_profile() abort
-  return get(g:, 'fortran_profile', 'debug')
+  return state#get('profile')
 endfunction
 
 function! profiles#is_mpi() abort
-  return get(g:, 'fortran_mpi', 0)
+  return state#is('mpi')
 endfunction
 
 function! profiles#is_openmp() abort
-  return get(g:, 'fortran_openmp', 0)
+  return state#is('openmp')
 endfunction
 
 function! profiles#get_effective_compiler() abort
@@ -100,7 +100,7 @@ function! profiles#get_flags() abort
     let l:flags .= ' ' . l:gpu_flag
   endif
 
-  let l:extra = get(g:, 'fortran_extra_flags', '')
+  let l:extra = state#get('extra_flags')
   if !empty(l:extra)
     let l:flags .= ' ' . l:extra
   endif
@@ -121,6 +121,7 @@ function! profiles#set_profile(name) abort
     return
   endif
 
+  call state#set('profile', l:name)
   let g:fortran_profile = l:name
   echo 'vimf90: Set build profile to [' . l:name . ']. Flags: ' . profiles#get_flags()
 endfunction
@@ -132,6 +133,7 @@ function! profiles#set_compiler(name) abort
     return
   endif
 
+  call state#set('compiler', l:name)
   let g:fortran_compiler = l:name
   echo 'vimf90: Active compiler set to ' . l:name . ' (' . profiles#get_effective_compiler() . ')'
 endfunction
@@ -139,23 +141,29 @@ endfunction
 function! profiles#toggle_mpi(...) abort
   if a:0 > 0 && !empty(a:1)
     let l:arg = tolower(trim(a:1))
-    let g:fortran_mpi = (l:arg ==# 'on' || l:arg ==# '1' || l:arg ==# 'true') ? 1 : 0
+    let l:val = (l:arg ==# 'on' || l:arg ==# '1' || l:arg ==# 'true') ? 1 : 0
   else
-    let g:fortran_mpi = !get(g:, 'fortran_mpi', 0)
+    let l:val = !state#is('mpi')
   endif
 
-  echo 'vimf90: MPI mode ' . (g:fortran_mpi ? 'ENABLED (' . profiles#get_effective_compiler() . ')' : 'DISABLED (' . profiles#get_compiler() . ')')
+  call state#set('mpi', l:val)
+  let g:fortran_mpi = l:val
+
+  echo 'vimf90: MPI mode ' . (l:val ? 'ENABLED (' . profiles#get_effective_compiler() . ')' : 'DISABLED (' . profiles#get_compiler() . ')')
 endfunction
 
 function! profiles#toggle_openmp(...) abort
   if a:0 > 0 && !empty(a:1)
     let l:arg = tolower(trim(a:1))
-    let g:fortran_openmp = (l:arg ==# 'on' || l:arg ==# '1' || l:arg ==# 'true') ? 1 : 0
+    let l:val = (l:arg ==# 'on' || l:arg ==# '1' || l:arg ==# 'true') ? 1 : 0
   else
-    let g:fortran_openmp = !get(g:, 'fortran_openmp', 0)
+    let l:val = !state#is('openmp')
   endif
 
-  echo 'vimf90: OpenMP ' . (g:fortran_openmp ? 'ENABLED' : 'DISABLED') . '. Flags: ' . profiles#get_flags()
+  call state#set('openmp', l:val)
+  let g:fortran_openmp = l:val
+
+  echo 'vimf90: OpenMP ' . (l:val ? 'ENABLED' : 'DISABLED') . '. Flags: ' . profiles#get_flags()
 endfunction
 
 function! profiles#status() abort

@@ -126,6 +126,7 @@ function! scratch#open(...) abort
   command! -buffer -bar FortranScratchRun call scratch#run()
 
   echomsg 'vimf90: Scratchpad ready [' . l:tmpl_name . ']. Press <leader>sr or :FortranScratchRun to execute.'
+  return bufnr('%')
 endfunction
 
 function! s:show_output(title, lines, is_error) abort
@@ -175,7 +176,7 @@ function! scratch#run() abort
   let l:flags = profiles#get_flags()
 
   " Build command
-  let l:compile_cmd = l:compiler . ' ' . l:flags . ' ' . fnameescape(l:tmp_src) . ' -o ' . fnameescape(l:tmp_bin)
+  let l:compile_cmd = l:compiler . ' ' . l:flags . ' ' . shellescape(l:tmp_src) . ' -o ' . shellescape(l:tmp_bin)
 
   echon 'Compiling & running scratchpad with ' . l:compiler . '...'
 
@@ -195,7 +196,7 @@ function! scratch#run() abort
   endif
 
   " Execute binary
-  let l:run_out = system(fnameescape(l:tmp_bin))
+  let l:run_out = system(shellescape(l:tmp_bin))
   let l:run_exit = v:shell_error
 
   " Cleanup temp artifacts

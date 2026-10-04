@@ -10,6 +10,10 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! makes#get_opt(name, default) abort
+  let l:key = substitute(a:name, '^fortran_', '', '')
+  if exists('b:vimf90') && has_key(b:vimf90, l:key)
+    return b:vimf90[l:key]
+  endif
   if exists('b:' . a:name)
     return get(b:, a:name)
   endif
@@ -106,6 +110,17 @@ function! s:finish_job(ctx, status) abort
 
   redraw!
   let l:success = (a:status == 0 && !s:qf_has_errors())
+
+  " A caller may own the outcome: a linter that finds something has not
+  " failed, so it reports for itself rather than through success_msg.
+  if !empty(get(a:ctx, 'Report', v:null))
+    call call(a:ctx.Report, [a:status])
+    if !empty(get(a:ctx, 'on_finish', v:null))
+      call call(a:ctx.on_finish, [l:success])
+    endif
+    return
+  endif
+
   if l:success
     echomsg a:ctx.success_msg
     if get(g:, 'fortran_qf_auto_close', 1)
@@ -121,12 +136,23 @@ function! s:finish_job(ctx, status) abort
   endif
 endfunction
 
+" Run a command asynchronously with the plugin's job plumbing: chunked Neovim
+" output, the Vim exit/close pairing, and quickfix population. opts may carry
+" title, success_msg, fail_msg, efm, cwd, on_finish and report. Returns 0 when
+" the editor has no job support, so the caller can fall back to running it
+" synchronously.
+function! makes#run_job(cmd, opts) abort
+  return s:run_async_job(a:cmd, a:opts)
+endfunction
+
 function! s:run_async_job(cmd, opts) abort
   let l:title       = get(a:opts, 'title', 'Fortran Build')
   let l:success_msg = get(a:opts, 'success_msg', 'Build finished successfully.')
   let l:fail_msg    = get(a:opts, 'fail_msg', 'Build failed.')
   let l:efm         = get(a:opts, 'efm', s:get_errorformat(makes#get_opt('fortran_compiler', 'gfortran')))
   let l:On_finish   = get(a:opts, 'on_finish', v:null)
+  let l:Report      = get(a:opts, 'report', v:null)
+  let l:cwd         = get(a:opts, 'cwd', '')
 
   " Clear QuickFix list before starting
   call setqflist([], 'r', {'title': l:title, 'items': []})
@@ -139,6 +165,7 @@ function! s:run_async_job(cmd, opts) abort
         \ 'fail_msg': l:fail_msg,
         \ 'efm': l:efm,
         \ 'on_finish': l:On_finish,
+        \ 'Report': l:Report,
         \ }
 
   " Neovim async execution
@@ -148,6 +175,9 @@ function! s:run_async_job(cmd, opts) abort
           \ 'on_stderr': {j, d, e -> makes#on_job_out(l:context, d)},
           \ 'on_exit':   {j, s, e -> makes#on_job_exit(l:context, s)},
           \ }
+    if !empty(l:cwd)
+      let l:callbacks.cwd = l:cwd
+    endif
     let s:current_job = jobstart(a:cmd, l:callbacks)
     return 1
 
@@ -160,6 +190,9 @@ function! s:run_async_job(cmd, opts) abort
           \ 'close_cb': {c -> makes#on_job_close(l:context)},
           \ 'mode':     'nl',
           \ }
+    if !empty(l:cwd)
+      let l:callbacks.cwd = l:cwd
+    endif
     let s:current_job = job_start(a:cmd, l:callbacks)
     return 1
 
@@ -372,8 +405,9 @@ function! makes#Cla() abort
     return
   endif
   let l:prompt  = 'Command line arguments for "' . l:exe . '": '
-  let l:current = exists('b:Clargs') ? b:Clargs : ''
+  let l:current = state#get('cla', exists('b:Clargs') ? b:Clargs : '')
   let b:Clargs  = input(l:prompt, l:current, 'file')
+  call state#set('cla', b:Clargs)
 endfunction
 "}}}1
 
@@ -432,8 +466,9 @@ endfunction
 " Make arguments / properties {{{1
 function! makes#MakeCla() abort
   let l:prompt  = 'Make parameters/target: '
-  let l:current = exists('b:MakeArgs') ? b:MakeArgs : ''
+  let l:current = state#get('make_args', exists('b:MakeArgs') ? b:MakeArgs : '')
   let b:MakeArgs = input(l:prompt, l:current)
+  call state#set('make_args', b:MakeArgs)
 endfunction
 "}}}1
 

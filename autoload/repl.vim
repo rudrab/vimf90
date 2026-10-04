@@ -6,7 +6,7 @@
 "########################################################################
 
 let s:save_cpo = &cpo
-let &cpo = s:save_cpo
+set cpo&vim
 
 let s:repl_bufnr = -1
 let s:repl_job   = -1
@@ -20,7 +20,14 @@ function! repl#is_active() abort
   endif
 
   if has('nvim')
-    return s:repl_job > 0 && jobpid(s:repl_job) > 0
+    if s:repl_job <= 0
+      return 0
+    endif
+    try
+      return jobpid(s:repl_job) > 0
+    catch
+      return 0
+    endtry
   elseif exists('*term_getstatus')
     return term_getstatus(s:repl_bufnr) !~# 'finished'
   else
@@ -123,7 +130,11 @@ function! repl#close() abort
       " 'hide' rather than 'close': Vim refuses to :close a terminal window
       " whose job is still running (E948), and the session is only being put
       " away here, not ended.
-      call win_execute(l:win, 'hide')
+      if winnr('$') > 1
+        silent! call win_execute(l:win, 'hide')
+      else
+        silent! call win_execute(l:win, 'enew')
+      endif
     endfor
   endif
 endfunction
@@ -137,12 +148,20 @@ function! s:terminate_bufnr(bufnr) abort
   endif
 
   for l:win in win_findbuf(a:bufnr)
-    call win_execute(l:win, 'hide')
+    if winnr('$') > 1
+      silent! call win_execute(l:win, 'hide')
+    else
+      silent! call win_execute(l:win, 'enew')
+    endif
   endfor
 
-  " Vim keeps a terminal buffer and its process alive after the window is
-  " gone, so the job has to be stopped explicitly.
-  if !has('nvim') && exists('*term_getjob')
+  if has('nvim')
+    let l:job = getbufvar(a:bufnr, 'terminal_job_id', 0)
+    if l:job > 0
+      silent! call chanclose(l:job)
+      silent! call jobstop(l:job)
+    endif
+  elseif !has('nvim') && exists('*term_getjob')
     let l:job = term_getjob(a:bufnr)
     if l:job isnot v:null && job_status(l:job) ==# 'run'
       call job_stop(l:job)
@@ -177,7 +196,8 @@ function! repl#restart() abort
     let s:repl_job = -1
     let s:repl_vim_job = v:null
     if has('nvim') && l:old_job > 0
-      call jobstop(l:old_job)
+      silent! call chanclose(l:old_job)
+      silent! call jobstop(l:old_job)
     elseif exists('*term_sendkeys') && l:old_buf > 0
       call term_sendkeys(l:old_buf, "exit\<CR>")
     endif
@@ -194,8 +214,14 @@ endfunction
 function! repl#send(input) abort
   if !repl#is_active()
     call repl#open()
-    " Give terminal a brief moment to initialize if newly spawned
-    sleep 50m
+    " Wait for the terminal to come up rather than guessing at a delay. A
+    " fixed :sleep is a guess in both directions: too long on an idle machine,
+    " too short on a loaded one. Worse, in a headless Neovim with nothing to
+    " wake it, :sleep can block outright -- it hung the suite in CI once a
+    " previous test had left a terminal channel open.
+    if exists('*wait')
+      call wait(2000, {-> repl#is_active()}, 10)
+    endif
   endif
 
   let l:lines = []

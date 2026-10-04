@@ -11,22 +11,24 @@ set cpo&vim
 
 " Find project root directory {{{1
 function! project#find_root(...) abort
-  " Allow explicit buffer or global root override from external project managers
-  if exists('b:fortran_project_root') && !empty(b:fortran_project_root)
-    return expand(b:fortran_project_root)
-  elseif exists('g:fortran_project_root') && !empty(g:fortran_project_root)
-    return expand(g:fortran_project_root)
-  endif
-
-  if exists('g:Fortran_root_provider')
-    let l:provided = call(g:Fortran_root_provider, [])
-    if !empty(l:provided)
-      return expand(l:provided)
+  " Allow the root to be supplied by an external project manager, but only when
+  " the caller has not named a directory to search from: an explicit argument is
+  " a question about that directory, not about the current project.
+  if a:0 == 0 || empty(a:1)
+    let l:proj_root = state#get('project_root')
+    if !empty(l:proj_root)
+      return expand(l:proj_root)
     endif
-  elseif exists('g:fortran_root_provider')
-    let l:provided = call(g:fortran_root_provider, [])
-    if !empty(l:provided)
-      return expand(l:provided)
+
+    " Only the capitalised spelling exists: Vim refuses to assign a Funcref to a
+    " variable whose name starts lowercase (E704), so g:fortran_root_provider
+    " could never have been set in the first place. A string function name works
+    " here too, since call() accepts either.
+    if exists('g:Fortran_root_provider')
+      let l:provided = call(g:Fortran_root_provider, [])
+      if !empty(l:provided)
+        return expand(l:provided)
+      endif
     endif
   endif
 
@@ -143,14 +145,13 @@ endfunction
 function! project#get_include_dirs(...) abort
   let l:root = a:0 > 0 ? a:1 : project#find_root()
 
-  " 1. Authoritative include/module dirs from active build/compile_commands.json
-  let l:cc_dirs = s:get_compile_commands_dirs(l:root)
-  if !empty(l:cc_dirs)
-    return l:cc_dirs
-  endif
+  " compile_commands.json names the module directory of the last build, so it
+  " goes first. It is not a complete picture though: it records only the
+  " targets of the last fpm command and carries no include/ or inc/ paths, so
+  " the heuristic candidates are appended rather than replaced. They also serve
+  " as the fallback module dirs when the manifest lags behind a profile switch.
+  let l:dirs = s:get_compile_commands_dirs(l:root)
 
-  " 2. Fallback heuristic for non-fpm or pre-build states
-  let l:dirs = []
   let l:candidate_dirs = [
         \ l:root,
         \ l:root . '/src',
@@ -161,14 +162,23 @@ function! project#get_include_dirs(...) abort
         \ l:root . '/build/modules',
         \ ]
 
-  " Check fpm build output directories
-  let l:fpm_build_dirs = globpath(l:root . '/build', 'gfortran_*', 0, 1) + globpath(l:root . '/build', 'ifx_*', 0, 1)
-  for l:fdir in l:fpm_build_dirs
-    call add(l:candidate_dirs, l:fdir)
+  " fpm build output directories, named <compiler>_<hash>. Matched by shape so
+  " that nvfortran, flang, ifort and friends are covered too, and so that
+  " build/dependencies is not mistaken for one.
+  for l:bdir in globpath(l:root . '/build', '*', 0, 1)
+    if fnamemodify(l:bdir, ':t') =~# '^\w\+_[0-9A-Fa-f]\{8,\}$'
+      call add(l:candidate_dirs, l:bdir)
+    endif
+  endfor
+
+  let l:seen = {}
+  for l:dir in l:dirs
+    let l:seen[l:dir] = 1
   endfor
 
   for l:dir in l:candidate_dirs
-    if isdirectory(l:dir)
+    if isdirectory(l:dir) && !has_key(l:seen, l:dir)
+      let l:seen[l:dir] = 1
       call add(l:dirs, l:dir)
     endif
   endfor
@@ -188,14 +198,10 @@ function! project#build(...) abort
   let l:type = project#detect_type(l:root)
   let l:args = a:0 > 0 ? a:1 : ''
 
-  " Allow delegation to external build providers (e.g. vim-dispatch, asyncrun)
+  " Allow delegation to external build providers (e.g. vim-dispatch, asyncrun).
+  " Capitalised for the same reason as g:Fortran_root_provider: E704.
   if exists('g:Fortran_build_provider')
     let l:handled = call(g:Fortran_build_provider, [{'root': l:root, 'type': l:type, 'args': l:args}])
-    if l:handled
-      return 1
-    endif
-  elseif exists('g:fortran_build_provider')
-    let l:handled = call(g:fortran_build_provider, [{'root': l:root, 'type': l:type, 'args': l:args}])
     if l:handled
       return 1
     endif
@@ -264,6 +270,20 @@ function! project#find_module(name) abort
   let l:root = project#find_root()
   let l:pattern = '\c^\s*module\s\+' . l:mod_name . '\>'
 
+  " Fixed-form extensions are included: a legacy tree is exactly the kind of
+  " project where hunting for a module by hand is least pleasant.
+  let l:fortran_exts = ['f90', 'f95', 'f03', 'f08', 'F90', 'F95', 'F03', 'F08',
+        \ 'f', 'F', 'for', 'FOR', 'f77', 'F77', 'ftn', 'FTN']
+  let l:files = []
+  for l:ext in l:fortran_exts
+    let l:files += globpath(l:root, '**/*.' . l:ext, 0, 1)
+  endfor
+
+  if empty(l:files)
+    echohl WarningMsg | echo 'Module "' . l:mod_name . '" not found in project.' | echohl None
+    return
+  endif
+
   " Let :vimgrep scan the project rather than reading every source file into a
   " Vim list. 'j' keeps the cursor here until we know where to jump, and the
   " quickfix list is restored afterwards so build results survive the search.
@@ -271,7 +291,7 @@ function! project#find_module(name) abort
   let l:matches = []
   try
     execute 'noautocmd vimgrep /' . escape(l:pattern, '/') . '/j '
-          \ . fnameescape(l:root) . '/**/*.{f90,f95,f03,f08,F90,F95,f,F}'
+          \ . join(map(l:files, 'fnameescape(v:val)'), ' ')
     let l:matches = getqflist()
   catch /^Vim\%((\a\+)\)\=:E\%(479\|480\|683\)/
     " No matching line, or no source files to search
