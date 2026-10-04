@@ -1,6 +1,6 @@
 # vimf90
 
-[![tests](https://github.com/rudrab/vimf90/actions/workflows/test.yml/badge.svg?branch=devel)](https://github.com/rudrab/vimf90/actions/workflows/test.yml)
+[![tests](https://github.com/rudrab/vimf90/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/rudrab/vimf90/actions/workflows/test.yml)
 
 A modern development environment for scientific and high-performance Fortran (F90, F95, F2003, F2008, F2018, F2023) in Vim and Neovim.
 
@@ -46,6 +46,7 @@ A hand-written `.fortls` is never touched: without the `_generated_by` marker, y
 * ⨁ **Accelerators & Supercomputing**: GPU offloading (`:FortranGPU` OpenACC/OpenMP Target) and MPI cluster job execution (`:FortranMPIRun`).
 * ⌖ **Scientific Debugging & Matrix Inspector**: GDB/LLDB/Termdebug and `nvim-dap` integration with breakpoint toggles (`:FortranBreakpointToggle`) and live multi-dimensional array visualization (`:FortranInspectArray` / `<leader>da`).
 * ☰ **Symbol Hierarchy**: Universal Ctags symbol tree (`Program` &rarr; `Module` &rarr; `Type` &rarr; `Interface` &rarr; `Subroutine`) compatible with `tagbar` and `aerial.nvim`.
+* ⛭ **Native Table of Contents**: Built-in outline sidebar (`:FortranToc` / `<leader>tt`) with no LSP or tags dependency — `[PRG]`/`[MOD]`/`[SBM]`/`[TYP]`/`[INT]`/`[SUB]`/`[FUN]`/`[BLK]` for the current buffer, or `:FortranToc!` for a recursive project-wide scan.
 * ⛊ **Buffer-Local Hygiene**: All mappings and settings are strictly buffer-scoped with complete `b:undo_ftplugin` teardown.
 
 ---
@@ -109,6 +110,8 @@ All mappings are buffer-local and respect `g:fortran_leader` (defaults to `<Lead
 | `<leader>so` | `<Plug>(vimf90-scratch-open)` | Open scientific Fortran scratchpad buffer |
 | `<leader>sr` | `<Plug>(vimf90-scratch-run)` | Compile & run scientific scratchpad buffer |
 | `<leader>tg` | `<Plug>(vimf90-tags)` | Generate project Universal Ctags |
+| `<leader>tt` | `<Plug>(vimf90-toc)` | Toggle Table of Contents / Outline sidebar |
+| `<leader>ll` | `<Plug>(vimf90-lint)` | Lint buffer (or project) via `fortitude` |
 | `<leader>fm` | `<Plug>(vimf90-find-module)` | Find & jump to module definition across project |
 | `<leader>dc` | `<Plug>(vimf90-doc)` | Generate FORD / Doxygen docstring header |
 | `<leader>db` | `<Plug>(vimf90-ford-build)` | Build project FORD documentation (`:FordBuild`) |
@@ -177,6 +180,9 @@ All mappings are buffer-local and respect `g:fortran_leader` (defaults to `<Lead
 * **Formatting**:
   * `:FortranFormat` (Delegates to `fprettify`)
   * `:FortranInstallDeps` (Advisory dependency helper)
+* **Navigation & Linting**:
+  * `:FortranToc [!]`: Toggle the Table of Contents sidebar for the buffer, or `!` for a recursive project-wide scan.
+  * `:FortranLint [!]`: Run `fortitude` over the current file, or `!` for the whole project, into the quickfix list.
 
 ---
 
