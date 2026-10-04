@@ -6,7 +6,7 @@
 "########################################################################
 
 let s:save_cpo = &cpo
-let &cpo = s:save_cpo
+set cpo&vim
 
 let s:repl_bufnr = -1
 let s:repl_job   = -1
