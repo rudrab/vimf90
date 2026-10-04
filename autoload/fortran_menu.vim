@@ -103,8 +103,8 @@ function! fortran_menu#items() abort
         \ ['&Documentation.Generate\ &FORD\ Docstring', s:shortcut('fortran_doc', '\dc'),          ':FortranDoc ford<CR>'],
         \ ['&Documentation.Generate\ &Doxygen\ Docstring', '',                                     ':FortranDoc doxygen<CR>'],
         \ ['&Documentation.-sep_doc-',                '',                                          '<Nop>'],
-        \ ['&Documentation.&Build\ Project\ FORD\ Docs', s:shortcut('fortran_ford_build_map', '\db'), ':FordBuild<CR>'],
-        \ ['&Documentation.&Preview\ FORD\ Docs\ in\ Browser', s:shortcut('fortran_ford_prev_map', '\dp'), ':FordPreview<CR>'],
+        \ ['&Documentation.&Build\ Project\ FORD\ Docs', s:shortcut('fortran_ford_build', '\db'), ':FordBuild<CR>'],
+        \ ['&Documentation.&Preview\ FORD\ Docs\ in\ Browser', s:shortcut('fortran_ford_preview', '\dp'), ':FordPreview<CR>'],
         \
         \ ['&Project.&Build\ Project',                '',                                          ':FortranProjectBuild<CR>'],
         \ ['&Project.&Outline\ (TOC)',                s:shortcut('fortran_toc', '\tt'),            ':FortranToc<CR>'],
