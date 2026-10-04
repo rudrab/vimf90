@@ -114,3 +114,23 @@ function! Test_docstring_inserted_above_subprogram() abort
   call assert_match('@param b', l:text)
   call assert_match('subroutine compute', l:text, 'the subprogram must survive')
 endfunction
+
+function! Test_docstring_for_typed_function() abort
+  let l:dir = Vf90Fixture('doc_typed')
+  call Vf90OpenScratch(l:dir . '/f.f90', [
+        \ 'real(8) function compute(x)',
+        \ '  real(8), intent(in) :: x',
+        \ '  compute = x * 2.0_8',
+        \ 'end function compute'])
+  call cursor(2, 1)
+  try
+    call doc#generate('ford')
+  catch
+    call assert_report('doc#generate threw on typed function: ' . v:exception)
+    return
+  endtry
+  let l:text = join(getline(1, '$'), "\n")
+  call assert_match('^!>', l:text, 'expected a FORD docstring marker')
+  call assert_match('@param\[in\] x', l:text, 'intent and dummy argument should be recognized')
+  call assert_match('function compute', l:text, 'the function header must survive')
+endfunction

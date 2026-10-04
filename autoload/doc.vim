@@ -50,6 +50,12 @@ function! doc#generate(style) abort
   echomsg 'vimf90: Generated ' . (l:style ==# 'doxygen' ? 'Doxygen' : 'FORD') . ' docstring for ' . l:meta.kind . ' ' . l:meta.name . '.'
 endfunction
 
+let s:re_typespec = '%(%(type|class)\s*\(.*\)\s*'
+      \ . '|%(integer|real|complex|logical|character)%(\s*\(.*\)\s*|\s*\*\s*\d+\s*|\s+)'
+      \ . '|double\s+%(precision|complex)\s+)'
+let s:re_modifier = '%(pure|elemental|impure|recursive|non_recursive|module)\s+'
+let s:re_prefix   = '%(' . s:re_modifier . '|' . s:re_typespec . ')*'
+
 function! s:find_header_start(start_lnum) abort
   let l:lnum = a:start_lnum
   while l:lnum >= 1 && l:lnum >= a:start_lnum - 100
@@ -59,7 +65,7 @@ function! s:find_header_start(start_lnum) abort
       let l:lnum -= 1
       continue
     endif
-    if l:line =~? '\v^\s*(pure\s+|elemental\s+|recursive\s+|impure\s+|module\s+)*%(subroutine|function|module|submodule|program|type|interface)\s+'
+    if l:line =~? '\v^\s*%(\d+\s+)?' . s:re_prefix . '%(subroutine|function|module|submodule|program|type|interface)\s+'
       return l:lnum
     endif
     let l:lnum -= 1
@@ -329,7 +335,7 @@ function! doc#ford_build(...) abort
       return s:run_async_ford(l:cmd_list, l:root, l:opts)
     else
       " Synchronous execution
-      let l:out = system('ford ' . fnameescape(fnamemodify(l:cfg, ':t')))
+      let l:out = system('ford ' . shellescape(fnamemodify(l:cfg, ':t')))
       redraw!
       let l:success = (v:shell_error == 0)
       if l:success
@@ -386,11 +392,11 @@ endfunction
 function! s:open_browser(html_path) abort
   echomsg 'vimf90: Opening FORD docs in browser: ' . a:html_path
   if has('unix') && !has('mac')
-    call system('xdg-open ' . fnameescape(a:html_path) . ' &')
+    call system('xdg-open ' . shellescape(a:html_path) . ' &')
   elseif has('mac')
-    call system('open ' . fnameescape(a:html_path) . ' &')
+    call system('open ' . shellescape(a:html_path) . ' &')
   elseif has('win32') || has('win64')
-    call system('start ' . fnameescape(a:html_path))
+    call system('start ' . shellescape(a:html_path))
   endif
 endfunction
 
